@@ -11,3 +11,80 @@ categories: jekyll update
 STL模型实际上有两种数据存储格式，分别是二进制格式和ASCII格式，其中二进制格式占用空间少，ASCII格式便于阅读，但是不管是哪种格式，存储的内容都是一样的。
 
 ## ASCII格式
+ASCII码格式的STL文件逐行给出三角面片的几何信息，每一行以1个或2个关键字开头。
+在STL文件中的三角面片的信息单元facet是一个带矢量方向的三角面片，STL三维模型就是由一系列这样的三角面片构成。
+整个STL文件的首行给出了文件名。
+在一个STL文件中，每一个facet由7行数据组成，
+facet normal 是三角面片指向实体外部的法矢量坐标，
+outer loop 说明随后的3行数据分别是三角面片的3个顶点坐标，3顶点沿指向实体外部的法矢量方向逆时针排列。
+ASCII格式的STL文件可以显示如下：
+```
+solid filename
+   facet normal 0.000000e+000 1.000000e+000 0.000000e+000
+      outer loop
+         vertex 8.440000e+001 2.000000e+001 0.000000e+000
+         vertex 0.000000e+000 2.000000e+001 0.000000e+000
+         vertex 1.000000e+001 2.000000e+001 1.500000e+001
+      endloop
+   endfacet
+   ```
+
+## 二进制格式
+二进制STL文件用固定的字节数来给出三角面片的几何信息。
+文件起始的80个字节是文件头，用于存贮文件名；
+紧接着用4个字节的整数来描述模型的三角面片个数，
+后面逐个给出每个三角面片的几何信息。每个三角面片占用固定的50个字节，依次是:
+3个4字节浮点数(角面片的法矢量)
+3个4字节浮点数(1个顶点的坐标)
+3个4字节浮点数(2个顶点的坐标)
+3个4字节浮点数(3个顶点的坐标)
+三角面片的最后2个字节用来描述三角面片的属性信息。
+一个完整二进制STL文件的大小为三角形面片数乘以50再加上84个字节。
+由于解码的问题，二进制格式的STL文件如果直接用记事本打开则显示出来大多数都是乱码。
+二进制格式的STL文件可显示如下：
+```
+UINT8//Header//文件头
+UINT32//Numberoftriangles//三角面片数量
+//foreachtriangle（每个三角面片中）
+REAL32[3]//Normalvector//法线矢量
+REAL32[3]//Vertex1//顶点1坐标
+REAL32[3]//Vertex2//顶点2坐标
+REAL32[3]//Vertex3//顶点3坐标
+UINT16//Attributebytecountend//文件属性统计
+```
+
+## 两种格式区别
+读取STL文件首先要对文件进行分类，二进制文件和ASCII格式文件虽然信息量是相等的，但是读取方法不相同，这样判断一个STL文件到底是二进制文件还是ASCII格式文件就非常重要。
+从简单的方法来看，ASCII格式的STL文件，首行读取的前五个字符一定是'solid',第二行开始的第一个非空格字符一定是'f'（由于生成STL格式的软件众多，一般来说f是第二行的第三个字符，但是由于标准不统一，这里采用非空格字符的方法），这样就可以用简单的方法将两类文件区分开来了，用代码实现如下：
+```
+string headStr;
+string SecondStr;
+getline(in, headStr);
+getline(in, SecondStr);
+in.close();
+
+if (headStr.empty())
+    return false;
+
+int noempty=0;
+while(SecondStr[noempty]==' ')
+    noempty++;
+if((headStr[0] == 's') && (SecondStr[noempty] == 'f'))
+{
+    cout << "ASCII File." << endl;
+    ReadASCII(cfilename);
+}
+else
+{
+    cout << "Binary File." << endl;
+    ReadBinary(cfilename);
+}
+```
+
+## 读取ASCII格式文件
+
+## 读取二进制格式文件
+
+
+## Reference
+[1]严梽铭, 钟艳如. 基于VC++和OpenGL的STL文件读取显示[J]. 计算机系统应用, 2009, 18(3):172-175.
