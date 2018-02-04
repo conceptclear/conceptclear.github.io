@@ -88,7 +88,7 @@ ASCII文件可以直接用输入的方式打开，代码如下：
 ifstream in;  
 in.open(cfilename, ios::in);  
 ```
-读取进入之后，利用循环读取每一行数据，对其中的字母，符号等数据进行剔除，只留下浮点数的数据。由于数据包含了法向量的数据和3个顶点的坐标，法向量的数据实际上可以由三个顶点坐标求出，所以可以选择舍弃法向量数据也可以单独存储，读取代码如下：
+读取文件之后，利用循环读取每一行数据，对其中的字母，符号等数据进行剔除，只留下浮点数的数据。由于数据包含了法向量的数据和3个顶点的坐标，法向量的数据实际上可以由三个顶点坐标求出，所以可以选择舍弃法向量数据也可以单独存储，读取代码如下：
 ```
 int flag=0;
 do   
@@ -118,18 +118,46 @@ do
         flag++;
         if(flag%4==1)
         {
-            //存储法向量
+            //save the normal factor
         }
         else
         {
-            //存储坐标值
+            //save the vertices coordinates
         }
     }  
     pCnt++;  
 }while(!in.eof());
 ```
 ### 读取二进制格式文件
-
-
-## Reference
+读取二进制格式的文件时，相较于读取ASCII格式文件，在读取函数中需要添加_ios::binary_，代码如下：
+```
+ifstream in;
+in.open(cfilename, ios::in | ios::binary);
+```
+由于前80个字节是文件头，可以直接舍弃
+```
+in.read(str, 80);
+```
+紧接着的四个字节整型描述模型的三角面片个数，所以可以事先读取出面片个数：
+```
+//number of triangles  
+int unTriangles;
+in.read((char*)&unTriangles, sizeof(int));
+```
+得到所有三角面片数量之后，利用for循环则可以很轻松得存储每个面片的数据信息：
+```
+for (int i = 0; i < unTriangles; i++)
+{
+    float coorXYZ[12];
+    in.read((char*)coorXYZ, 12 * sizeof(float));
+    //save the normal factor
+    for(int j = 0 ; j < 4 ; j++)
+    {
+        //save the vertices coordinates
+    }
+}
+```
+### Reference
 [1]严梽铭, 钟艳如. 基于VC++和OpenGL的STL文件读取显示[J]. 计算机系统应用, 2009, 18(3):172-175.
+[2]https://baike.baidu.com/item/stl%E6%A0%BC%E5%BC%8F/3511640?fr=aladdin
+[3]http://blog.csdn.net/chinamming/article/details/16918643
