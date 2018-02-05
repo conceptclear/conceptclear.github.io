@@ -2,7 +2,7 @@
 layout: default
 ---
 <h2>{{ page.title }}</h2>
-<p class="meta">{{ page.date | date_to_string }}</p>
+<p class="meta"><b>Date:</b>{{ page.date | date_to_long_string }} | <b>Number of words:</b>{{ page.content | number_of_words }}</p>
 
 {{ content }}
 <div id="container"></div>
