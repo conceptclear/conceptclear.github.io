@@ -2,7 +2,9 @@
 layout: default
 ---
 <h2>{{ page.title }}</h2>
-<p class="meta"><b>Date:</b>{{ page.date | date_to_long_string }} | <b>Number of words:</b>{{ page.content | number_of_words }}</p>
+<p class="meta"><b>Date:</b>{{ page.date | date_to_long_string }}
+  | <b>Number of words:</b>{{ page.content | strip_html | strip_newlines | remove: " " | size }}
+  | <b>Approximately reading time:</b>{{ page.content | strip_html | strip_newlines | remove: " " | size | divided_by: 350 | plus: 1 }} minutes</p>
 
 {{ content }}
 <div id="container"></div>
