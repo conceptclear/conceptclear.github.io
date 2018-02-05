@@ -5,3 +5,18 @@ layout: default
 <p class="meta">{{ page.date | date_to_string }}</p>
 
 {{ content }}
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: 'location.href', // 可选。默认为 location.href
+  owner: 'conceptclear',
+  repo: 'githubpages-comments',
+  oauth: {
+    client_id: '752ee3de59625b0b5a64',
+    client_secret: '22bb8aa5f16438b184051e916fd19c271ba59efd',
+  },
+})
+gitment.render('container')
+</script>
