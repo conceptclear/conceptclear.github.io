@@ -17,3 +17,19 @@ Cura是一个采用C++引擎的利用python搭建起来的开源程序，上述�
 
 ### CuraEngine  
 emmmm
+
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: 'CuraEngine_set.href', // 可选。默认为 location.href
+  owner: 'conceptclear',
+  repo: 'githubpages-comments',
+  oauth: {
+    client_id: '6a29f84533d3ebc673da',
+    client_secret: 'b1537face0afad64fafa7e6fd7169df85b9d9eb2',
+  },
+})
+gitment.render('container')
+</script>

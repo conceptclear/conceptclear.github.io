@@ -161,3 +161,19 @@ for (int i = 0; i < unTriangles; i++)
 [1]严梽铭, 钟艳如. 基于VC++和OpenGL的STL文件读取显示[J]. 计算机系统应用, 2009, 18(3):172-175.
 [2]https://baike.baidu.com/item/stl%E6%A0%BC%E5%BC%8F/3511640?fr=aladdin
 [3]http://blog.csdn.net/chinamming/article/details/16918643
+
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: 'location.href', // 可选。默认为 location.href
+  owner: 'conceptclear',
+  repo: 'githubpages-comments',
+  oauth: {
+    client_id: '6a29f84533d3ebc673da',
+    client_secret: 'b1537face0afad64fafa7e6fd7169df85b9d9eb2',
+  },
+})
+gitment.render('container')
+</script>
