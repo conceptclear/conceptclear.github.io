@@ -23,7 +23,7 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <title> conceptclear's blog </title>
+    <title> CuraEngine开源程序解读1——配置 </title>
   </head>
 
   <body>
@@ -39,16 +39,39 @@
       <div class="inner clearfix">
         <section id="main-content">
 
-          <div id="home">
-  <h1>Blog Posts</h1>
-  <ul class="posts">
-    
-      <li><span>31 Mar 2018</span> &raquo; <a href="/jekyll/update/2018/03/31/CuraEngine-set-blog.html">CuraEngine开源程序解读1——配置</a></li>
-    
-      <li><span>02 Feb 2018</span> &raquo; <a href="/jekyll/update/2018/02/02/STL-model-blog.html">STL模型的读取</a></li>
-    
-  </ul>
-</div>
+          <h2>CuraEngine开源程序解读1——配置</h2>
+<p class="meta"><b>Date:</b>31 March 2018
+  | <b>Number of words:</b>391
+  | <b>Approximately reading time:</b>2 minutes</p>
+
+<p>3D打印行业近些年在国内发展迅猛，很多新的3D打印公司在国家政策的支持下纷纷建立起来。然而虽然3d打印机型号外形众多，绝大多数公司打印程序仍然采用的是Cura公司提供在github上的一个开源项目——CuraEngine作为内核，
+理解学习CuraEngine对于3D打印行业内部程序开发来说还是必不可少的一步。</p>
+
+<h3 id="cura">Cura</h3>
+<p>Cura公司将<a href="https://github.com/Ultimaker/Cura">Cura</a>的源码提供在github上，Cura15.04版本之后Cura有着较大的改动，15.04版本的<a href="https://github.com/daid/LegacyCura">Cura</a>同样也提供在了github之上。</p>
+
+<p>Cura是一个采用C++引擎的利用python搭建起来的开源程序，上述链接中的程序实际上是一个pyhon GUI，内部模型的旋转切片gcode生成等都是由<a href="https://github.com/Ultimaker/CuraEngine">CuraEngine</a>这个纯C++程序所提供的。</p>
+
+<p>本身图形GUI不是我们研究的重点，所以将重点放在CuraEngine的解读之上。</p>
+
+<h3 id="curaengine">CuraEngine</h3>
+<p>emmmm</p>
+
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: 'location.href', // 可选。默认为 location.href
+  owner: 'conceptclear',
+  repo: 'githubpages-comments',
+  oauth: {
+    client_id: '6a29f84533d3ebc673da',
+    client_secret: 'b1537face0afad64fafa7e6fd7169df85b9d9eb2',
+  },
+})
+gitment.render('container')
+</script>
 
 
         </section>
