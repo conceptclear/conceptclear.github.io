@@ -91,11 +91,12 @@ CuraEngine slice [-v] [-p] [-j <settings.json>] [-s <settingkey>=<value>] [-g] [
 ````
 ./build/CuraEngine slice -v -j ../Cura/resources/definitions/zone3d_printer.def.json -o "./output/test.gcode" -e0 -s infill_line_distance=1 -e0 -l "./build/testcub1.STL"
 ````
+
 运行结果如图所示：  
-![example](https://github.com/conceptclear/conceptclear.github.io/images/CuraEngine_set/example_CuraEngine_setting.png "Example")
+![example](https://github.com/conceptclear/conceptclear.github.io/blob/master/images/CuraEngine_set/example_CuraEngine_setting.png "Example")
 
 利用Cura打开生成的gcode文件如图：  
-![example](https://github.com/conceptclear/conceptclear.github.io/images/CuraEngine_set/example_CuraEngine_gcode_testcub.png "Example")
+![gcode](https://github.com/conceptclear/conceptclear.github.io/blob/master/images/CuraEngine_set/example_CuraEngine_gcode_testcub.png "gcode")
 
 ### Reference
 [1]https://github.com/Ultimaker/CuraEngine  
