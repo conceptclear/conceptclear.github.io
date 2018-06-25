@@ -93,10 +93,10 @@ CuraEngine slice [-v] [-p] [-j <settings.json>] [-s <settingkey>=<value>] [-g] [
 ````
 
 运行结果如图所示：  
-![example](https://github.com/conceptclear/conceptclear.github.io/blob/master/images/CuraEngine_set/example_CuraEngine_setting.png "Example")
+![example](https://github.com/conceptclear/conceptclear.github.io/raw/master/images/CuraEngine_set/example_CuraEngine_setting.png "Example")
 
 利用Cura打开生成的gcode文件如图：  
-![gcode](https://github.com/conceptclear/conceptclear.github.io/blob/master/images/CuraEngine_set/example_CuraEngine_gcode_testcub.png "gcode")
+![gcode](https://github.com/conceptclear/conceptclear.github.io/raw/master/images/CuraEngine_set/example_CuraEngine_gcode_testcub.png "gcode")
 
 ### Reference
 [1]https://github.com/Ultimaker/CuraEngine  
