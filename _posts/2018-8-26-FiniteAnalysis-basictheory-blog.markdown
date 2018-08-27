@@ -17,7 +17,9 @@ categories: jekyll update
 
 通过一个例子来解释一下形函数所建立的插值方法。
 ![2D近似解](https://github.com/conceptclear/conceptclear.github.io/raw/master/images/FEA/example.png "Example")
-
+图中显示的是一个2D温度分布的近似解。对于给定的三个点上的温度值T<sub>1</sub>、T<sub>2</sub>、T<sub>3</sub>，可以通过二次插值函数来近似这条温度曲线上每一点的温度值。
+（a）可以假设温度分布函数可以表示为下面这个式子：
+$ T=a $
 
 
 ### Reference
@@ -29,7 +31,7 @@ categories: jekyll update
 <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
 var gitment = new Gitment({
-  id: 'CuraEngine_set.href', // 可选。默认为 location.href
+  id: 'FEA_basictheory.href', // 可选。默认为 location.href
   owner: 'conceptclear',
   repo: 'githubpages-comments',
   oauth: {
