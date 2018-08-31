@@ -16,10 +16,10 @@ categories: jekyll update
 - **得到近似的数值解**。问题的数值解可以通过计算得出的每个节点值以及形函数从而对每个单元的分段插值求解得出。    
 
 通过一个例子来解释一下形函数所建立的插值方法。
-![2D近似解](https://github.com/conceptclear/conceptclear.github.io/raw/master/images/FEA/example.png "Example")
-图中显示的是一个2D温度分布的近似解。对于给定的三个点上的温度值T<sub>1</sub>、T<sub>2</sub>、T<sub>3</sub>，可以通过二次插值函数来近似这条温度曲线上每一点的温度值。
-（a）可以假设温度分布函数可以表示为下面这个式子：
-$ T=a $
+![2D近似解](https://github.com/conceptclear/conceptclear.github.io/raw/master/images/FEA/example.png "Example")    
+图中显示的是一个2D温度分布的近似解。对于给定的三个点上的温度值T<sub>1</sub>、T<sub>2</sub>、T<sub>3</sub>，可以通过二次插值函数来近似这条温度曲线上每一点的温度值。    
+（a）可以假设温度分布函数可以表示为下面这个式子：    
+$T=a$
 
 
 ### Reference
