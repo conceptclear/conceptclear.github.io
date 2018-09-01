@@ -2,7 +2,7 @@
 layout: post
 title:  "CuraEngine开源程序解读1——配置"
 date:   2018-3-30 19:35:56
-categories: jekyll update
+category: 3dprint
 ---
 
 3D打印行业近些年在国内发展迅猛，很多新的3D打印公司在国家政策的支持下纷纷建立起来。然而虽然3d打印机型号外形众多，绝大多数公司打印程序仍然采用的是Ultimaker公司提供在github上的一个开源项目——CuraEngine作为内核，

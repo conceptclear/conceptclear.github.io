@@ -2,7 +2,7 @@
 layout: post
 title:  "有限元分析基础理论"
 date:   2018-8-26 22:35:56
-categories: jekyll update
+category: FEA
 ---
 
 这段时间由于项目原因去了企业教企业员工关于ANSYS的一些操作，虽然说如果只教软件的话，可能对于有限元理论并不是需要那么了解，但是知其然知其所以然，正好趁着这个机会巩固了一下有限元分析的一些基础。
@@ -19,7 +19,7 @@ categories: jekyll update
 ![2D近似解](https://github.com/conceptclear/conceptclear.github.io/raw/master/images/FEA/example.png "Example")    
 图中显示的是一个2D温度分布的近似解。对于给定的三个点上的温度值T<sub>1</sub>、T<sub>2</sub>、T<sub>3</sub>，可以通过二次插值函数来近似这条温度曲线上每一点的温度值。    
 （a）可以假设温度分布函数可以表示为下面这个式子：    
-$T=a$
+$$T=a$$
 
 
 ### Reference

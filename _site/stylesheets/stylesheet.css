@@ -539,10 +539,10 @@ header a.button {
 aside a.button {
   display: block;
   width: 138px;
-  padding-left: 64px;
+  padding-left: 104px;
   margin-bottom: 20px;
   font-size: 21px;
-  background: transparent url(../images/download-button.png) 0 0 no-repeat;
+  background: transparent url(../images/homepage-button.png) 0 0 no-repeat;
 }
 
 code, pre {
