@@ -16,29 +16,34 @@ category: FEA
 - **得到近似的数值解**。问题的数值解可以通过计算得出的每个节点值以及形函数从而对每个单元的分段插值求解得出。    
 
 通过一个例子来解释一下形函数所建立的插值方法。
+
 <div align=center>
 ![2D近似解](https://github.com/conceptclear/conceptclear.github.io/raw/master/images/FEA/example.png "Example")
-</div>    
+
 图中显示的是一个2D温度分布的近似解。对于给定的三个点上的温度值T<sub>1</sub>、T<sub>2</sub>、T<sub>3</sub>，可以通过二次插值函数来近似这条温度曲线上每一点的温度值。
 
 可以假设温度分布函数可以表示为下面这个式子:
 
 $$T=a\xi^2+b\xi^2+c$$
 
-其中，
+其中，    
 $$\xi\in[-1,1]$$
 
 这里可以简单看为将这个二次插值函数自变量归一化，使得函数在[-1,1]的范围内变化，那么可以根据三个点处的温度值求解出a，b，c的值来：
 
-$$T=T_1 \quad when \quad \xi=-1$$
-$$T=T_2 \quad when \quad \xi=0$$
-$$T=T_3 \quad when \quad \xi=1$$
+$$
+T=T_1 \quad when \quad \xi=-1 \\
+T=T_2 \quad when \quad \xi=0  \\
+T=T_3 \quad when \quad \xi=1
+$$
 
 可得：
 
-$$a=\frac{1}{2}(T_3+T_1)-T_2$$
-$$b=\frac{1}{2}(T_3-T_1)$$
-$$c=T_2$$
+$$
+a=\frac{1}{2}(T_3+T_1)-T_2 \\
+b=\frac{1}{2}(T_3-T_1) \\
+c=T_2
+$$
 
 带入原方程，重新整理可以得到：
 
