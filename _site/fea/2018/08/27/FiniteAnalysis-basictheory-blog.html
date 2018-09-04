@@ -42,8 +42,8 @@
 
           <h2>有限元分析基础理论</h2>
 <p class="meta"><b>Date:</b>27 August 2018
-  | <b>Number of words:</b>1076
-  | <b>Approximately reading time:</b>4 minutes</p>
+  | <b>Number of words:</b>2021
+  | <b>Approximately reading time:</b>6 minutes</p>
 
 <p>这段时间由于项目原因去了企业教企业员工关于ANSYS的一些操作，虽然说如果只教软件的话，可能对于有限元理论并不是需要那么了解，但是知其然知其所以然，正好趁着这个机会巩固了一下有限元分析的一些基础。</p>
 
@@ -57,11 +57,86 @@
   <li><strong>得到近似的数值解</strong>。问题的数值解可以通过计算得出的每个节点值以及形函数从而对每个单元的分段插值求解得出。</li>
 </ul>
 
-<p>通过一个例子来解释一下形函数所建立的插值方法。
-<img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/FEA/example.png" alt="2D近似解" title="Example" />  <br />
-图中显示的是一个2D温度分布的近似解。对于给定的三个点上的温度值T<sub>1</sub>、T<sub>2</sub>、T<sub>3</sub>，可以通过二次插值函数来近似这条温度曲线上每一点的温度值。  <br />
-（a）可以假设温度分布函数可以表示为下面这个式子：  <br />
-<script type="math/tex">T=a</script></p>
+<p>通过一个例子来解释一下形函数所建立的插值方法。</p>
+
+<div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/FEA/example.png" /></div>
+
+<p>图中显示的是一个2D温度分布的近似解。对于给定的三个点上的温度值T<sub>1</sub>、T<sub>2</sub>、T<sub>3</sub>，可以通过二次插值函数来近似这条温度曲线上每一点的温度值。</p>
+
+<p>可以假设温度分布函数可以表示为下面这个式子:</p>
+
+<script type="math/tex; mode=display">T=a\xi^2+b\xi^2+c</script>
+
+<p>其中，</p>
+
+<script type="math/tex; mode=display">\xi\in[-1,1]</script>
+
+<p>这里可以简单看为将这个二次插值函数自变量归一化，使得函数在[-1,1]的范围内变化，那么可以根据三个点处的温度值求解出a，b，c的值来：</p>
+
+<script type="math/tex; mode=display">T=T_1 \quad when \quad \xi=-1 \\
+T=T_2 \quad when \quad \xi=0  \\
+T=T_3 \quad when \quad \xi=1</script>
+
+<p>可得：</p>
+
+<script type="math/tex; mode=display">a=\frac{1}{2}(T_3+T_1)-T_2 \\
+b=\frac{1}{2}(T_3-T_1) \\
+c=T_2</script>
+
+<p>带入原方程，重新整理可以得到：</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+T&=[\frac{1}{2}(T_3+T_1)-T_2]\xi^2+\frac{1}{2}(T_3-T_1)\xi+T_2 \\
+&=\frac{1}{2}\xi(\xi-1)T_1-(\xi-1)(\xi+1)T_2+\frac{1}{2}\xi(\xi+1)T_3 \\
+&=N_1(\xi)T_1+N_2(\xi)T_2+N_3(\xi)T_3
+\end{align} %]]></script>
+
+<p>这里的N<sub>1</sub>，N<sub>2</sub>，N<sub>3</sub>即为三个形函数</p>
+
+<script type="math/tex; mode=display">N_1(\xi)=\frac{1}{2}\xi(\xi-1);\quad
+N_2(\xi)=-(\xi+1)(\xi-1);\quad
+N_3(\xi)=\frac{1}{2}\xi(\xi+1)</script>
+
+<p>可以发现，形函数具有以下几个性质：</p>
+
+<p>(a)N<sub>i</sub>(ξ)在节点i的地方恒等于1而在其他节点位置恒等于0。那么实际上形函数可以通过这样的一条性质来直接构造。       <br />
+(b)构造出来的三个形函数的和恒等于1，当三个点上的的温度相同时，整条线的温度也恒为定值。</p>
+
+<p>同理，这三个点在实际二维空间中连成的曲线也可以通过这三个形函数来进行构造：</p>
+
+<script type="math/tex; mode=display">\left\{
+    \begin{array}{c}
+        x=N_1(\xi)x_1+N_2(\xi)x_2+N_3(\xi)x_3 \\
+        y=N_1(\xi)y_1+N_2(\xi)y_2+N_3(\xi)y_3
+    \end{array}
+\right.</script>
+
+<p>通过给定的三个点就可以构造出整个单元的边界，换句话说就是确定了单元的形状，所以这个函数被称为形函数。通过形函数的插值，我们可以将单元的参数空间与实际分析中的真实空间形成一个映射关系。</p>
+
+<h3 id="有限元分析中的典型步骤">有限元分析中的典型步骤</h3>
+<p>有限元分析通常会被划分为三个部分，分别是前处理，求解和后处理。对于每个部分，通常有以下几个步骤：</p>
+<h4 id="前处理">前处理</h4>
+<ul>
+  <li>将所需求解的区域离散化为许多带节点的单元。</li>
+  <li>构造可以通过节点值插值求解的形函数</li>
+  <li>针对每个单元建立方程，组合这些单元从而形成一组代数方程</li>
+  <li>设置边界关系和内部连接关系
+    <h4 id="求解">求解</h4>
+  </li>
+  <li>同步求解代数方程。</li>
+  <li>计算获得节点值的结果，从而得到近似解。
+    <h4 id="后处理">后处理</h4>
+  </li>
+  <li>从近似解中计算其他感兴趣的参数。</li>
+  <li>验证，可视化解决方案的感兴趣的方面(应力应变变形温度等的云图)。</li>
+  <li>分析并评估解决方案。</li>
+</ul>
+
+<h3 id="有限元分析的优缺点">有限元分析的优缺点</h3>
+<p>FEA与其他所有的方法一样，是一个具有两面性的工具，存在着明显的优点和缺点。    <br />
+作为一个强大的分析工具，它可以处理复杂的分析类型，如振动，瞬态，非线性，流体等；它可以处理复杂的几何形状和复杂的载荷和边界条件；它可以处理非均质材料，非各向同性材料和特殊材料的温度依赖性和可塑性等效果；它可以处理特殊的几何效应，如大变形。也许FEA最吸引人的特性就是它处理一个复杂的问题就像一个简单的问题一样简单。      <br />
+FEA的缺点包括：不像分析结果，它只能给出具体的特定问题的结果；它包含固有的错误（本身对于模型求解的近似舍入等）；它需要经验和判断力才能获得值得信赖的分析；它需要一台功能强大的计算机和可靠的FEA软件包，而这样的硬件软件设备通常很贵；最后，通常需要简化但很难处理。最重要的是，当存在确切的解决方案时，它就变得毫无用处。</p>
 
 <h3 id="reference">Reference</h3>
 <p>[1]Moaveni S. Finite Element Analysis:Theory and Applications with ANSYS:[M]. Prentice Hall, 2013.

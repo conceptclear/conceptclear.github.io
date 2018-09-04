@@ -17,9 +17,7 @@ category: FEA
 
 通过一个例子来解释一下形函数所建立的插值方法。
 
-<div align=center>
-<img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/FEA/example.png" alt="2D近似解" />
-</div>
+<div align="center"><img  src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/FEA/example.png"></div>
 
 图中显示的是一个2D温度分布的近似解。对于给定的三个点上的温度值T<sub>1</sub>、T<sub>2</sub>、T<sub>3</sub>，可以通过二次插值函数来近似这条温度曲线上每一点的温度值。
 
@@ -71,7 +69,7 @@ $$
 
 可以发现，形函数具有以下几个性质：
 
-(a)N<sub>i</sub>($\xi$)在节点i的地方恒等于1而在其他节点位置恒等于0。那么实际上形函数可以通过这样的一条性质来直接构造。         
+(a)N<sub>i</sub>(ξ)在节点i的地方恒等于1而在其他节点位置恒等于0。那么实际上形函数可以通过这样的一条性质来直接构造。         
 (b)构造出来的三个形函数的和恒等于1，当三个点上的的温度相同时，整条线的温度也恒为定值。
 
 同理，这三个点在实际二维空间中连成的曲线也可以通过这三个形函数来进行构造：
