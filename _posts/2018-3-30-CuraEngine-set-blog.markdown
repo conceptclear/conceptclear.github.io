@@ -104,19 +104,3 @@ CuraEngine slice [-v] [-p] [-j <settings.json>] [-s <settingkey>=<value>] [-g] [
 [3]https://github.com/Ultimaker/Uranium  
 [4]https://github.com/Ultimaker/libArcus  
 [5]CuraEngine Help
-
-<div id="container"></div>
-<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-<script>
-var gitment = new Gitment({
-  id: 'CuraEngine_set.href', // 可选。默认为 location.href
-  owner: 'conceptclear',
-  repo: 'githubpages-comments',
-  oauth: {
-    client_id: 'a1812e9ad609dc70811c',
-    client_secret: 'f1ebf229475b995ad032d72d9e177ecf0b0219f9',
-  },
-})
-gitment.render('container')
-</script>

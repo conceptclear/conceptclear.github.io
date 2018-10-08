@@ -108,19 +108,3 @@ FEA的缺点包括：不像分析结果，它只能给出具体的特定问题�
 ### Reference
 [1]Moaveni S. Finite Element Analysis:Theory and Applications with ANSYS:[M]. Prentice Hall, 2013.
 [2]ANSYS Help
-
-<div id="container"></div>
-<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-<script>
-var gitment = new Gitment({
-  id: 'FEA_basictheory.href', // 可选。默认为 location.href
-  owner: 'conceptclear',
-  repo: 'githubpages-comments',
-  oauth: {
-    client_id: 'a1812e9ad609dc70811c',
-    client_secret: 'f1ebf229475b995ad032d72d9e177ecf0b0219f9',
-  },
-})
-gitment.render('container')
-</script>

@@ -7,3 +7,18 @@ layout: default
   | <b>Approximately reading time:</b>{{ page.content | strip_html | strip_newlines | remove: " " | size | divided_by: 350 | plus: 1 }} minutes</p>
 
 {{ content }}
+
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  owner: 'conceptclear',
+  repo: 'conceptclear.github.io',
+  oauth: {
+    client_id: 'a1812e9ad609dc70811c',
+    client_secret: 'f1ebf229475b995ad032d72d9e177ecf0b0219f9',
+  },
+})
+gitment.render('container')
+</script>
