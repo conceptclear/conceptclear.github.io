@@ -118,8 +118,8 @@ var gitment = new Gitment({
   owner: 'conceptclear',
   repo: 'githubpages-comments',
   oauth: {
-    client_id: '6a29f84533d3ebc673da',
-    client_secret: 'b1537face0afad64fafa7e6fd7169df85b9d9eb2',
+    client_id: 'a1812e9ad609dc70811c',
+    client_secret: 'f1ebf229475b995ad032d72d9e177ecf0b0219f9',
   },
 })
 gitment.render('container')
