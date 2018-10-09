@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CuraEngine开源程序解读1——配置"
+title:  "CuraEngine开源程序配置"
 date:   2018-3-30 19:35:56
 category: 3dprint
 ---
@@ -8,26 +8,26 @@ category: 3dprint
 3D打印行业近些年在国内发展迅猛，很多新的3D打印公司在国家政策的支持下纷纷建立起来。然而虽然3d打印机型号外形众多，绝大多数公司打印程序仍然采用的是Ultimaker公司提供在github上的一个开源项目——CuraEngine作为内核，
 理解学习CuraEngine对于3D打印行业内部程序开发来说还是必不可少的一步。
 
-### Cura  
+## Cura  
 Ultimaker公司将[Cura](https://github.com/Ultimaker/Cura)的源码提供在github上，Cura15.04版本之后Cura有着较大的改动，15.04版本的[Cura](https://github.com/daid/LegacyCura)同样也提供在了github之上。
 
 Cura是一个采用C++引擎的利用python搭建起来的开源程序，上述链接中的程序实际上是一个pyhon GUI，内部模型的旋转切片gcode生成等都是由[CuraEngine](https://github.com/Ultimaker/CuraEngine)这个纯C++程序所提供的。
 
 本身图形GUI不是我们研究的重点，所以将重点放在CuraEngine的解读之上。
 
-### CuraEngine  
+## CuraEngine  
 CuraEngine是一个用于生成3D打印gcode的C++控制台程序。相较于Skeinforge引擎，CuraEngine速度上要更为快速。在对其中切片所得到的二维图形进行处理时，CuraEngine采用了[Clipper](http://www.angusj.com/delphi/clipper.php)这个开源的免费库，该库基于Vatti的裁剪算法，对线和多边形进行裁剪，包括求交，合并，偏移等。除此之外，Cura与其后端和类似代码之间的通信，Ultimaker公司同样将开源代码[libArcus](https://github.com/Ultimaker/libArcus)提供在了github上。libArcus是基于Ptotocol Buffers库来进行通信的，所以配置libArcus的时候需要配置Protocol Buffers库，即[protobuf](https://github.com/google/protobuf)。
 
-### 许可协议
+## 许可协议
 CuraEngine根据AGPLv3许可证发布。许可证的条款可以在CuraEngine的LICENSE文件中找到,或者访问[GNU AFFERO通用公共许可证](http://www.gnu.org/licenses/agpl.html)。
 如果使用CuraEngine来创建应用程序，需要分享你的源码。
 
-### 安装配置
+## 安装配置
 程序解读首先需要能够运行这个程序并且知道程序可以做到什么，按照官方所提供的安装配置方法来进行配置，这里采用Ubuntu16.04.3系统来进行编译。
 
 安装可以分为三部分：编译protobuf，编译libArcus和编译CuraEngine
 
-#### 编译protobuf
+### 编译protobuf
 1.确保自己配置了`libtool`，若未安装，可以利用`apt`进行安装。  
 ````
 sudo apt install libtool
@@ -46,7 +46,7 @@ sudo apt install autoreconf
 5.`make`  
 6.`sudo make install`  
 
-#### 编译libArcus库
+### 编译libArcus库
 1.需要安装`CMake`，`python3-dev(3.4+)`和`python3-sip-dev(4.16+)`。  
 2.git clone [libArcus](https://github.com/Ultimaker/libArcus)的仓库或者直接下载zip包。  
 3.利用CMake对libArcus进行编译
@@ -58,7 +58,7 @@ make
 sudo make install
 ````
 
-#### 编译CuraEngine库
+### 编译CuraEngine库
 1.git clone [CuraEngine](https://github.com/Ultimaker/CuraEngine)的仓库或者直接下载zip包。  
 2.利用CMake对CuraEngine进行编译
 ````
@@ -69,7 +69,7 @@ make
 cmake . -G "CodeBlocks - Unix Makefiles"
 ````
 
-### 运行CuraEngine
+## 运行CuraEngine
 与Cura软件所不同的是，CuraEngine需要通过命令行的方式进行运行。运行CuraEngine需要一个JSON的配置文件，在Cura的repository中可以找到。自Cura2.1版本后，json文件结构发生了变化。
 CuraEngine切片的用法在CuraEngine Help中提供如下：  
 ````
@@ -98,9 +98,9 @@ CuraEngine slice [-v] [-p] [-j <settings.json>] [-s <settingkey>=<value>] [-g] [
 利用Cura打开生成的gcode文件如图：  
 ![gcode](https://github.com/conceptclear/conceptclear.github.io/raw/master/images/CuraEngine_set/example_CuraEngine_gcode_testcub.png "gcode")
 
-### Reference
-[1]https://github.com/Ultimaker/CuraEngine  
-[2]https://github.com/Ultimaker/Cura  
-[3]https://github.com/Ultimaker/Uranium  
-[4]https://github.com/Ultimaker/libArcus  
+## Reference
+[1]https://github.com/Ultimaker/CuraEngine     
+[2]https://github.com/Ultimaker/Cura      
+[3]https://github.com/Ultimaker/Uranium      
+[4]https://github.com/Ultimaker/libArcus       
 [5]CuraEngine Help
