@@ -48,16 +48,16 @@ struct IntPoint {
 #### 全局变量
 定义了一个简单占位符坐标点（brief Placeholder coordinate point (3D)），作用不明。该坐标点是由三个int32_t类型所能提供的最小值构成的点。           
 ### IntPoint类
-####成员变量
+#### 成员变量
 存储二维坐标变量，int X, Y。          
-####成员函数
+#### 成员函数
 - **Point p()**。用于返回Point类型的x，y坐标；          
 
 ### Point类
 对clipper中的IntPoint类定义了一个别名，即为这里的Point类。
-####成员函数
+#### 成员函数
 - **运算符重载**。重载了几个常用的运算符，包括和Point类的+,-,+=,-=,==,!=、和int32_t类型数据的*/以及和任意类型的*,\*=,/=；          
-####相关内联函数
+#### 相关内联函数
 - **Point normal(const Point& p0, int64_t len)**。用于返回len长度的Point向量；          
 - **bool shorterThen(const Point& p0, int32_t len)**。用于检测坐标点距离原点长度是否满足要求；        
 - **int64_t vSize2(const Point& p0)**。用于返回二维整数点距离原点距离的平方；          
@@ -71,18 +71,18 @@ struct IntPoint {
 
 ### PointMatrix类           
 PointMatrix类是用来对二维点进行旋转变换的矩阵类。              
-####成员变量           
+#### 成员变量           
 定义了double类型的大小为4的一维数组。          
-####成员函数
+#### 成员函数
 - **构造函数**。不带参数的构造函数默认matrix数组为{1,0,0,1}；可以用弧度制和Point类型的向量值来构造变换矩阵。
 - **Point apply(const Point p) const**。Point p逆时针旋转。                 
 - **Point unapply(const Point p) const**。Point p顺时针旋转。                 
 
 ### Point3Matrix类        
 Point3Matrix类是用来对三维点进行旋转变换的矩阵类。              
-####成员变量         
+#### 成员变量         
 定义了double类型的大小为9的一维数组。           
-####成员函数          
+#### 成员函数          
 - **构造函数**。不带参数的构造函数默认matrix数组为{1,0,0,0,1,0,0,0,1}；可以用PointMatrix类型的向量值来构造缺少第三个方向值的变换矩阵。
 - **Point3 apply(const Point3 p) const**。Point3 p逆时针旋转。                 
 - **Point apply(const Point p) const**。Point p逆时针旋转（只在xy平面投影）。           

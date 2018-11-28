@@ -42,13 +42,13 @@
 
           <h1>CuraEngine开源程序解读1</h1>
 <p class="meta"><b>Date:</b>08 October 2018
-  | <b>Number of words:</b>1329
-  | <b>Approximately reading time:</b>4 minutes</p>
+  | <b>Number of words:</b>2656
+  | <b>Approximately reading time:</b>8 minutes</p>
 
 <p>CuraEngine这个开源程序用到的东西太多，想要整理出来不是特别容易，这里先按照我读程序的顺序来进行程序解读，如果之后有时间可以从新整理一下。</p>
 
 <h2 id="intpoint">intpoint</h2>
-<p>intpoint类是curaengine用来尽可能快的使用的整数点类，使用整数点主要是为了避免浮点运算中的舍入误差，并且由于需要用到clipperlib，而在ClipperLib中也是采用的整数点类来进行运算的，为了保持一致性，从而建立了这样一个整数点类。     <br />
+<p>intpoint这个头文件主要包含了curaengine用来尽可能快的使用的整数点类，使用整数点主要是为了避免浮点运算中的舍入误差，并且由于需要用到clipperlib，而在ClipperLib中也是采用的整数点类来进行运算的，为了保持一致性，从而建立了这样一个整数点类。     <br />
 intpoint类中调用了clipperlib库主要是为了重用clipperlib库中提供的IntPoint的定义，在ClipperLib中，IntPoint是一个用来代表Clipper库中相关点的整形点数据结构，定义如下：</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct IntPoint {
   cInt X;
@@ -87,7 +87,55 @@ intpoint类中调用了clipperlib库主要是为了重用clipperlib库中提供�
   <li><strong><span style="color:red;"><del>Point3 cross(const Point3&amp; p)</del></span></strong>。用于返回两个三维向量的叉积，但是由于可能会造成溢出（当向量长度超过4.6cm时），所以不建议使用这个函数。
     <h4 id="全局变量">全局变量</h4>
     <p>定义了一个简单占位符坐标点（brief Placeholder coordinate point (3D)），作用不明。该坐标点是由三个int32_t类型所能提供的最小值构成的点。</p>
+    <h3 id="intpoint类">IntPoint类</h3>
+    <h4 id="成员变量-1">成员变量</h4>
+    <p>存储二维坐标变量，int X, Y。</p>
+    <h4 id="成员函数-1">成员函数</h4>
   </li>
+  <li><strong>Point p()</strong>。用于返回Point类型的x，y坐标；</li>
+</ul>
+
+<h3 id="point类">Point类</h3>
+<p>对clipper中的IntPoint类定义了一个别名，即为这里的Point类。</p>
+<h4 id="成员函数-2">成员函数</h4>
+<ul>
+  <li><strong>运算符重载</strong>。重载了几个常用的运算符，包括和Point类的+,-,+=,-=,==,!=、和int32_t类型数据的<em>/以及和任意类型的</em>,*=,/=；
+    <h4 id="相关内联函数">相关内联函数</h4>
+  </li>
+  <li><strong>Point normal(const Point&amp; p0, int64_t len)</strong>。用于返回len长度的Point向量；</li>
+  <li><strong>bool shorterThen(const Point&amp; p0, int32_t len)</strong>。用于检测坐标点距离原点长度是否满足要求；</li>
+  <li><strong>int64_t vSize2(const Point&amp; p0)</strong>。用于返回二维整数点距离原点距离的平方；</li>
+  <li><strong>float vSize2f(const Point&amp; p0)</strong>。用于返回二维浮点距离原点距离的平方；</li>
+  <li><strong>int64_t vSize(const Point&amp; p0)</strong>。用于返回二维整数点距离原点的距离；</li>
+  <li><strong>double vSizeMM(const Point&amp; p0)</strong>。用于返回二维点距离原点的距离（mm）；</li>
+  <li><strong>int64_t dot(const Point&amp; p0, const Point&amp; p1)</strong>。用于返回两个二维向量的点积；</li>
+  <li><strong>Point turn90CCW(const Point&amp; p0)</strong>。用于返回p0向量逆时针旋转90°；</li>
+  <li><strong>Point rotate(const Point&amp; p0, double angle)</strong>。用于返回p0向量逆时针旋转angle(弧度)；</li>
+  <li><strong>int angle(const Point&amp; p)</strong>。用于返回p0向量与x轴的夹角（角度）；</li>
+</ul>
+
+<h3 id="pointmatrix类">PointMatrix类</h3>
+<p>PointMatrix类是用来对二维点进行旋转变换的矩阵类。</p>
+<h4 id="成员变量-2">成员变量</h4>
+<p>定义了double类型的大小为4的一维数组。</p>
+<h4 id="成员函数-3">成员函数</h4>
+<ul>
+  <li><strong>构造函数</strong>。不带参数的构造函数默认matrix数组为{1,0,0,1}；可以用弧度制和Point类型的向量值来构造变换矩阵。</li>
+  <li><strong>Point apply(const Point p) const</strong>。Point p逆时针旋转。</li>
+  <li><strong>Point unapply(const Point p) const</strong>。Point p顺时针旋转。</li>
+</ul>
+
+<h3 id="point3matrix类">Point3Matrix类</h3>
+<p>Point3Matrix类是用来对三维点进行旋转变换的矩阵类。</p>
+<h4 id="成员变量-3">成员变量</h4>
+<p>定义了double类型的大小为9的一维数组。</p>
+<h4 id="成员函数-4">成员函数</h4>
+<ul>
+  <li><strong>构造函数</strong>。不带参数的构造函数默认matrix数组为{1,0,0,0,1,0,0,0,1}；可以用PointMatrix类型的向量值来构造缺少第三个方向值的变换矩阵。</li>
+  <li><strong>Point3 apply(const Point3 p) const</strong>。Point3 p逆时针旋转。</li>
+  <li><strong>Point apply(const Point p) const</strong>。Point p逆时针旋转（只在xy平面投影）。</li>
+  <li><strong>static Point3Matrix translate(const Point p)</strong>。构造平移Point p向量的矩阵。</li>
+  <li><strong>Point3Matrix compose(const Point3Matrix&amp; b)</strong>。实现矩阵相乘。</li>
 </ul>
 
 
