@@ -24,7 +24,7 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <title> CuraEngine开源程序解读1 </title>
+    <title> CuraEngine开源程序解读————工具类 </title>
   </head>
 
   <body>
@@ -40,75 +40,64 @@
       <div class="inner clearfix">
         <section id="main-content">
 
-          <h1>CuraEngine开源程序解读1</h1>
+          <h1>CuraEngine开源程序解读————工具类</h1>
 <p class="meta"><b>Date:</b>08 October 2018
-  | <b>Number of words:</b>2656
-  | <b>Approximately reading time:</b>8 minutes</p>
+  | <b>Number of words:</b>4901
+  | <b>Approximately reading time:</b>15 minutes</p>
 
-<p>CuraEngine这个开源程序用到的东西太多，想要整理出来不是特别容易，这里先按照我读程序的顺序来进行程序解读，如果之后有时间可以从新整理一下。</p>
+<p>CuraEngine作为一个不断在维护的开源软件，在版本更新的过程中代码经常会有一些变化，这里尽力按照类别来对其进行解读，也方便代码更新之后进行修改。
+源码中将一部分文件归类于utils文件夹中，这部分代码主要起到的是基础工具类的作用，这里首先对这部分代码进行分析解读。
+由于CuraEngine主要重用了clipperlib库中提供的IntPoint的定义，所以顶点坐标数据都是以整数点的形式保存在内存之中，单位为um（微米）。</p>
 
-<h2 id="intpoint">intpoint</h2>
-<p>intpoint这个头文件主要包含了curaengine用来尽可能快的使用的整数点类，使用整数点主要是为了避免浮点运算中的舍入误差，并且由于需要用到clipperlib，而在ClipperLib中也是采用的整数点类来进行运算的，为了保持一致性，从而建立了这样一个整数点类。     <br />
-intpoint类中调用了clipperlib库主要是为了重用clipperlib库中提供的IntPoint的定义，在ClipperLib中，IntPoint是一个用来代表Clipper库中相关点的整形点数据结构，定义如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct IntPoint {
-  cInt X;
-  cInt Y;
-#ifdef use_xyz
-  cInt Z;
-  IntPoint(cInt x = 0, cInt y = 0, cInt z = 0): X(x), Y(y), Z(z) {};
-#else
-  IntPoint(cInt x = 0, cInt y = 0): X(x), Y(y) {};
-#endif
+<h2 id="coord_t">Coord_t</h2>
+<p>Coord_t中没有定义一个新的类，主要是一些坐标转换的宏定义，其中包括：</p>
+<ul>
+  <li>对Clipper库中的cInt类型给出了一个别名coord_t;</li>
+  <li>宏定义INT2MM(n),INT2MM2(n),MM2INT(n),MM2_2INT(n),MM3_2INT(n),主要实现int类型的坐标（微米）同毫米之间的转换；</li>
+  <li>宏定义INT2MICRON(n),MICRON2INT(n)，实现int类型坐标同微米之间的转换。</li>
+</ul>
 
-  friend inline bool operator== (const IntPoint&amp; a, const IntPoint&amp; b)
-  {
-    return a.X == b.X &amp;&amp; a.Y == b.Y;
-  }
-  friend inline bool operator!= (const IntPoint&amp; a, const IntPoint&amp; b)
-  {
-    return a.X != b.X  || a.Y != b.Y;
-  }
-};
-</code></pre></div></div>
-<p>在6.0版本以上，IntPoint可以拥有Z坐标，但是在intpoint类中并没有去使用这个坐标。    <br />
-在intpoint类中宏定义了几个函数，用来做数据类型的转换，由于整点类中的成员变量以微米为单位，所以宏定义的函数主要用来做整数的微米单位和毫米单位之间的转换。</p>
+<h2 id="point3">Point3</h2>
+<p>Point3中定义了Point3类，用于存储coord_t类型的三维坐标值。</p>
 <h3 id="point3类">Point3类</h3>
 <h4 id="成员变量">成员变量</h4>
-<p>存储三维的常量整数点坐标，int32_t x,y,z。</p>
+<p>存储三维的常量整数点坐标，coord_t x,y,z。</p>
 <h4 id="成员函数">成员函数</h4>
 <ul>
-  <li><strong>运算符重载</strong>。重载了几个常用的运算符，包括和Point3类的+,-,+=,-=,==,!=、和int32_t类型数据的<em>/以及和double类型的</em>；</li>
-  <li><strong>int32_t max() const</strong>。用于检测坐标值的最大值；</li>
-  <li><strong>bool testLength(int32_t len) const</strong>。用于检测坐标点距离原点长度是否满足要求；</li>
-  <li><strong>int64_t vSize2() const</strong>。用于返回三维整数点距离原点距离的平方；</li>
-  <li><strong>int32_t vSize() const</strong>。用于返回三维整数点距离原点的距离；</li>
+  <li><strong>运算符重载</strong>。重载了几个常用的运算符，包括同Point3类的+,-,*,/,+=,-=,*=,/=,==,!=以及和模板类型数据的*,/,*=,/=；</li>
+  <li><strong>coord_t max() const</strong>。用于检测坐标值的最大值；</li>
+  <li><strong>bool testLength(coord_t len) const</strong>。用于检测坐标点距离原点长度是否满足要求；</li>
+  <li><strong>coord_t vSize2() const</strong>。用于返回三维整数点距离原点距离的平方；</li>
+  <li><strong>coord_t vSize() const</strong>。用于返回三维整数点距离原点的距离；</li>
   <li><strong>double vSizeMM() const</strong>。用于返回三维点距离原点的距离（mm）；</li>
-  <li><strong>int64_t dot(const Point3&amp; p) const</strong>。用于返回两个三维向量的点积；</li>
-  <li><strong><span style="color:red;"><del>Point3 cross(const Point3&amp; p)</del></span></strong>。用于返回两个三维向量的叉积，但是由于可能会造成溢出（当向量长度超过4.6cm时），所以不建议使用这个函数。
-    <h4 id="全局变量">全局变量</h4>
-    <p>定义了一个简单占位符坐标点（brief Placeholder coordinate point (3D)），作用不明。该坐标点是由三个int32_t类型所能提供的最小值构成的点。</p>
-    <h3 id="intpoint类">IntPoint类</h3>
-    <h4 id="成员变量-1">成员变量</h4>
-    <p>存储二维坐标变量，int X, Y。</p>
-    <h4 id="成员函数-1">成员函数</h4>
+  <li><strong>coord_t dot(const Point3&amp; p) const</strong>。用于返回两个三维向量的点积；
+    <h3 id="全局变量">全局变量</h3>
+    <p>定义了一个简单占位符坐标点no_point3（brief Placeholder coordinate point (3D)），作用不明。该坐标点是由三个int32_t类型所能提供的最小值构成的点。</p>
   </li>
+</ul>
+
+<h2 id="intpoint">IntPoint</h2>
+<p>IntPoint中包含了CuraEngine用来尽可能快的使用的二位整数点类IntPoint，二维点矩阵变换类PointMatrix和三维点矩阵变换类Point3Matrix，并对clipperlib中的IntPoint类赋予了Point的别名。</p>
+<h3 id="intpoint类">IntPoint类</h3>
+<h4 id="成员变量-1">成员变量</h4>
+<p>存储二维坐标变量，int X, Y。</p>
+<h4 id="成员函数-1">成员函数</h4>
+<ul>
   <li><strong>Point p()</strong>。用于返回Point类型的x，y坐标；</li>
 </ul>
 
 <h3 id="point类">Point类</h3>
 <p>对clipper中的IntPoint类定义了一个别名，即为这里的Point类。</p>
-<h4 id="成员函数-2">成员函数</h4>
+<h4 id="相关内联函数">相关内联函数</h4>
 <ul>
-  <li><strong>运算符重载</strong>。重载了几个常用的运算符，包括和Point类的+,-,+=,-=,==,!=、和int32_t类型数据的<em>/以及和任意类型的</em>,*=,/=；
-    <h4 id="相关内联函数">相关内联函数</h4>
-  </li>
-  <li><strong>Point normal(const Point&amp; p0, int64_t len)</strong>。用于返回len长度的Point向量；</li>
+  <li><strong>运算符重载</strong>。重载了几个常用的运算符，包括和Point类的+,-,+=,-=,/以及和模板类型的*,/；</li>
+  <li><strong>Point normal(const Point&amp; p0, coord_t len)</strong>。用于返回len长度的Point向量；</li>
   <li><strong>bool shorterThen(const Point&amp; p0, int32_t len)</strong>。用于检测坐标点距离原点长度是否满足要求；</li>
-  <li><strong>int64_t vSize2(const Point&amp; p0)</strong>。用于返回二维整数点距离原点距离的平方；</li>
+  <li><strong>coord_t vSize2(const Point&amp; p0)</strong>。用于返回二维整数点距离原点距离的平方；</li>
   <li><strong>float vSize2f(const Point&amp; p0)</strong>。用于返回二维浮点距离原点距离的平方；</li>
-  <li><strong>int64_t vSize(const Point&amp; p0)</strong>。用于返回二维整数点距离原点的距离；</li>
+  <li><strong>coord_t vSize(const Point&amp; p0)</strong>。用于返回二维整数点距离原点的距离；</li>
   <li><strong>double vSizeMM(const Point&amp; p0)</strong>。用于返回二维点距离原点的距离（mm）；</li>
-  <li><strong>int64_t dot(const Point&amp; p0, const Point&amp; p1)</strong>。用于返回两个二维向量的点积；</li>
+  <li><strong>coord_t dot(const Point&amp; p0, const Point&amp; p1)</strong>。用于返回两个二维向量的点积；</li>
   <li><strong>Point turn90CCW(const Point&amp; p0)</strong>。用于返回p0向量逆时针旋转90°；</li>
   <li><strong>Point rotate(const Point&amp; p0, double angle)</strong>。用于返回p0向量逆时针旋转angle(弧度)；</li>
   <li><strong>int angle(const Point&amp; p)</strong>。用于返回p0向量与x轴的夹角（角度）；</li>
@@ -117,8 +106,8 @@ intpoint类中调用了clipperlib库主要是为了重用clipperlib库中提供�
 <h3 id="pointmatrix类">PointMatrix类</h3>
 <p>PointMatrix类是用来对二维点进行旋转变换的矩阵类。</p>
 <h4 id="成员变量-2">成员变量</h4>
-<p>定义了double类型的大小为4的一维数组。</p>
-<h4 id="成员函数-3">成员函数</h4>
+<p>定义了double类型的大小为4的一维数组matrix[4]。</p>
+<h4 id="成员函数-2">成员函数</h4>
 <ul>
   <li><strong>构造函数</strong>。不带参数的构造函数默认matrix数组为{1,0,0,1}；可以用弧度制和Point类型的向量值来构造变换矩阵。</li>
   <li><strong>Point apply(const Point p) const</strong>。Point p逆时针旋转。</li>
@@ -128,14 +117,114 @@ intpoint类中调用了clipperlib库主要是为了重用clipperlib库中提供�
 <h3 id="point3matrix类">Point3Matrix类</h3>
 <p>Point3Matrix类是用来对三维点进行旋转变换的矩阵类。</p>
 <h4 id="成员变量-3">成员变量</h4>
-<p>定义了double类型的大小为9的一维数组。</p>
-<h4 id="成员函数-4">成员函数</h4>
+<p>定义了double类型的大小为9的一维数组matrix[9]。</p>
+<h4 id="成员函数-3">成员函数</h4>
 <ul>
   <li><strong>构造函数</strong>。不带参数的构造函数默认matrix数组为{1,0,0,0,1,0,0,0,1}；可以用PointMatrix类型的向量值来构造缺少第三个方向值的变换矩阵。</li>
+  <li><strong>运算符重载</strong>。重载了与Point3类型和Point类型的+,+=,-,-=。</li>
   <li><strong>Point3 apply(const Point3 p) const</strong>。Point3 p逆时针旋转。</li>
   <li><strong>Point apply(const Point p) const</strong>。Point p逆时针旋转（只在xy平面投影）。</li>
   <li><strong>static Point3Matrix translate(const Point p)</strong>。构造平移Point p向量的矩阵。</li>
   <li><strong>Point3Matrix compose(const Point3Matrix&amp; b)</strong>。实现矩阵相乘。</li>
+</ul>
+
+<h2 id="floatpoint">floatpoint</h2>
+<p>在模型加载期间会使用到三维浮点向量，这里定义了以毫米为单位的浮点类FPoint3和其旋转变换的矩阵类FMatrix3x3。</p>
+<h3 id="fpoint3类">FPoint3类</h3>
+<h4 id="成员变量-4">成员变量</h4>
+<p>存储三维的常量浮点坐标，float x,y,z。</p>
+<h4 id="成员函数-4">成员函数</h4>
+<ul>
+  <li><strong>构造函数</strong>。不带参数的构造函数不会给成员变量赋值或者初始化，可以直接用float类型参数给成员变量初始化，也可以通过Point3类型的变量p通过坐标变换初始化。</li>
+  <li><strong>运算符重载</strong>。重载了几个常用的运算符，包括同FPoint3类的+,-,+=,-=,==和!=，以及同float类型的*,/,*=；</li>
+  <li><strong>float max() const</strong>。用于检测坐标值的最大值；</li>
+  <li><strong>bool testLength(float len) const</strong>。用于检测坐标点距离原点长度是否满足要求；</li>
+  <li><strong>float vSize2() const</strong>。用于返回三维浮数点距离原点距离的平方；</li>
+  <li><strong>float vSize() const</strong>。用于返回三维浮数点距离原点的距离；</li>
+  <li><strong>FPoint3 normalized() const</strong>。用于对浮点向量进行归一化；</li>
+  <li><strong>FPoint3 cross(const FPoint3&amp; p) const</strong>。用于实现两个向量叉乘；</li>
+  <li><strong>Point3 toPoint3</strong>。用于实现三维浮点坐标转换为整数点坐标；</li>
+</ul>
+
+<h3 id="fmatrix3x3类">FMatrix3x3类</h3>
+<p>FMatrix3x3类是用来对三维浮点数点进行旋转变换的矩阵类。</p>
+<h4 id="成员变量-5">成员变量</h4>
+<p>定义了double类型的总大小为3*3的二维数组m[3][3]。</p>
+<h4 id="成员函数-5">成员函数</h4>
+<ul>
+  <li><strong>构造函数</strong>。不带参数的构造函数默认m[3][3]数组为{1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0}。</li>
+  <li><strong>Point3 apply(const FPoint3&amp; p) const</strong>。Point p逆时针旋转并将旋转后的向量转为Point3类型。</li>
+</ul>
+
+<h2 id="date">Date</h2>
+<p>Date中定义了用来表示当前年月日的一个简单类Date。</p>
+<h3 id="date类">Date类</h3>
+<h4 id="成员变量-6">成员变量</h4>
+<p>存储年月日的三个int类型量，int year,month,day。</p>
+<h4 id="成员函数-6">成员函数</h4>
+<ul>
+  <li><strong>构造函数</strong>。带参数的构造函数直接初始化年月日三个量，不带参数的构造函数为私有成员函数，默认全部初始化为-1。</li>
+  <li><strong>static Date getDate()</strong>。通过宏__DATE__获取编译时的时间。</li>
+  <li><strong>std::string toStringDashed()</strong>。将Date类中的数据转换为yyyy-mm-dd格式输出。</li>
+</ul>
+
+<h2 id="algorithm">algorithm</h2>
+<p>algorithm文件主要是对C++的algorithm库的拓展，定义了一个用于返回vector向量排序索引的函数 <strong>order</strong>。</p>
+
+<h2 id="math">math</h2>
+<p>math文件主要是对C++的cmath库的拓展。</p>
+<h3 id="宏定义">宏定义</h3>
+<p>C++11开始不再对M_PI有宏定义，这里定义M_PI。</p>
+<h3 id="全局函数">全局函数</h3>
+<ul>
+  <li><strong>static const float sqrt2</strong>。全局常量，值为 <script type="math/tex">\sqrt{2}</script>。</li>
+  <li><strong>inline T square(const T&amp; a)</strong>。计算模板类型的平方。</li>
+  <li><strong>inline unsigned int round_divide(unsigned int dividend, unsigned int divisor)</strong>。计算dividend被divisor平分后最接近的的组数。</li>
+  <li><strong>inline unsigned int round_up_divide(unsigned int dividend, unsigned int divisor)</strong>。计算平分后的组数，向上取整。</li>
+</ul>
+
+<h2 id="gettime">gettime</h2>
+<p>gettime中定义了一个TimeKeeper类用于获取程序运行时间。</p>
+<h3 id="timekeeper类">TimeKeeper类</h3>
+<p>TimeKeeper类主要是用于获取程序段的运行时间。</p>
+<h4 id="成员函数-7">成员函数</h4>
+<p>double类型的startTime。</p>
+<h4 id="成员函数-8">成员函数</h4>
+<ul>
+  <li><strong>构造函数</strong>。调用restart函数。</li>
+  <li><strong>double restart()</strong>。返回当前时间与之前调用构造函数时的时间之差。
+    <h3 id="静态全局函数">静态全局函数</h3>
+  </li>
+  <li><strong>static inline double getTime()</strong>。根据编译平台不同，采用不同的函数，返回当前时间，单位为s。</li>
+</ul>
+
+<h2 id="nocopy">NoCopy</h2>
+<p>C++默认构造的类是具有拷贝构造函数的，但是有一些类在程序中不应该被拷贝，所以通过建立NoCopy类实现拷贝构造函数及=运算符重载的私有化。当需要定义不能被拷贝的类时，只需要继承NoCopy类即可以实现。</p>
+
+<h2 id="macros">macros</h2>
+<p>只定义了一个用于抑制编译器对未使用参数警告的宏。</p>
+
+<h2 id="polygon">polygon</h2>
+<p>polygon中包含了几个用于保存二维多边形轮廓的类，构造了一个list容器保存point并定义了一个别名ListPolygon，构造了一个vector容器保存ListPolygon并定义别名为ListPolygons。</p>
+
+<h3 id="constpolygonref">ConstPolygonRef</h3>
+<p>构造了一个存储多边形轮廓的类，外轮廓定义为逆时针方向，内轮廓为顺时针方向，左边为x负方向，下为y负方向。</p>
+<h4 id="成员变量-7">成员变量</h4>
+<p>定义了一个指向Path类型的*path指针，path类型定义在ClipperLib文件中，实际上是<code class="highlighter-rouge">std::vector&lt; IntPoint &gt;</code>的别名。</p>
+<h4 id="成员函数-9">成员函数</h4>
+<ul>
+  <li><strong>构造函数</strong>。传递一个const ClipperLib::Path类型的polygon地址；</li>
+  <li><strong>禁用==运算符</strong>。多边形比较非常复杂，这里直接禁用了；</li>
+  <li><strong>禁用=运算符</strong>。无法分配const对象；</li>
+  <li><strong>size_t size() const</strong>。用于返回多边形顶点数；</li>
+  <li><strong>bool empty() const</strong>。用于判断多边形是否为空。没有顶点时返回true，有顶点返回false；</li>
+  <li><strong>const Point&amp; operator[] (unsigned int index) const</strong>。用于返回index索引点；</li>
+  <li><strong>重载*运算符</strong>。返回path的指针；</li>
+  <li><strong>ClipperLib::Path::const_iterator begin() const</strong>。返回path向量头指针；</li>
+  <li><strong>ClipperLib::Path::const_iterator end() const</strong>。返回path向量尾指针；</li>
+  <li><strong>ClipperLib::Path::const_reference back() const</strong>。返回path向量尾元素的引用；</li>
+  <li><strong>const void* data() const</strong>。返回指向path向量头元素的指针；</li>
+  <li><strong>bool orientation() const</strong>。判断多边形方向，若为逆时针方向则返回true；</li>
 </ul>
 
 
@@ -169,10 +258,12 @@ gitment.render('container')
           <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</p>
 
           
-          <h2>3dprint(3)</h2>
+          <h2>3dprint(4)</h2>
           <ul class="arc-list">
             
-            <li>08/10/2018<a href="/3dprint/2018/10/08/CuraEngine-read-blog.html">CuraEngine开源程序解读1</a></li>
+            <li>04/01/2019<a href="/3dprint/2019/01/04/CuraEngine-mesh-blog.html">CuraEngine开源程序解读————面片读取</a></li>
+            
+            <li>08/10/2018<a href="/3dprint/2018/10/08/CuraEngine-read-blog.html">CuraEngine开源程序解读————工具类</a></li>
             
             <li>31/03/2018<a href="/3dprint/2018/03/31/CuraEngine-set-blog.html">CuraEngine开源程序配置</a></li>
             

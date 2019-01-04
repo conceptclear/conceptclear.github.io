@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CuraEngine开源程序————工具类"
+title:  "CuraEngine开源程序解读————工具类"
 date:   2018-10-08 10:35:56
 category: 3dprint
 ---
@@ -100,7 +100,7 @@ FMatrix3x3类是用来对三维浮点数点进行旋转变换的矩阵类。
 - **Point3 apply(const FPoint3& p) const**。Point p逆时针旋转并将旋转后的向量转为Point3类型。                                
 
 ## Date
-Date中定义了用来表示当前年月日的一个简单类Date。         
+Date中定义了用来表示当前年月日的一个简单类Date。                 
 ### Date类
 #### 成员变量
 存储年月日的三个int类型量，int year,month,day。                       
@@ -108,3 +108,55 @@ Date中定义了用来表示当前年月日的一个简单类Date。
 - **构造函数**。带参数的构造函数直接初始化年月日三个量，不带参数的构造函数为私有成员函数，默认全部初始化为-1。          
 - **static Date getDate()**。通过宏__DATE__获取编译时的时间。            
 - **std::string toStringDashed()**。将Date类中的数据转换为yyyy-mm-dd格式输出。         
+
+## algorithm
+algorithm文件主要是对C++的algorithm库的拓展，定义了一个用于返回vector向量排序索引的函数 **order**。                         
+
+## math
+math文件主要是对C++的cmath库的拓展。
+### 宏定义
+C++11开始不再对M_PI有宏定义，这里定义M_PI。                 
+### 全局函数
+- **static const float sqrt2**。全局常量，值为 $$\sqrt{2}$$。            
+- **inline T square(const T& a)**。计算模板类型的平方。                    
+- **inline unsigned int round_divide(unsigned int dividend, unsigned int divisor)**。计算dividend被divisor平分后最接近的的组数。                  
+- **inline unsigned int round_up_divide(unsigned int dividend, unsigned int divisor)**。计算平分后的组数，向上取整。                 
+
+## gettime
+gettime中定义了一个TimeKeeper类用于获取程序运行时间。                     
+### TimeKeeper类
+TimeKeeper类主要是用于获取程序段的运行时间。                        
+#### 成员函数
+double类型的startTime。          
+#### 成员函数
+- **构造函数**。调用restart函数。              
+- **double restart()**。返回当前时间与之前调用构造函数时的时间之差。        
+### 静态全局函数
+- **static inline double getTime()**。根据编译平台不同，采用不同的函数，返回当前时间，单位为s。                
+
+## NoCopy
+C++默认构造的类是具有拷贝构造函数的，但是有一些类在程序中不应该被拷贝，所以通过建立NoCopy类实现拷贝构造函数及=运算符重载的私有化。当需要定义不能被拷贝的类时，只需要继承NoCopy类即可以实现。
+
+## macros
+只定义了一个用于抑制编译器对未使用参数警告的宏。
+
+## polygon
+polygon中包含了几个用于保存二维多边形轮廓的类，构造了一个list容器保存point并定义了一个别名ListPolygon，构造了一个vector容器保存ListPolygon并定义别名为ListPolygons。
+
+### ConstPolygonRef
+构造了一个存储多边形轮廓的类，外轮廓定义为逆时针方向，内轮廓为顺时针方向，左边为x负方向，下为y负方向。            
+#### 成员变量
+定义了一个指向Path类型的*path指针，path类型定义在ClipperLib文件中，实际上是`std::vector< IntPoint >`的别名。        
+#### 成员函数
+- **构造函数**。传递一个const ClipperLib::Path类型的polygon地址；        
+- **禁用==运算符**。多边形比较非常复杂，这里直接禁用了；        
+- **禁用=运算符**。无法分配const对象；        
+- **size_t size() const**。用于返回多边形顶点数；        
+- **bool empty() const**。用于判断多边形是否为空。没有顶点时返回true，有顶点返回false；                            
+- **const Point& operator[] (unsigned int index) const**。用于返回index索引点；                            
+- **重载*运算符**。返回path的指针；          
+- **ClipperLib::Path::const_iterator begin() const**。返回path向量头指针；            
+- **ClipperLib::Path::const_iterator end() const**。返回path向量尾指针；            
+- **ClipperLib::Path::const_reference back() const**。返回path向量尾元素的引用；            
+- **const void* data() const**。返回指向path向量头元素的指针；          
+- **bool orientation() const**。判断多边形方向，若为逆时针方向则返回true；          
