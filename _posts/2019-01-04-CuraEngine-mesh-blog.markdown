@@ -6,7 +6,7 @@ category: 3dprint
 ---
 
 ## mesh                 
-mesh.h和mesh.cpp这两个文件主要定义了关于三角形网格三个类和这三个类的一些成员函数，分别是MeshVertex，MeshFace以及Mesh。           
+mesh中主要定义了关于三角形网格三个类和这三个类的一些成员函数，分别是MeshVertex，MeshFace以及Mesh。           
 
 ### 全局变量             
 `const int`类型的全局变量vertex_meld_distance，其值设定为MM2INT(0.03)；          
@@ -37,6 +37,8 @@ Mesh类是3D模型最基本的表示类，以MeshFace存储所有面的信息。
 `MeshFace`类型的vector容器faces，用于存储网格的所有面片数据；            
 `bool`类型的has_disconnected_faces，判定mesh中是否存在断开连接的面；                 
 `bool`类型的has_overlapping_faces，判定mesh中是否存在交叠的面；                 
+`Settings`类的对象settings，用于存储基础设定；                  
+`string`类型的mesh_name，用于存储读取进来的模型名称。                   
 #### 成员函数             
 - **构造函数**。构造函数中不直接输入模型的面片信息，而是对其一些设定值进行初始化，形参为其虚基类SettingsBaseVirtual类所构造对象的指针；                 
 - **int findIndexOfVertex(const Point3& v)**。私有成员函数，用于返回接近该Point的顶点索引，若不存在则新建一个索引并返回；寻找索引时，通过所搜寻点的hash值在vertex_hash_map中寻找，若寻找到同样hash值的存储点，通过判断寻找到的点和所搜寻点之间的距离是否超过设定的全局变量vertex_meld_distance来判断该点是否满足条件，若满足则返回所搜寻点的索引值，若不满足则在vertex_hash_map[hash]中添加一个当前顶点数量的值，在vertices容器中添加该点，并返回vertices.size() - 1；                 
@@ -49,3 +51,19 @@ Mesh类是3D模型最基本的表示类，以MeshFace存储所有面的信息。
 - **void expandXY(int64_t offset)**。用于拓展AABB包围盒。若offset为正，向外拓展offset；若为负，向内拓展；                         
 - **void offset(Point3 offset)**。用于平移整个模型，包括aabb和所有的顶点；                         
 - **int getFaceIdxWithPoints(int idx0, int idx1, int notFaceIdx, int notFaceVertexIdx) const**。用于根据当前面片索引以及对应边的顶点索引来确定所连接的另一个面片的索引，当多个面连接相同的边缘时，若连接一条边的面片数量为单数，则说明存在断开连接的面，若为双数则从idx1到idx0查看，返回下一个顶点构成的是一个逆时针面的面片；                         
+
+## MeshGroup
+MeshGroup中只定义了一个MeshGroup类，主要用于作为保存一个或者多个mesh。一个MeshGroup中保存的模型都是在一次打印中需要被打印的模型，所以在同一次打印中，只会有一个MeshGroup。          
+
+### MeshGroup类
+MeshGroup类是NoCopy类的继承类，所以不能直接进行拷贝。          
+#### 成员变量
+`Mesh`类型的vector容器meshes，用于存储多个mesh模型；           
+`Settings`类的对象settings，用于基础设定。                         
+#### 成员函数
+- **Point3 min() const**。用于返回AABB包围盒最小点；                         
+- **Point3 max() const**。用于返回AABB包围盒最大点；                        
+- **void clear()**。对meshes中每个mesh都进行clear；                  
+- **void finalize()**。主要是用于调整mesh的位置。                     
+#### 全局函数
+- **bool loadMeshIntoMeshGroup(MeshGroup* meshgroup, const char* filename, const FMatrix3x3& transformation, Settings& object_parent_settings)**。从文件中读取网格并将其存储在MeshGroup的meshes当中，其中meshgroup为网格存储位置，filename为文件名，transformation为对该模型所有顶点的变换矩阵，object_parent_settings为父类设置，函数返回是否成功读取面片模型并将其保存于meshgroup当中。该函数通过调用`loadMeshSTL_ascii`或`loadMeshSTL_binary`对ASCII格式或二进制格式的STL文件进行读取。                 

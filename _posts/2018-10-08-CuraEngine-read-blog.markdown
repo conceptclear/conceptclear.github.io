@@ -146,7 +146,7 @@ polygon中包含了几个用于保存二维多边形轮廓的类，构造了一�
 ### ConstPolygonRef
 构造了一个存储多边形轮廓的类，外轮廓定义为逆时针方向，内轮廓为顺时针方向，左边为x负方向，下为y负方向。            
 #### 成员变量
-定义了一个指向Path类型的*path指针，path类型定义在ClipperLib文件中，实际上是`std::vector< IntPoint >`的别名。        
+定义了一个指向Path类型的*path指针，path类型定义在ClipperLib文件中，实际上是`std::vector< IntPoint >`的别名。             
 #### 成员函数
 - **构造函数**。传递一个const ClipperLib::Path类型的polygon地址；        
 - **禁用==运算符**。多边形比较非常复杂，这里直接禁用了；        
