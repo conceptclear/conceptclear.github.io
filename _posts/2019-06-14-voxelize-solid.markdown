@@ -25,6 +25,8 @@ void FloodFill(int x, int y, int z)
     FloodFill(x,y,z+1)；
 }
 ```
+![floodfill](https://github.com/conceptclear/conceptclear.github.io/raw/master/images/voxelization/Recursive_Flood_Fill_4.gif "FloodFill")
+
 这种方法需要逐点进行搜索，效率比较低，而且由于函数递归需要压栈，系统资源是有限的,递归层次一旦多起来就很容易堆栈溢出。为了解决这个问题可以采用广度优先搜索的方法将迭代转换为循环通过队列来实现，6邻域的实现方法如下：
 ```
 void FloodFill_bfs(int x, int y, int z)
@@ -76,9 +78,69 @@ void FloodFill_bfs(int x, int y, int z)
 - 算法效率较低，资源消耗量大，易导致堆栈溢出，当然可以采用扫描线的方法来进一步优化算法，但是本质上还是漫水填充。
 
 ## 边界标志算法
-未完待续。。。
+边界标志算法，在有些地方也叫边缘填充算法，在二值二维图像中是求出多边形的每一条边与扫描线的交点，对交点右侧的所有像素颜色全部取反，按照顺序完成多边形所有边之后，就完成了多边形内部的填充。其原理是一个像素的值被求反两次之后就会恢复原值，即任意像素被求偶数次反之后保持原值，被求奇数次后取反。对于任意一个封闭的图形，如果点在图形内部，通过这个点引出一条射线，这条射线与原图形的边的相交次数必为奇数次（若在顶点上，则认为与两条边都相交）。                        
+将这个二维图像填充中使用的算法拓展到三维空间中，即首先对面片模型的每个三角面片都进行遍历，对于每一个三角面片，首先求解其在yoz平面上投影面的包围盒，并且根据所得到的包围盒计算得出所覆盖的体素中心范围。若所得到的体素中心范围不为空，则遍历所得到的所有体素列。对于每个位于包围盒中的体素中心首先对其和三角面片在yoz平面上的投影进行检测，判断其是否在投影三角形内部，可以采用碰撞检测中常用的分离轴（SAT)算法或是Schwarz[4]提出的改进算法来进行检测。这里可以采用一个简单的方法来判断，对于体素中心点P和投影三角形ABC，若点P在三角形ABC内部，有：                      
+- PA×PB，PB×PC，PC×PA所得值必为同号；                                
+- 若存在符号相反则点P必在三角形外部；                             
+- 若PA×PB=0，则点P在AB连线上，其中若PA=k*PB，k>0时，P在AB线段的延长线上，k<0时，P在AB线段上，k=0时，P与点A重合，以此类推；                
+实现方法如下：
+```
+int check_point_triangle(vec2 v0, vec2 v1, vec2 v2, vec2 point)
+{
+	 vec2 PA = point - v0;
+	 vec2 PB = point - v1;
+	 vec2 PC = point - v2;
+
+   //由于浮点数不是精确数，有可能不能正好达到0，所以不用等于0来进行判断
+	 float t1 = PA.x*PB.y - PA.y*PB.x;
+	 if (fabs(t1) < float_error && PA.x*PB.x <= 0 && PA.y*PB.y <= 0)
+		  return 1;//点在线段AB上
+
+	 float t2 = PB.x*PC.y - PB.y*PC.x;
+	 if (fabs(t2) < float_error && PB.x*PC.x <= 0 && PB.y*PC.y <= 0)
+		  return 2;//点在线段BC上
+
+	 float t3 = PC.x*PA.y - PC.y*PA.x;
+	 if (fabs(t3) < float_error && PC.x*PA.x <= 0 && PC.y*PA.y <= 0)
+		  return 3;//点在线段CA上
+
+	 if (t1*t2 > 0 && t1*t3 > 0)
+		  return 0;//点在三角形内部
+	 else
+		  return -1;//点在三角形外部
+}
+```
+若体素中心点在三角形内部，将该体素中心沿着x轴进行投影到三角面片上，对该投影点在体素空间中的映射体素q到原检测体素之间的所有体素值全部求反。遍历完所有面片之后，则完成了三维模型的实体体素化。                      
+与二维像素空间的填充相似，边界标志算法在边界位置上存在着一定的问题。在二维图形中，若凸多边形的顶点正好位于像素中心上，其所连接的边数必为偶数，这样映射到像素空间中时，顶点像素总会进行两次翻转，这样该顶点最后都会产生填充错误。从二维映射到三维时，若存在体素的中心经过某个面片的边，这样会导致该体素所对应的体素列重复填充，引起整条体素列的填充错误。而且若体素中心在某面片的顶点之上时，由于顶点连接的三角面片数是不确定的，这样会导致顶点所投影的体素列翻转也出现问题。                     
+针对于边重复所对应的体素列重复翻转的问题，可以采用光栅化中的左上填充规则（top-left rule），对于每个三角面片的边，只对其左边和上边对应的体素列进行翻转。左上填充规则实现起来其实比较容易，由于三角形顶点方向是一定的，可以通过对每条边两个顶点的高低来判断是不是左边或上边。对于逆时针排列的三个顶点，左边的边的第一个顶点一定比第二个顶点高，如果是上边的话则第一个顶点和第二个顶点一样高，但是第一个顶点一定在第二个顶点的右边。实现方法如下：
+```
+bool TopLeftEdge(vec2 v0, vec2 v1)
+{
+    return ((v1.y<v0.y)||(v1.y==v0.y&&v0.x>v1.x));
+}
+```
+检测三角形的三个顶点顺时针或逆时针实现起来也很容易，可以利用矢量叉乘来判断。                  
+对于三角形ABC,若AB*AC>0，则三角形ABC是逆时针的；                         
+对于三角形ABC,若AB*AC<0，则三角形ABC是顺时针的；                         
+对于三角形ABC,若AB*AC=0，则三点共线。                         
+实现方法如下：
+```
+bool checkCCW(vec2 v0, vec2 v1, vec2 v2)
+{
+	 vec2 e0 = v1 - v0;
+	 vec2 e1 = v2 - v0;
+	 float result = e0.x*e1.y - e1.x*e0.y;
+	  if (result > 0)
+		  return true;
+	  else
+		  return false;//共线的情况在之前排除掉
+}
+```
+
+
 
 ## Reference
 [1]https://zh.wikipedia.org/wiki/Flood_fill                     
-[2]https://en.wikipedia.org/wiki/Breadth-first_search
-[3]杨钦, 徐永安, 翟红英. 计算机图形学[M]. 清华大学出版社有限公司, 2005.
+[2]https://en.wikipedia.org/wiki/Breadth-first_search                     
+[3]杨钦, 徐永安, 翟红英. 计算机图形学[M]. 清华大学出版社有限公司, 2005.                
+[4]Schwarz M, Seidel H P. Fast parallel surface and solid voxelization on GPUs[J]. ACM Transactions on Graphics (TOG), 2010, 29(6): 179.                    
