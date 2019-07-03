@@ -25,7 +25,8 @@ void FloodFill(int x, int y, int z)
     FloodFill(x,y,z+1)；
 }
 ```
-![floodfill](https://github.com/conceptclear/conceptclear.github.io/raw/master/images/voxelization/Recursive_Flood_Fill_4.gif "FloodFill")
+具体如图所示：                         
+<div align="center"><img  src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/voxelization/Recursive_Flood_Fill_4.gif"></div>     
 
 这种方法需要逐点进行搜索，效率比较低，而且由于函数递归需要压栈，系统资源是有限的,递归层次一旦多起来就很容易堆栈溢出。为了解决这个问题可以采用广度优先搜索的方法将迭代转换为循环通过队列来实现，6邻域的实现方法如下：
 ```
@@ -78,11 +79,13 @@ void FloodFill_bfs(int x, int y, int z)
 - 算法效率较低，资源消耗量大，易导致堆栈溢出，当然可以采用扫描线的方法来进一步优化算法，但是本质上还是漫水填充。
 
 ## 边界标志算法
-边界标志算法，在有些地方也叫边缘填充算法，在二值二维图像中是求出多边形的每一条边与扫描线的交点，对交点右侧的所有像素颜色全部取反，按照顺序完成多边形所有边之后，就完成了多边形内部的填充。其原理是一个像素的值被求反两次之后就会恢复原值，即任意像素被求偶数次反之后保持原值，被求奇数次后取反。对于任意一个封闭的图形，如果点在图形内部，通过这个点引出一条射线，这条射线与原图形的边的相交次数必为奇数次（若在顶点上，则认为与两条边都相交）。                        
+边界标志算法，在有些地方也叫边缘填充算法，在二值二维图像中是求出多边形的每一条边与扫描线的交点，对交点右侧的所有像素颜色全部取反，按照顺序完成多边形所有边之后，就完成了多边形内部的填充。其原理是一个像素的值被求反两次之后就会恢复原值，即任意像素被求偶数次反之后保持原值，被求奇数次后取反。对于任意一个封闭的图形，如果点在图形内部，通过这个点引出一条射线，这条射线与原图形的边的相交次数必为奇数次（若在顶点上，则认为与两条边都相交），实现如下图所示：                        
+<div align="center"><img  src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/voxelization/edge_fill_2d.png"></div>     
 将这个二维图像填充中使用的算法拓展到三维空间中，即首先对面片模型的每个三角面片都进行遍历，对于每一个三角面片，首先求解其在yoz平面上投影面的包围盒，并且根据所得到的包围盒计算得出所覆盖的体素中心范围。若所得到的体素中心范围不为空，则遍历所得到的所有体素列。对于每个位于包围盒中的体素中心首先对其和三角面片在yoz平面上的投影进行检测，判断其是否在投影三角形内部，可以采用碰撞检测中常用的分离轴（SAT)算法或是Schwarz[4]提出的改进算法来进行检测。这里可以采用一个简单的方法来判断，对于体素中心点P和投影三角形ABC，若点P在三角形ABC内部，有：                      
 - PA×PB，PB×PC，PC×PA所得值必为同号；                                
 - 若存在符号相反则点P必在三角形外部；                             
 - 若PA×PB=0，则点P在AB连线上，其中若PA=k*PB，k>0时，P在AB线段的延长线上，k<0时，P在AB线段上，k=0时，P与点A重合，以此类推；                
+
 实现方法如下：
 ```
 int check_point_triangle(vec2 v0, vec2 v1, vec2 v2, vec2 point)
