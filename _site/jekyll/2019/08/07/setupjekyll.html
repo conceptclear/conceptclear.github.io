@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <head>
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?23d6c2df2c6b780f993da09793d10491";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="/images/favicon.ico" rel="shortcut icon" />
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title> windows下jekyll的配置 </title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1> Conceptclear </h1>
+        <h2>概念清楚吧</h2>
+        <a href="https://github.com/conceptclear/conceptclear.github.io" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+
+          <h1>windows下jekyll的配置</h1>
+<p class="meta"><b>Date:</b>07 August 2019
+  | <b>Number of words:</b>1317
+  | <b>Approximately reading time:</b>4 minutes</p>
+
+<p>jekyll是一个简单的免费的博客或者是静态网站的生成工具，不需要数据库的支持，而且可以很方便地部署在github上，这个网页就是用jekyll所配置生成的。在linux下jekyll配置非常方便，在Windows环境下会相对复杂，这篇博客记录一下如何在Windows 10的环境下配置jekyll。</p>
+
+<h2 id="ruby">Ruby</h2>
+<p>jekyll是基于ruby的一个软件，所以先要配置ruby。DevKit 是windows平台下编译和使用本地C/C++扩展包的工具。它就是用来模拟Linux平台下的make, gcc, sh来进行编译。ruby官方提供的windows下的安装包分为包含devkit和不含devkit的两种，当前可以直接安装推荐的<a href="https://rubyinstaller.org/downloads/">Ruby+Devkit 2.5.5-1 (x64)</a>。              <br />
+安装的时候需要将勾选添加到PATH选项（默认勾选），后续便于在命令行中使用。</p>
+<div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/jekyll/ruby_path.jpg" /></div>
+<p>安装完成如图所示：</p>
+<div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/jekyll/ruby_finish.jpg" /></div>
+<p>安装完之后检查ruby和gem的版本：</p>
+<div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/jekyll/ruby_check.jpg" /></div>
+
+<h2 id="rubygems">RubyGems</h2>
+<p>RubyGems（简称 gems）是一个用于对 Ruby组件进行打包的 Ruby 打包系统，类似于linux系统下的apt-get。由于各种原因，rubygems的<a href="rubygems.org">官网</a>访问非常缓慢，直接从命令行来安装jekyll很困难，国内有一个rubygems的<a href="http://gems.ruby-china.com/">镜像网站</a>，可以改变一下rubygems的源来提高速度。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/
+$ gem sources -l
+https://gems.ruby-china.com
+# 确保只有 gems.ruby-china.com
+</code></pre></div></div>
+<p>更改源之后更新一下rubygems</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gem update --system
+$ gem -v
+</code></pre></div></div>
+<p>如图所示：</p>
+<div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/jekyll/gem_check.jpg" /></div>
+
+<h2 id="jekyll">jekyll</h2>
+<p>安装好ruby和rubygems之后，就可以利用命令行通过rubygems来安装jekyll了。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install jekyll
+</code></pre></div></div>
+<p>安装完成可以测试一下</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll -v
+</code></pre></div></div>
+<p>如图所示：</p>
+<div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/jekyll/jekyll_check.jpg" /></div>
+
+<h2 id="运行">运行</h2>
+<p>都配置好之后，只需要按照jekyll官网上的运行方法，就可以在本地运行jekyll的静态网站进行调试了。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ $ gem install jekyll bundler
+~ $ jekyll new my-awesome-site
+~ $ cd my-awesome-site
+~/my-awesome-site $ bundle install
+~/my-awesome-site $ bundle exec jekyll serve
+</code></pre></div></div>
+<p>打开浏览器 http://localhost:4000 就可以本地查看生成的网页了，如图所示：</p>
+<div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/jekyll/local.jpg" /></div>
+
+<h2 id="问题">问题</h2>
+<p>jekyll生成出现问题的时候可以将Gemfile.lock文件删除，检查Gemfile文件之后重新生成，这样可以解决大部分的问题。</p>
+
+<h2 id="reference">Reference</h2>
+<p>[1] https://jekyllcn.com/                  <br />
+[2] https://github.com/mmistakes/minimal-mistakes/issues/1454                           <br />
+[3] https://github.com/rubygems/rubygems/issues/2058                      <br />
+[4] 百度百科                     <br />
+[5] https://gems.ruby-china.com/</p>
+
+
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: '2019-08-07 18:35:56 +0800',
+  owner: 'conceptclear',
+  repo: 'conceptclear.github.io',
+  oauth: {
+    client_id: 'a1812e9ad609dc70811c',
+    client_secret: 'f1ebf229475b995ad032d72d9e177ecf0b0219f9',
+  },
+})
+gitment.render('container')
+</script>
+
+
+        </section>
+
+        <aside id="sidebar">
+          <a href="http://conceptclear.cn" class="button">
+            <small>homepage</small>
+            主页
+          </a>
+
+          写点平时科研的时候会关注的问题
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</p>
+
+          
+          <h2>3dprint(4)</h2>
+          <ul class="arc-list">
+            
+            <li>04/01/2019<a href="/3dprint/2019/01/04/CuraEngine-mesh-blog.html">CuraEngine开源程序解读————面片读取</a></li>
+            
+            <li>08/10/2018<a href="/3dprint/2018/10/08/CuraEngine-read-blog.html">CuraEngine开源程序解读————工具类</a></li>
+            
+            <li>31/03/2018<a href="/3dprint/2018/03/31/CuraEngine-set-blog.html">CuraEngine开源程序配置</a></li>
+            
+            <li>02/02/2018<a href="/3dprint/2018/02/02/STL-model-blog.html">STL模型的读取</a></li>
+            
+          </ul>
+          
+          <h2>FEA(1)</h2>
+          <ul class="arc-list">
+            
+            <li>27/08/2018<a href="/fea/2018/08/27/FiniteAnalysis-basictheory-blog.html">有限元分析基础理论</a></li>
+            
+          </ul>
+          
+          <h2>MobileGame(1)</h2>
+          <ul class="arc-list">
+            
+            <li>07/10/2018<a href="/mobilegame/2018/10/07/MoblieGame-ArkOrder-blog.html">手游方舟指令捞UR脚本</a></li>
+            
+          </ul>
+          
+          <h2>voxelization(2)</h2>
+          <ul class="arc-list">
+            
+            <li>14/06/2019<a href="/voxelization/2019/06/14/voxelize-solid.html">三维模型的体素化————实体体素化</a></li>
+            
+            <li>31/05/2019<a href="/voxelization/2019/05/31/voxelize-surface.html">三维模型的体素化————表面体素化</a></li>
+            
+          </ul>
+          
+          <h2>jekyll(1)</h2>
+          <ul class="arc-list">
+            
+            <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">windows下jekyll的配置</a></li>
+            
+          </ul>
+          
+
+        </aside>
+      </div>
+    </div>
+
+  </body>
+</html>

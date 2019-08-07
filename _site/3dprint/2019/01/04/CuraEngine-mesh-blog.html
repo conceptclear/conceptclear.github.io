@@ -42,11 +42,11 @@
 
           <h1>CuraEngine开源程序解读————面片读取</h1>
 <p class="meta"><b>Date:</b>04 January 2019
-  | <b>Number of words:</b>2461
-  | <b>Approximately reading time:</b>8 minutes</p>
+  | <b>Number of words:</b>3230
+  | <b>Approximately reading time:</b>10 minutes</p>
 
 <h2 id="mesh">mesh</h2>
-<p>mesh.h和mesh.cpp这两个文件主要定义了关于三角形网格三个类和这三个类的一些成员函数，分别是MeshVertex，MeshFace以及Mesh。</p>
+<p>mesh中主要定义了关于三角形网格三个类和这三个类的一些成员函数，分别是MeshVertex，MeshFace以及Mesh。</p>
 
 <h3 id="全局变量">全局变量</h3>
 <p><code class="highlighter-rouge">const int</code>类型的全局变量vertex_meld_distance，其值设定为MM2INT(0.03)；</p>
@@ -79,7 +79,9 @@
 <code class="highlighter-rouge">MeshVertex</code>类型的vector容器vertices，用于存储网格的所有顶点数据；            <br />
 <code class="highlighter-rouge">MeshFace</code>类型的vector容器faces，用于存储网格的所有面片数据；          <br />
 <code class="highlighter-rouge">bool</code>类型的has_disconnected_faces，判定mesh中是否存在断开连接的面；               <br />
-<code class="highlighter-rouge">bool</code>类型的has_overlapping_faces，判定mesh中是否存在交叠的面；</p>
+<code class="highlighter-rouge">bool</code>类型的has_overlapping_faces，判定mesh中是否存在交叠的面；               <br />
+<code class="highlighter-rouge">Settings</code>类的对象settings，用于存储基础设定；                <br />
+<code class="highlighter-rouge">string</code>类型的mesh_name，用于存储读取进来的模型名称。</p>
 <h4 id="成员函数-1">成员函数</h4>
 <ul>
   <li><strong>构造函数</strong>。构造函数中不直接输入模型的面片信息，而是对其一些设定值进行初始化，形参为其虚基类SettingsBaseVirtual类所构造对象的指针；</li>
@@ -93,6 +95,25 @@
   <li><strong>void expandXY(int64_t offset)</strong>。用于拓展AABB包围盒。若offset为正，向外拓展offset；若为负，向内拓展；</li>
   <li><strong>void offset(Point3 offset)</strong>。用于平移整个模型，包括aabb和所有的顶点；</li>
   <li><strong>int getFaceIdxWithPoints(int idx0, int idx1, int notFaceIdx, int notFaceVertexIdx) const</strong>。用于根据当前面片索引以及对应边的顶点索引来确定所连接的另一个面片的索引，当多个面连接相同的边缘时，若连接一条边的面片数量为单数，则说明存在断开连接的面，若为双数则从idx1到idx0查看，返回下一个顶点构成的是一个逆时针面的面片；</li>
+</ul>
+
+<h2 id="meshgroup">MeshGroup</h2>
+<p>MeshGroup中只定义了一个MeshGroup类，主要用于作为保存一个或者多个mesh。一个MeshGroup中保存的模型都是在一次打印中需要被打印的模型，所以在同一次打印中，只会有一个MeshGroup。</p>
+
+<h3 id="meshgroup类">MeshGroup类</h3>
+<p>MeshGroup类是NoCopy类的继承类，所以不能直接进行拷贝。</p>
+<h4 id="成员变量-3">成员变量</h4>
+<p><code class="highlighter-rouge">Mesh</code>类型的vector容器meshes，用于存储多个mesh模型；         <br />
+<code class="highlighter-rouge">Settings</code>类的对象settings，用于基础设定。</p>
+<h4 id="成员函数-2">成员函数</h4>
+<ul>
+  <li><strong>Point3 min() const</strong>。用于返回AABB包围盒最小点；</li>
+  <li><strong>Point3 max() const</strong>。用于返回AABB包围盒最大点；</li>
+  <li><strong>void clear()</strong>。对meshes中每个mesh都进行clear；</li>
+  <li><strong>void finalize()</strong>。主要是用于调整mesh的位置。
+    <h4 id="全局函数-1">全局函数</h4>
+  </li>
+  <li><strong>bool loadMeshIntoMeshGroup(MeshGroup* meshgroup, const char* filename, const FMatrix3x3&amp; transformation, Settings&amp; object_parent_settings)</strong>。从文件中读取网格并将其存储在MeshGroup的meshes当中，其中meshgroup为网格存储位置，filename为文件名，transformation为对该模型所有顶点的变换矩阵，object_parent_settings为父类设置，函数返回是否成功读取面片模型并将其保存于meshgroup当中。该函数通过调用<code class="highlighter-rouge">loadMeshSTL_ascii</code>或<code class="highlighter-rouge">loadMeshSTL_binary</code>对ASCII格式或二进制格式的STL文件进行读取。</li>
 </ul>
 
 
@@ -150,6 +171,22 @@ gitment.render('container')
           <ul class="arc-list">
             
             <li>07/10/2018<a href="/mobilegame/2018/10/07/MoblieGame-ArkOrder-blog.html">手游方舟指令捞UR脚本</a></li>
+            
+          </ul>
+          
+          <h2>voxelization(2)</h2>
+          <ul class="arc-list">
+            
+            <li>14/06/2019<a href="/voxelization/2019/06/14/voxelize-solid.html">三维模型的体素化————实体体素化</a></li>
+            
+            <li>31/05/2019<a href="/voxelization/2019/05/31/voxelize-surface.html">三维模型的体素化————表面体素化</a></li>
+            
+          </ul>
+          
+          <h2>jekyll(1)</h2>
+          <ul class="arc-list">
+            
+            <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">windows下jekyll的配置</a></li>
             
           </ul>
           
