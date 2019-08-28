@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "STL模型的读取"
+title:  "STL模型的读写"
 date:   2018-2-2 15:40:56
 category: 3dprint
 ---
@@ -50,8 +50,19 @@ REAL32[3]//Normalvector//法线矢量
 REAL32[3]//Vertex1//顶点1坐标
 REAL32[3]//Vertex2//顶点2坐标
 REAL32[3]//Vertex3//顶点3坐标
-UINT16//Attributebytecountend//文件属性统计
+UINT16//Attribute byte count//文件属性统计
 ```
+对于二进制格式的STL文件，每个三角形面片末尾的两个字节可以用来存储15位的RGB颜色信息，对于VisCAM和SolidView软件：               
+- 第0位到第4位，用于表示蓝色的强度等级（0-31）；                   
+- 第5位到第9位，用于表示绿色的强度等级（0-31）；                     
+- 第10位到第14位，用于表示红色的强度等级（0-31）；                   
+- 第15位用于表示颜色的有效性，颜色有效则为1，无效则为0。                     
+对于Material Magics软件，对于颜色强度的排序则与之前正好相反：               
+- 第0位到第4位，用于表示红色的强度等级（0-31）；                   
+- 第5位到第9位，用于表示绿色的强度等级（0-31）；                     
+- 第10位到第14位，用于表示蓝色的强度等级（0-31）；                   
+- 第15位为0表示该面片有自己独特的颜色，为1则表示使用每个面片的颜色。                
+由于两种表达方式正好相反，对于通用软件来说无法区分它们，当然对于大多数3d打印软件来说，颜色属性并不重要。     
 
 ## 两种格式区别
 读取STL文件首先要对文件进行分类，二进制文件和ASCII格式文件虽然信息量是相等的，但是读取方法不相同，这样判断一个STL文件到底是二进制文件还是ASCII格式文件就非常重要。
@@ -129,7 +140,7 @@ do
 }while(!in.eof());
 ```
 ## 读取二进制格式文件
-读取二进制格式的文件时，相较于读取ASCII格式文件，在读取函数中需要添加_ios::binary_，代码如下：
+读取二进制格式的文件时，相较于读取ASCII格式文件，在读取函数中需要添加ios::binary，代码如下：
 ```
 ifstream in;
 in.open(cfilename, ios::in | ios::binary);
@@ -157,7 +168,98 @@ for (int i = 0; i < unTriangles; i++)
     }
 }
 ```
+
+## 写ASCII格式文件
+当具有所有面片的顶点信息时，可以比较容易将面片信息存储为STL文件。ASCII格式在前文已经讨论过，只需要对每个面片进行遍历，并且将面片的顶点数据按照格式写入文件即可，利用glm库来处理向量叉乘，代码如下：
+```
+string filename_output = filename + string(".stl");
+ofstream output(filename_output.c_str(), ios_base::out);
+
+output << "solid " << filename << endl;
+
+vector<Mesh>::iterator mesh_iter;
+for (mesh_iter = meshgroup->meshes.begin(); mesh_iter != meshgroup->meshes.end(); mesh_iter++)
+{
+  vector<MeshFace>::iterator face_iter;
+  for (face_iter = mesh_iter->faces.begin(); face_iter != mesh_iter->faces.end(); face_iter++)
+  {
+    glm::vec3 v0 = Point3toGlm(mesh_iter->vertices[face_iter->vertex_index[0]].p);
+    glm::vec3 v1 = Point3toGlm(mesh_iter->vertices[face_iter->vertex_index[1]].p);
+    glm::vec3 v2 = Point3toGlm(mesh_iter->vertices[face_iter->vertex_index[2]].p);
+
+    glm::vec3 e0 = v1 - v0;
+    glm::vec3 e1 = v2 - v1;
+    // Normal vector pointing up from the triangle
+    glm::vec3 n = glm::normalize(glm::cross(e0, e1));
+
+    output << "   " << "facet normal " << n.x << " " << n.y << " " << n.z << endl;
+    output << "      " << "outer loop" << endl;
+    output << "         " << "vertex" << " " << v0.x << " " << v0.y << " " << v0.z << endl;
+    output << "         " << "vertex" << " " << v1.x << " " << v1.y << " " << v1.z << endl;
+    output << "         " << "vertex" << " " << v2.x << " " << v2.y << " " << v2.z << endl;
+    output << "      " << "endloop" << endl;
+    output << "   " << "endfacet" << endl;
+  }
+}
+output << "endsolid" << endl;
+output.close();
+```
+
+## 写二进制格式文件
+相较于写ASCII格式文件，二进制格式相对麻烦一点，由于二进制格式文件在文件开始处就需要将面片数量写入文件，所以需要在遍历面片之前先读取面片数量的数据，代码如下：
+```
+string filename_output = filename + string(".stl");
+ofstream output(filename_output.c_str(), ios_base::out | ios_base::binary);
+
+output.write(filename.c_str(),80);
+
+vector<Mesh>::iterator mesh_iter;
+int facetnum = 0;
+for (mesh_iter = meshgroup->meshes.begin(); mesh_iter != meshgroup->meshes.end(); mesh_iter++)
+{
+  facetnum += mesh_iter->faces.size();
+}
+output.write((char*)&facetnum, 4);
+
+for (mesh_iter = meshgroup->meshes.begin(); mesh_iter != meshgroup->meshes.end(); mesh_iter++)
+{
+  vector<MeshFace>::iterator face_iter;
+  for (face_iter = mesh_iter->faces.begin(); face_iter != mesh_iter->faces.end(); face_iter++)
+  {
+    glm::vec3 v0 = Point3toGlm(mesh_iter->vertices[face_iter->vertex_index[0]].p);
+    glm::vec3 v1 = Point3toGlm(mesh_iter->vertices[face_iter->vertex_index[1]].p);
+    glm::vec3 v2 = Point3toGlm(mesh_iter->vertices[face_iter->vertex_index[2]].p);
+
+    glm::vec3 e0 = v1 - v0;
+    glm::vec3 e1 = v2 - v1;
+    // Normal vector pointing up from the triangle
+    glm::vec3 n = glm::normalize(glm::cross(e0, e1));
+
+    output.write((char*)&n.x, 4);
+    output.write((char*)&n.y, 4);
+    output.write((char*)&n.z, 4);
+
+    output.write((char*)&v0.x, 4);
+    output.write((char*)&v0.y, 4);
+    output.write((char*)&v0.z, 4);
+
+    output.write((char*)&v1.x, 4);
+    output.write((char*)&v1.y, 4);
+    output.write((char*)&v1.z, 4);
+
+    output.write((char*)&v2.x, 4);
+    output.write((char*)&v2.y, 4);
+    output.write((char*)&v2.z, 4);
+
+    output.write((char*)("  "), 2);//颜色信息，这里不需要
+  }
+}
+output.close();
+```
+
+
 ## Reference
 [1]严梽铭, 钟艳如. 基于VC++和OpenGL的STL文件读取显示[J]. 计算机系统应用, 2009, 18(3):172-175.       
 [2]https://baike.baidu.com/item/stl%E6%A0%BC%E5%BC%8F/3511640?fr=aladdin       
-[3]http://blog.csdn.net/chinamming/article/details/16918643
+[3]http://blog.csdn.net/chinamming/article/details/16918643                
+[4]https://en.wikipedia.org/wiki/STL_(file_format)
