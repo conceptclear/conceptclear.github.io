@@ -178,11 +178,11 @@ Loop
 - 由于宝具没打死需要补刀导致开环程序出现问题；
 - 由于按键精灵后台识图效果不好，所以必须将网易mumu模拟器一直显示在屏幕上从而拾取屏幕区域图片；
 - 由于不知道是网易mumu的问题还是按键精灵的问题，将程序最小化之后有一定几率脚本无法运行；
-- 为了保证脚本的稳定性，很多地方放出了一定的时间余量，并不能以最高效率完成刷本。
+- 为了保证脚本的稳定性，很多地方放出了一定的时间余量，并不能以最高效率完成刷本。                       
 不过尽管存在一定的问题，总体上还是很大程度上解放了双手，提高了刷本的效率。
 
 ## Reference
 [1]百度百科       
-[2]http://zy.anjian.com/?action-study
-[3]http://conceptclear.cn/mobilegame/2018/10/07/MoblieGame-ArkOrder-blog.html
-[4]http://conceptclear.cn/mobilegame/2019/10/02/homedream.html
+[2]http://zy.anjian.com/?action-study                               
+[3]http://conceptclear.cn/mobilegame/2018/10/07/MoblieGame-ArkOrder-blog.html                          
+[4]http://conceptclear.cn/mobilegame/2019/10/02/homedream.html                      
