@@ -1,0 +1,186 @@
+---
+layout: post
+title:  "三维模型的体素化————表面体素化"
+date:   2020-02-25 10:35:56
+category: CG
+---
+
+体素（voxel）是体积像素（volume pixel）的简称，类似于二维空间中的最小单位————像素，体素是三维空间分割中的最小单位，被广泛应用于三维成像、科学数据与医学影像等领域。三维模型的体素化本质上就是对模型所在的三维空间进行离散化从而分割成正方体或长方体网格，并判断每个网格是否处于模型上（表面体素化）或模型内部（实体体素化）。由于计算机中对于三维图像的处理几乎都是基于三角面片的，三维模型的保存格式也基本都以三角面片为最小单元进行储存，三维模型的表面体素化也就可以转化成为空间中每个三角面片的体素化。                                    
+
+## 体素空间
+3D离散空间$$Z^3$$可以表示为3D空间中的一组网格点，离散空间中任意点$$P$$都可以用其笛卡尔坐标$$P(x,y,z)$$来表示，体素空间即为其中一种。为了能够完全表示三维模型，通常采用模型的AABB包围盒来构建体素空间$$N^3$$，并根据分辨率N将整个AABB包围盒按照长宽高划分为$$N \times N \times N$$个体素cell，通过设置flag记录每个体素cell与三维模型的关系（在模型内部，在模型外部，在模型上）。对于表面体素空间，每个体素cell的flag则只需分辨与模型是相交还是分离即可，不必再区分在模型内部或是外部，即
+
+$$
+flag=\left\{
+  \begin{array}
+    00,  &  apart \\ 1,  &  intersection
+   \end{array}
+   \right.
+$$
+
+每个体素cell的几何尺寸可以通过以下公式进行计算：
+
+$$
+cell_x=\frac{L_x}{N}   \qquad
+cell_y=\frac{L_y}{N}   \qquad
+cell_z=\frac{L_z}{N}    
+$$
+
+其中$$cell_x,cell_y,cell_z$$分别为体素的长度宽度和高度，$$L_x,L_y,L_z$$分别为AABB包围盒的长度宽度和高度。            
+为了加快运算速度并简化算法，体素空间以原点为起点构建在第一象限内，对于原三维模型的的任意点$$P(x_0,y_0,z_0)$$,其对应的体素$$P_v(v_{x_0},v_{y_0},v_{z_0})$$为
+
+$$
+v_{x_0}=ceil(\frac{x_0-x_min}{L_x}N)    \\
+v_{y_0}=ceil(\frac{y_0-y_min}{L_y}N)    \\
+v_{z_0}=ceil(\frac{z_0-z_min}{L_z}N)    
+$$
+
+## 体素信息的存储
+一般来说，体素如同像素并不会直接存储它们在空间中位置的数据，但是可以通过某些方法来求解出坐标。实际上，如果每个体素都保存自己的坐标信息，当分辨率足够高时，体素信息值会变得非常巨大。当不使用八叉树的存储方法而是每个空间体素都进行储存，假设在计算机处理中以整型变量int来存储每个体素的三个方向坐标，每个int为4个字节，这样每个体素光是位置信息就需要12字节来进行存储，即96byte，若再使用一个整型变量来储存当前体素是否在模型内部，则单个体素就需要128byte的存储空间，对于分辨率为1024x1024x1024的体素空间来说，则需要128GB的存储空间，这么大的空间用来存储信息明显是过剩的。                           
+对于每个体素来说，实际上只需要1位的数据来存储信息，即在模型上和不在模型上两个状态，一个整型数据有32位既可以保存32个体素的信息，这样对于分辨率为1024x1024x1024的体素空间来说，只需要1G的存储空间，一般的PC基本上都可以实现1G内存的调用。                  
+具体如何分配这32位数据分别存储哪些位置的点方法有很多，比较简单的方法是首先将3维空间的体素坐标降维到1维坐标，如下所示：                  
+
+$$
+location = x + (y*gridsize) + (z*gridsize*gridsize)
+$$
+
+其中，x、y、z分别为空间中体素坐标，gridsize为体素空间的分辨率，这里简化处理将x、y、z看作相同的分辨率，location即为降维之后的坐标；int数据类型一般是32位，最大可以存储的数据为2^31-1，按照这样降维处理的话最大的分辨率只能取到1024^3，一般情况下是足够了。             
+得到了具体体素的位置就可以去存储体素信息的内存中去搜寻该体素的信息了，但是正如之前描述，并不是每个体素都占用1个数据结构来存储，实际上每32个体素占用了一个int的信息，这里采取的办法如下图所示，location除以32所得到的数值int_location即为存储该体素信息的数据位置，再利用位与操作来确定具体信息。
+![voxel_location](https://github.com/conceptclear/conceptclear.github.io/raw/master/images/voxelization/voxel_location.png "Voxel_location")
+
+为了进一步的缩小体素信息所占内存空间，可以采用八叉树（octree）这种数据结构来储存数据。八叉树结构在计算机图形学中有着广泛的应用，简单来说就是对于每个节点判断其是否为灰节点（节点与三维模型表面相交），如果是则继续往下划分直到所设定精度，若不是灰节点，则停止继续往下划分。这样可以比较大幅度的减少内存的占用，但是对于体素模型后续的操作带来了一定的困难。
+
+## 表面体素化
+对于由三角面片所构成模型的表面体素化可以等效于每个面片的体素化最终求并集。针对三角面片的体素化许多研究人员都提出了不同的算法，比较普遍的算法主要分为以下两种：                     
+- 对三角面片的顶点，边线以及三角面分别体素化；                     
+- 对每个已经划分好的体素判断与三角面片是否相交。                        
+
+两种方法各有优缺点，对三角面片顶点边线和面分别体素化计算量小，但是判断复杂且很容易造成模型不水密，无法对体素化后的模型的分离性以及体素数量最小化进行保证；对每个划分好的体素与三角面片进行求交计算量大，很多体素都要对不同的面片进行重复计算是否求交，会造成较大的计算资源浪费，但是在算法正确的情况下可以保证模型的水密性和数量最小性。为了保证体素化后模型的质量，本文采取后面这种方法进行体素化。                        
+针对不同的体素化需求，如下图所示，表面体素化[1]又可以分为以下两种：
+- conservative。保守的体素化需求需要识别所有与三角面片存在交点的体素。
+- 6-separating。并不需要所有与三角面片存在交点的体素，只需要相对稀薄的保证边界体素6-邻域水密的即可。                       
+
+<div align="center"><img  src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/voxelization/voxelization_type.png"></div>     
+
+相比较而言，conservative的方式应用更为广泛，但是6-separating的方式具有更少的体素数量，在都可以保证水密和最小性的情况下可以根据不同的需求采取不同的体素化方式。                       
+
+## 三角面片与体素的相交测试
+不管是conservative还是6-separating的方式，三角面片与体素长方体的相交测试都是非常重要的一个环节。本文介绍一下分离轴算法[2]以及Michael Schwarz[3]所提出的用于检测二者相交的算法。
+
+### 分离轴（SAT）算法
+分离轴算法（separating axis theorem，SAT）被广泛运用于多边形相交的检测之中。对于两个凸多面体A,B，若存在任意一条平行于A，B某一面片法向量的轴线或A,B任意两条边的向量叉乘所得到的轴线，使得两个多面体在该轴线上的投影不相交，则这两个多面体不相交。                  
+如下图所示对于三角面片和AABB包围盒划分的体素来说，体素可以通过中心$$\boldsymbol{c}$$和长度一半的向量$$\boldsymbol{h}$$来表示，三角面片则可以通过三个顶点$$\boldsymbol{u_0,u_1,u_2}$$来表示。为了简化测试，将体素中心移动到原点，则三角面片的坐标会变为$$\boldsymbol{v_i}=\boldsymbol{u_i}-\boldsymbol{c},i\in\{0,1,2\}$$。由于体素是通过AABB包围盒划分生成的，所以三个向量的方向与坐标轴一致，若与坐标轴不一致时还需要进行旋转变换。
+
+<div align="center"><img  src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/voxelization/SAT_transformation.png"></div>                     
+
+基于SAT算法，检测二者是否相交需要检测以下13个轴：
+- 坐标轴的三个基向量，共3个，$$\boldsymbol{e}_0(1,0,0),\boldsymbol{e}_1(0,1,0),\boldsymbol{e}_2(0,0,1)$$;                       
+- 三角面片的法向量，共1个，$$\boldsymbol{N}=\boldsymbol{v}_0\times \boldsymbol{v}_1$$;                    
+- 三角面片的三个边构成的向量与三个基向量叉乘的向量，共9个，$$\boldsymbol{a_{ij}}=\boldsymbol{e_i}\times \boldsymbol{v_j}$$。                   
+
+若其中某一个轴投影下二者不相交，则说明二者在三维空间内不相交。
+
+### Michael Schwarz所提出算法
+给定三角面片$$\Gamma$$，其三个顶点分别为$$\boldsymbol{v_0,v_1,v_2}$$，体素$$B$$最小顶点为$$\boldsymbol{p}$$，最大顶点为$$\boldsymbol{p}+\boldsymbol{\Delta p}$$，若$$B$$与$$\Gamma$$相交，则有：
+- $$\Gamma$$所在平面与$$B$$相交；                
+- $$\Gamma$$与$$B$$在xy，yz，zx三个平面上的投影都相交。                       
+
+判断$$\Gamma$$所在平面是否与$$B$$相交可以利用Haines和Wallace[4]所提出的方法，令$$\Gamma$$所在平面的法向量为$$\boldsymbol{n}$$，设critical point $$\boldsymbol{c}$$
+
+$$
+\boldsymbol{c}=
+{\left(
+  \left\{
+    \begin{array}
+      0\Delta p_x,  &  n_x>0 \\ 0,  &  n_x\le 0
+     \end{array}
+    \right\},
+    \left\{
+      \begin{array}
+        0\Delta p_y,  &  n_y>0 \\ 0,  &  n_y\le 0
+       \end{array}
+      \right\},
+      \left\{
+        \begin{array}
+          0\Delta p_z,  &  n_z>0 \\ 0,  &  n_z\le 0
+         \end{array}
+        \right\}
+  \right)}^T
+$$
+
+只需要检测点$$\boldsymbol{p}+\boldsymbol{c}$$和其对应点$$\boldsymbol{p}+\boldsymbol{\Delta p} -\boldsymbol{c}$$是否在平面$$\Gamma$$的两侧即可，即判断是否满足：
+
+$$
+(\boldsymbol{n}\cdot\boldsymbol{p}+d_1)(\boldsymbol{n}\cdot\boldsymbol{p}+d_2)\leq 0
+$$
+
+其中，对于conservative的方法来说，
+
+$$
+d_1=\boldsymbol{n}\cdot(\boldsymbol{c}-\boldsymbol{v}_0)  \\
+d_2=\boldsymbol{n}\cdot(\boldsymbol{\Delta p}-\boldsymbol{c}-\boldsymbol{v}_0)  \\
+$$
+
+若满足条件，则说明$$\Gamma$$所在平面与$$B$$相交。                 
+
+对于三个平面的二维投影相交的判定，可以通过Pineda[5]的边缘函数来进行。和之前判断点是否在平面一侧类似，这里需要判断体素投影的测试点（conservative和6-separating不同）是否在投影三角形内部，以xy平面的投影为例，需要计算每条边的法向量$$\boldsymbol{n}_{e_i}^{xy}$$以及距离$$d_{e_i}^{xy}$$，其中，对于conservative的方法来说
+
+$$
+\boldsymbol{n}_{e_i}^{xy}=(-e_{i,y},e_{i,x})^{T}\cdot\left\{
+  \begin{array}
+    01,  &  n_x\ge0 \\ -1,  &  n_x< 0
+   \end{array}
+  \right\}   \\
+d_{e_i}^{xy}=-\boldsymbol{n}_{e_i}^{xy}\cdot v_{i,xy}+max\{0,\Delta p_x\boldsymbol{n}_{e_{i,x}}^{xy}\}+max\{0,\Delta p_y\boldsymbol{n}_{e_{i,y}}^{xy}\}
+$$
+
+其中，$$\boldsymbol{e}_i$$表示三角面片上第i个顶点指向第i+1 mod 3个顶点的向量，即
+
+$$
+\boldsymbol{e}_i=\boldsymbol{v}_{i+1 mod 3}-\boldsymbol{v}_i
+$$
+
+上述公式中，下标的逗号之后的字母表示该向量的x,y或z分量，$$v_{i,xy}$$表示第i个顶点在xy平面的分量。对三角面片在xy平面投影的三条边依次判断
+
+$$
+\boldsymbol{n}_{e_i}^{xy}\cdot\boldsymbol{p}_{xy}+d_{e_i}^{xy} \ge 0
+$$
+
+若三条边都满足，则说明在xy投影面上二者相交。同理再对yz，zx平面做投影，一共测试9次，若都满足条件则可以证明二者相交。
+
+对于6-separating的情况，根据Huang[1]提出的方法，只需要对距离进行修改即可，即
+
+$$
+d_1=\boldsymbol{n}\cdot(\frac{1}{2}\boldsymbol{\Delta p}-\boldsymbol{v}_0)+\frac{1}{2}\boldsymbol{\Delta p_m}|\boldsymbol{n}_m|  \\
+d_2=\boldsymbol{n}\cdot(\frac{1}{2}\boldsymbol{\Delta p}-\boldsymbol{v}_0)-\frac{1}{2}\boldsymbol{\Delta p_m}|\boldsymbol{n}_m|  \\
+$$
+
+其中，
+
+$$
+m= arg max|n_j|   \qquad j={x,y,z}
+$$
+
+同样，投影下的距离$$d_{e_i}^{xy}$$可以表示为
+
+$$
+d_{e_i}^{xy}=\boldsymbol{n}_{e_i}^{xy}\cdot(\frac{1}{2}\boldsymbol{\Delta p}_{xy}-\boldsymbol{v}_{i,xy})+\frac{1}{2}\boldsymbol{\Delta p}_{n}|\boldsymbol{n}_{e_{i,n}^{xy}}|
+$$
+
+其中，
+
+$$
+m= arg max|\boldsymbol{n}_{e_{i,j}^{xy}}|   \qquad j={x,y}
+$$
+
+<div align="center"><img  src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/voxelization/voxelization_2dcheck.png"></div>      
+
+## 表面体素化实现
+根据前文描述方法，完成三角面片与体素的相交测试之后，对于表面体素化只需要将所有相交的体素求一个并集即可，不再需要进行后续操作。在检测所有三角面片与体素时，可以通过遍历三角面片来与体素求交，也可以通过遍历体素来和三角面片求交。当体素数量很少而三角面片数量较多的时候，推荐使用遍历体素的方式，反之亦然。
+
+## Reference
+[1] Huang J, Yagel R, Filippov V, et al. An accurate method for voxelizing polygon meshes[C]//IEEE Symposium on Volume Visualization (Cat. No. 989EX300). Ieee, 1998: 119-126.                                      
+[2] Akenine-Möllser T. Fast 3D triangle-box overlap testing[J]. Journal of graphics tools, 2001, 6(1): 29-33.                             
+[3] Michael, Schwarz, Hans-Peter, et al. Fast parallel surface and solid voxelization on GPUs[J]. ACM Transactions on Graphics, 2010.                                         
+[4] Haines E A, Wallace J R. Shaft culling for efficient ray-cast radiosity[M]//Photorealistic rendering in computer graphics. Springer, Berlin, Heidelberg, 1994: 122-138.                                       
+[5] Pineda, Juan. A parallel algorithm for polygon rasterization[C]// ACM, 1988:17-20.
