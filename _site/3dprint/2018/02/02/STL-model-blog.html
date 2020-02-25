@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  <head>
-    <script>
+
+<head>
+  <script>
     var _hmt = _hmt || [];
     (function() {
       var hm = document.createElement("script");
@@ -11,39 +12,39 @@
       s.parentNode.insertBefore(hm, s);
     })();
     </script>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href="/images/favicon.ico" rel="shortcut icon" />
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/stylesheets/print.css" media="print" />
+  <meta charset='utf-8'>
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="/images/favicon.ico" rel="shortcut icon" />
+  <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/stylesheet.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="/stylesheets/pygment_trac.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="/stylesheets/print.css" media="print" />
 
-    <!--[if lt IE 9]>
+  <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <title> STL模型的读取 </title>
-  </head>
+  <title> STL模型的读写 </title>
+</head>
 
-  <body>
-    <header>
-      <div class="inner">
-        <h1> Conceptclear </h1>
-        <h2>概念清楚吧</h2>
-        <a href="https://github.com/conceptclear/conceptclear.github.io" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+<body>
+  <header>
+    <div class="inner">
+      <h1> Conceptclear </h1>
+      <h2>概念清楚吧</h2>
+      <a href="https://github.com/conceptclear/conceptclear.github.io" class="button"><small>View project on</small> GitHub</a>
+    </div>
+  </header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
+  <div id="content-wrapper">
+    <div class="inner clearfix">
+      <section id="main-content">
 
-          <h1>STL模型的读取</h1>
+        <h1>STL模型的读写</h1>
 <p class="meta"><b>Date:</b>02 February 2018
-  | <b>Number of words:</b>3178
-  | <b>Approximately reading time:</b>10 minutes</p>
+  | <b>Number of words:</b>6629
+  | <b>Approximately reading time:</b>19 minutes</p>
 
 <p>STL模型作为一种存储三角面片的三维模型格式现在广泛运用于3d打印行业中。一般来说用3d打印的商业软件可以直接读取模型并且进行后续的切片等操作，但是由于商业软件的封装特点，往往难以得到所需要的信息。实际上STL模型是一种很简单的模型，他只存储了模型的三角面片的三个顶点坐标和法向量坐标，面与面之间的拓扑关系等是没有存储在内的，这样虽然减少了模型的数据量，但是在后续打印中也遗留下一定的困难。</p>
 
@@ -88,8 +89,21 @@ REAL32[3]//Normalvector//法线矢量
 REAL32[3]//Vertex1//顶点1坐标
 REAL32[3]//Vertex2//顶点2坐标
 REAL32[3]//Vertex3//顶点3坐标
-UINT16//Attributebytecountend//文件属性统计
+UINT16//Attribute byte count//文件属性统计
 </code></pre></div></div>
+<p>对于二进制格式的STL文件，每个三角形面片末尾的两个字节可以用来存储15位的RGB颜色信息，对于VisCAM和SolidView软件：</p>
+<ul>
+  <li>第0位到第4位，用于表示蓝色的强度等级（0-31）；</li>
+  <li>第5位到第9位，用于表示绿色的强度等级（0-31）；</li>
+  <li>第10位到第14位，用于表示红色的强度等级（0-31）；</li>
+  <li>第15位用于表示颜色的有效性，颜色有效则为1，无效则为0。                   <br />
+对于Material Magics软件，对于颜色强度的排序则与之前正好相反：</li>
+  <li>第0位到第4位，用于表示红色的强度等级（0-31）；</li>
+  <li>第5位到第9位，用于表示绿色的强度等级（0-31）；</li>
+  <li>第10位到第14位，用于表示蓝色的强度等级（0-31）；</li>
+  <li>第15位为0表示该面片有自己独特的颜色，为1则表示使用每个面片的颜色。              <br />
+由于两种表达方式正好相反，对于通用软件来说无法区分它们，当然对于大多数3d打印软件来说，颜色属性并不重要。</li>
+</ul>
 
 <h2 id="两种格式区别">两种格式区别</h2>
 <p>读取STL文件首先要对文件进行分类，二进制文件和ASCII格式文件虽然信息量是相等的，但是读取方法不相同，这样判断一个STL文件到底是二进制文件还是ASCII格式文件就非常重要。
@@ -164,7 +178,7 @@ do
 }while(!in.eof());
 </code></pre></div></div>
 <h2 id="读取二进制格式文件">读取二进制格式文件</h2>
-<p>读取二进制格式的文件时，相较于读取ASCII格式文件，在读取函数中需要添加_ios::binary_，代码如下：</p>
+<p>读取二进制格式的文件时，相较于读取ASCII格式文件，在读取函数中需要添加ios::binary，代码如下：</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ifstream in;
 in.open(cfilename, ios::in | ios::binary);
 </code></pre></div></div>
@@ -188,10 +202,98 @@ in.read((char*)&amp;unTriangles, sizeof(int));
     }
 }
 </code></pre></div></div>
+
+<h2 id="写ascii格式文件">写ASCII格式文件</h2>
+<p>当具有所有面片的顶点信息时，可以比较容易将面片信息存储为STL文件。ASCII格式在前文已经讨论过，只需要对每个面片进行遍历，并且将面片的顶点数据按照格式写入文件即可，利用glm库来处理向量叉乘，代码如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>string filename_output = filename + string(".stl");
+ofstream output(filename_output.c_str(), ios_base::out);
+
+output &lt;&lt; "solid " &lt;&lt; filename &lt;&lt; endl;
+
+vector&lt;Mesh&gt;::iterator mesh_iter;
+for (mesh_iter = meshgroup-&gt;meshes.begin(); mesh_iter != meshgroup-&gt;meshes.end(); mesh_iter++)
+{
+  vector&lt;MeshFace&gt;::iterator face_iter;
+  for (face_iter = mesh_iter-&gt;faces.begin(); face_iter != mesh_iter-&gt;faces.end(); face_iter++)
+  {
+    glm::vec3 v0 = Point3toGlm(mesh_iter-&gt;vertices[face_iter-&gt;vertex_index[0]].p);
+    glm::vec3 v1 = Point3toGlm(mesh_iter-&gt;vertices[face_iter-&gt;vertex_index[1]].p);
+    glm::vec3 v2 = Point3toGlm(mesh_iter-&gt;vertices[face_iter-&gt;vertex_index[2]].p);
+
+    glm::vec3 e0 = v1 - v0;
+    glm::vec3 e1 = v2 - v1;
+    // Normal vector pointing up from the triangle
+    glm::vec3 n = glm::normalize(glm::cross(e0, e1));
+
+    output &lt;&lt; "   " &lt;&lt; "facet normal " &lt;&lt; n.x &lt;&lt; " " &lt;&lt; n.y &lt;&lt; " " &lt;&lt; n.z &lt;&lt; endl;
+    output &lt;&lt; "      " &lt;&lt; "outer loop" &lt;&lt; endl;
+    output &lt;&lt; "         " &lt;&lt; "vertex" &lt;&lt; " " &lt;&lt; v0.x &lt;&lt; " " &lt;&lt; v0.y &lt;&lt; " " &lt;&lt; v0.z &lt;&lt; endl;
+    output &lt;&lt; "         " &lt;&lt; "vertex" &lt;&lt; " " &lt;&lt; v1.x &lt;&lt; " " &lt;&lt; v1.y &lt;&lt; " " &lt;&lt; v1.z &lt;&lt; endl;
+    output &lt;&lt; "         " &lt;&lt; "vertex" &lt;&lt; " " &lt;&lt; v2.x &lt;&lt; " " &lt;&lt; v2.y &lt;&lt; " " &lt;&lt; v2.z &lt;&lt; endl;
+    output &lt;&lt; "      " &lt;&lt; "endloop" &lt;&lt; endl;
+    output &lt;&lt; "   " &lt;&lt; "endfacet" &lt;&lt; endl;
+  }
+}
+output &lt;&lt; "endsolid" &lt;&lt; endl;
+output.close();
+</code></pre></div></div>
+
+<h2 id="写二进制格式文件">写二进制格式文件</h2>
+<p>相较于写ASCII格式文件，二进制格式相对麻烦一点，由于二进制格式文件在文件开始处就需要将面片数量写入文件，所以需要在遍历面片之前先读取面片数量的数据，代码如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>string filename_output = filename + string(".stl");
+ofstream output(filename_output.c_str(), ios_base::out | ios_base::binary);
+
+output.write(filename.c_str(),80);
+
+vector&lt;Mesh&gt;::iterator mesh_iter;
+int facetnum = 0;
+for (mesh_iter = meshgroup-&gt;meshes.begin(); mesh_iter != meshgroup-&gt;meshes.end(); mesh_iter++)
+{
+  facetnum += mesh_iter-&gt;faces.size();
+}
+output.write((char*)&amp;facetnum, 4);
+
+for (mesh_iter = meshgroup-&gt;meshes.begin(); mesh_iter != meshgroup-&gt;meshes.end(); mesh_iter++)
+{
+  vector&lt;MeshFace&gt;::iterator face_iter;
+  for (face_iter = mesh_iter-&gt;faces.begin(); face_iter != mesh_iter-&gt;faces.end(); face_iter++)
+  {
+    glm::vec3 v0 = Point3toGlm(mesh_iter-&gt;vertices[face_iter-&gt;vertex_index[0]].p);
+    glm::vec3 v1 = Point3toGlm(mesh_iter-&gt;vertices[face_iter-&gt;vertex_index[1]].p);
+    glm::vec3 v2 = Point3toGlm(mesh_iter-&gt;vertices[face_iter-&gt;vertex_index[2]].p);
+
+    glm::vec3 e0 = v1 - v0;
+    glm::vec3 e1 = v2 - v1;
+    // Normal vector pointing up from the triangle
+    glm::vec3 n = glm::normalize(glm::cross(e0, e1));
+
+    output.write((char*)&amp;n.x, 4);
+    output.write((char*)&amp;n.y, 4);
+    output.write((char*)&amp;n.z, 4);
+
+    output.write((char*)&amp;v0.x, 4);
+    output.write((char*)&amp;v0.y, 4);
+    output.write((char*)&amp;v0.z, 4);
+
+    output.write((char*)&amp;v1.x, 4);
+    output.write((char*)&amp;v1.y, 4);
+    output.write((char*)&amp;v1.z, 4);
+
+    output.write((char*)&amp;v2.x, 4);
+    output.write((char*)&amp;v2.y, 4);
+    output.write((char*)&amp;v2.z, 4);
+
+    output.write((char*)("  "), 2);//颜色信息，这里不需要
+  }
+}
+output.close();
+</code></pre></div></div>
+
 <h2 id="reference">Reference</h2>
 <p>[1]严梽铭, 钟艳如. 基于VC++和OpenGL的STL文件读取显示[J]. 计算机系统应用, 2009, 18(3):172-175.     <br />
 [2]https://baike.baidu.com/item/stl%E6%A0%BC%E5%BC%8F/3511640?fr=aladdin     <br />
-[3]http://blog.csdn.net/chinamming/article/details/16918643</p>
+[3]http://blog.csdn.net/chinamming/article/details/16918643              <br />
+[4]https://en.wikipedia.org/wiki/STL_(file_format)</p>
 
 
 <div id="container"></div>
@@ -211,66 +313,121 @@ gitment.render('container')
 </script>
 
 
-        </section>
+      </section>
 
-        <aside id="sidebar">
-          <a href="http://conceptclear.cn" class="button">
+      <aside id="sidebar">
+        <a href="http://conceptclear.cn" class="button">
             <small>homepage</small>
             主页
           </a>
 
-          写点平时科研的时候会关注的问题
+        写点平时科研的时候会关注的问题
 
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</p>
+        <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</p>
 
+        <div id="showcategory">
           
-          <h2>3dprint(4)</h2>
-          <ul class="arc-list">
-            
-            <li>04/01/2019<a href="/3dprint/2019/01/04/CuraEngine-mesh-blog.html">CuraEngine开源程序解读————面片读取</a></li>
-            
-            <li>08/10/2018<a href="/3dprint/2018/10/08/CuraEngine-read-blog.html">CuraEngine开源程序解读————工具类</a></li>
-            
-            <li>31/03/2018<a href="/3dprint/2018/03/31/CuraEngine-set-blog.html">CuraEngine开源程序配置</a></li>
-            
-            <li>02/02/2018<a href="/3dprint/2018/02/02/STL-model-blog.html">STL模型的读取</a></li>
-            
-          </ul>
+          <details class="menu" open>
+            <summary>
+              <font size="4"><b>3dprint（4）</b></font>
+            </summary>
+            <ul class="arc-list">
+              
+              <li>04/01/2019<a href="/3dprint/2019/01/04/CuraEngine-mesh-blog.html">CuraEngine开源程序解读————面片读取</a></li>
+              
+              <li>08/10/2018<a href="/3dprint/2018/10/08/CuraEngine-read-blog.html">CuraEngine开源程序解读————工具类</a></li>
+              
+              <li>31/03/2018<a href="/3dprint/2018/03/31/CuraEngine-set-blog.html">CuraEngine开源程序配置</a></li>
+              
+              <li>02/02/2018<a href="/3dprint/2018/02/02/STL-model-blog.html">STL模型的读写</a></li>
+              
+            </ul>
+          </details>
           
-          <h2>FEA(1)</h2>
-          <ul class="arc-list">
-            
-            <li>27/08/2018<a href="/fea/2018/08/27/FiniteAnalysis-basictheory-blog.html">有限元分析基础理论</a></li>
-            
-          </ul>
+          <details class="menu" open>
+            <summary>
+              <font size="4"><b>FEA（1）</b></font>
+            </summary>
+            <ul class="arc-list">
+              
+              <li>27/08/2018<a href="/fea/2018/08/27/FiniteAnalysis-basictheory-blog.html">有限元分析基础理论</a></li>
+              
+            </ul>
+          </details>
           
-          <h2>MobileGame(1)</h2>
-          <ul class="arc-list">
-            
-            <li>07/10/2018<a href="/mobilegame/2018/10/07/MoblieGame-ArkOrder-blog.html">手游方舟指令捞UR脚本</a></li>
-            
-          </ul>
+          <details class="menu" open>
+            <summary>
+              <font size="4"><b>MobileGame（3）</b></font>
+            </summary>
+            <ul class="arc-list">
+              
+              <li>18/02/2020<a href="/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a></li>
+              
+              <li>02/10/2019<a href="/mobilegame/2019/10/02/homedream.html">手游家国梦网易mumu模拟器挂机收火车及收钱脚本</a></li>
+              
+              <li>07/10/2018<a href="/mobilegame/2018/10/07/MoblieGame-ArkOrder-blog.html">手游方舟指令捞UR脚本</a></li>
+              
+            </ul>
+          </details>
           
-          <h2>voxelization(2)</h2>
-          <ul class="arc-list">
-            
-            <li>14/06/2019<a href="/voxelization/2019/06/14/voxelize-solid.html">三维模型的体素化————实体体素化</a></li>
-            
-            <li>31/05/2019<a href="/voxelization/2019/05/31/voxelize-surface.html">三维模型的体素化————表面体素化</a></li>
-            
-          </ul>
+          <details class="menu" open>
+            <summary>
+              <font size="4"><b>CG（5）</b></font>
+            </summary>
+            <ul class="arc-list">
+              
+              <li>25/02/2020<a href="/cg/2020/02/25/voxelize-surface.html">三维模型的体素化————表面体素化</a></li>
+              
+              <li>04/12/2019<a href="/cg/2019/12/04/3d-transformation-matrix.html">三维空间中根据线段变换前后坐标求解变换矩阵</a></li>
+              
+              <li>12/10/2019<a href="/cg/2019/10/12/curvature-mesh.html">面片模型的曲率估计</a></li>
+              
+              <li>11/10/2019<a href="/cg/2019/10/11/curvature.html">曲率计算</a></li>
+              
+              <li>14/06/2019<a href="/cg/2019/06/14/voxelize-solid.html">三维模型的体素化————实体体素化</a></li>
+              
+            </ul>
+          </details>
           
-          <h2>jekyll(1)</h2>
-          <ul class="arc-list">
-            
-            <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">windows下jekyll的配置</a></li>
-            
-          </ul>
+          <details class="menu" open>
+            <summary>
+              <font size="4"><b>GPU（1）</b></font>
+            </summary>
+            <ul class="arc-list">
+              
+              <li>14/06/2019<a href="/gpu/2019/06/14/GPU-voxelize.html">GPU加速的体素化</a></li>
+              
+            </ul>
+          </details>
           
+          <details class="menu" open>
+            <summary>
+              <font size="4"><b>jekyll（1）</b></font>
+            </summary>
+            <ul class="arc-list">
+              
+              <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">Windows下jekyll的配置</a></li>
+              
+            </ul>
+          </details>
+          
+          <details class="menu" open>
+            <summary>
+              <font size="4"><b>matrix（1）</b></font>
+            </summary>
+            <ul class="arc-list">
+              
+              <li>18/09/2019<a href="/matrix/2019/09/18/matrix-decomposition.html">矩阵分解</a></li>
+              
+            </ul>
+          </details>
+          
+        </div>
 
-        </aside>
-      </div>
+      </aside>
     </div>
+  </div>
 
-  </body>
+</body>
+
 </html>

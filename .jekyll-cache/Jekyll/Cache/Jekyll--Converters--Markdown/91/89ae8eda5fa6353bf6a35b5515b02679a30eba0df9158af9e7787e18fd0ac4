@@ -1,0 +1,138 @@
+I"�<p>对于三维空间中的一条线段<script type="math/tex">P_1P_2</script>如下图所示，若已知变换前后的线段端点坐标<script type="math/tex">P_1(x_1,y_1),P_2(x_2,y_2)</script>以及<script type="math/tex">P_1'(x_1',y_1'),P_2'(x_1',y_1')</script>，如何求解该线段的三维变换矩阵？本文针对该问题进行分析。线段的空间三维变换可以主要分解为线段所构成向量的旋转，顶点的平移，以及大小的变换三个变换矩阵，这里分开讨论。</p>
+
+<div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/CG/line_transformation.png" /></div>
+
+<h2 id="旋转矩阵">旋转矩阵</h2>
+<p>不考虑线段的绕着自身的自旋，求解线段的旋转矩阵可以简化为所构成向量的旋转。已知旋转前的向量为<script type="math/tex">\boldsymbol {P_1P_2}</script>，旋转后的向量为<script type="math/tex">\boldsymbol {P_1'P_2'}</script>，可以计算出向量之间的夹角为：</p>
+
+<script type="math/tex; mode=display">\theta = arccos \left( \frac{\boldsymbol{P_1P_2} \cdot \boldsymbol{P_1'P_2'}}{\|\boldsymbol {P_1P_2}\|\|\boldsymbol {P_1'P_2'}\|} \right)</script>
+
+<p>为了方便表示，令</p>
+
+<script type="math/tex; mode=display">\boldsymbol{P_1P_2}=\left[
+ \begin{matrix}
+   x_2-x_1 \\ y_2-y_1 \\ z_2-z_1
+  \end{matrix}
+  \right]=\left[
+   \begin{matrix}
+     a_1 \\ a_2 \\ a_3
+    \end{matrix}
+    \right] \qquad
+    \boldsymbol{P_1'P_2'}=\left[
+     \begin{matrix}
+       x_2'-x_1' \\ y_2'-y_1' \\ z_2'-z_1'
+      \end{matrix}
+      \right]=\left[
+       \begin{matrix}
+         b_1 \\ b_2 \\ b_3
+        \end{matrix}  
+        \right]</script>
+
+<p>则夹角<script type="math/tex">\theta</script>可以表示为：</p>
+
+<script type="math/tex; mode=display">\theta = arccos \left( \frac{a_1b_1+a_2b_2+a_3b_3}{\sqrt{a_1^2+a_2^2+a_3^2}\cdot\sqrt{b_1^2+b_2^2+b_3^2}} \right)</script>
+
+<p>根据两个向量可以求出向量旋转的旋转轴，旋转轴垂直于两个向量所构成的平面，利用向量的叉乘可以计算出旋转轴<script type="math/tex">\boldsymbol{k}</script>的向量：</p>
+
+<script type="math/tex; mode=display">\boldsymbol{k}=\boldsymbol{P_1P_2} \times \boldsymbol{P_1'P_2'}=\left[
+ \begin{matrix}
+   a_2b_3-a_3b_2 \\ a_3b_1-a_1b_3 \\ a_1b_2-a_2b_1
+  \end{matrix}
+  \right]</script>
+
+<p>得到了向量的旋转角和旋转轴之后，旋转轴<script type="math/tex">\boldsymbol{k}</script>和原始向量<script type="math/tex">\boldsymbol{P_1P_2}</script>的外积可以表示成矩阵积的形式：</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\boldsymbol{k} \times \boldsymbol{P_1P_2}=\left[
+ \begin{matrix}
+   k_ya_3-k_za_2 \\ k_za_1-k_xa_3 \\ k_xa_2-k_ya_1
+  \end{matrix}
+  \right]=\left[
+   \begin{matrix}
+     0  &  -k_z  &  k_y\\ k_z  &  0  &  -k_x \\ -k_y  &  k_x  &  0
+    \end{matrix}
+    \right]\left[
+     \begin{matrix}
+       a_1 \\ a_2 \\ a_3
+      \end{matrix}
+      \right] %]]></script>
+
+<p>用矩阵<script type="math/tex">\boldsymbol{K}</script>来表示向量<script type="math/tex">\boldsymbol{k}</script>的叉乘矩阵，即</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\boldsymbol{K}=\left[
+ \begin{matrix}
+   0  &  -k_z  &  k_y\\ k_z  &  0  &  -k_x \\ -k_y  &  k_x  &  0
+  \end{matrix}
+  \right] %]]></script>
+
+<p>可以利用罗德里格旋转公式来得到旋转矩阵，旋转矩阵<script type="math/tex">\boldsymbol{R}</script>表示如下：</p>
+
+<script type="math/tex; mode=display">\boldsymbol{R}=\boldsymbol{E}+sin\theta\boldsymbol{K}+(1-cos\theta)\boldsymbol{K^2}</script>
+
+<p>公式中的<script type="math/tex">\boldsymbol{K}</script>需要归一化，即</p>
+
+<script type="math/tex; mode=display">{\|\boldsymbol{K}\|}_2=1</script>
+
+<p>为了和后面的平移缩放矩阵保持一致性，这里将三维旋转矩阵拓展至四维，即</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+{\boldsymbol{R}}_{4 \times 4}=\left[
+ \begin{matrix}
+   {\boldsymbol{R}}_{3 \times 3}  &  {\boldsymbol{0}}_{1 \times 3}\\ {\boldsymbol{0}}_{3 \times 1}  &  1
+  \end{matrix}
+  \right] %]]></script>
+
+<h2 id="比例变换矩阵">比例变换矩阵</h2>
+<p>经过旋转之后，由于之前做过了归一化处理，这里比例变换因子即为<script type="math/tex">\|\boldsymbol {P_1'P_2'}\|</script>，直接通过比例变换矩阵<script type="math/tex">{\boldsymbol{S}}</script>进行整体放缩即可：</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+{\boldsymbol{S}}_{4 \times 4}=\left[
+ \begin{matrix}
+   \|\boldsymbol {P_1'P_2'}\|  &  0  &  0  &  0  \\ 0  &  \|\boldsymbol {P_1'P_2'}\|  &  0  &  0 \\ 0  &  0  &  \|\boldsymbol {P_1'P_2'}\|  &  0  \\ 0  &  0  &  0  &  1
+  \end{matrix}
+  \right] %]]></script>
+
+<h2 id="平移矩阵">平移矩阵</h2>
+<p>已知起点<script type="math/tex">P_1</script>和终点<script type="math/tex">P_1'</script>，平移矩阵<script type="math/tex">{\boldsymbol{T}}</script>很容易表示：</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+{\boldsymbol{T}}_{4 \times 4}=\left[
+ \begin{matrix}
+   1  &  0  &  0  &  0  \\ 0  &  1  &  0  &  0 \\ 0  &  0  &  1  &  0  \\  x_1'-x_1  &  y_1'-y_1  &  z_1'-z_1  &  1
+  \end{matrix}
+  \right] %]]></script>
+
+<h2 id="示例">示例</h2>
+<p>针对于三维空间中的回转体，若已知回转体旋转轴上任意不相同两点空间变换前后的坐标，即可以利用该方法对整个回转体进行空间变换。如图所示：</p>
+<div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/CG/clinder1.png" /></div>
+
+<p>已知圆柱体的中心轴的两个端点位置，该圆柱体的方向为(0,0,1)，若想旋转至(1,1,1)，且保证底部圆的圆心位置处于原点处不变，则可以利用该方法进行三维变换，变换后结果如图所示：</p>
+<div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/CG/clinder2.png" /></div>
+
+<p>matlab的源码如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v1=[0;0;1];
+v2=[1;1;1];
+theta = acos(dot(v1,v2)/(norm(v1)*norm(v2)));
+k=cross(v1,v2);
+K=[0 -k(3) k(2);k(3) 0 -k(1);-k(2) k(1) 0];
+K=K/norm(K);
+R=eye(3)+sin(theta)*K+(1-cos(theta))*(K*K);
+
+[x,y,z]=cylinder;%创建以(0,0)为圆心，高度为[0,1]，半径为R的圆柱
+v3=[x(1,:);y(1,:);z(1,:)];
+m=R*v3;
+v4=[x(2,:);y(2,:);z(2,:)];
+n=R*v4;
+x1=[m(1,:);n(1,:)];
+y1=[m(2,:);n(2,:)];
+z1=[m(3,:);n(3,:)];
+%surf(x,y,z)%重新绘图
+surf(x1,y1,z1)%重新绘图
+</code></pre></div></div>
+
+<h2 id="reference">Reference</h2>
+<p>[1] https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula                       <br />
+[2] https://www.cnblogs.com/xpvincent/archive/2013/02/15/2912836.html                         <br />
+[3] https://blog.csdn.net/piaoxuezhong/article/details/70171525</p>
+:ET
