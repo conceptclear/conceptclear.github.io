@@ -1,4 +1,4 @@
-I"l<p>这段时间由于项目原因去了企业教企业员工关于ANSYS的一些操作，虽然说如果只教软件的话，可能对于有限元理论并不是需要那么了解，但是知其然知其所以然，正好趁着这个机会巩固了一下有限元分析的一些基础。</p>
+I":<p>这段时间由于项目原因去了企业教企业员工关于ANSYS的一些操作，虽然说如果只教软件的话，可能对于有限元理论并不是需要那么了解，但是知其然知其所以然，正好趁着这个机会巩固了一下有限元分析的一些基础。</p>
 
 <h2 id="fea的基本概念">FEA的基本概念</h2>
 <p>有限元分析（Finite Element Analysis, FEA）是现代工程计算中不可忽略的一部分，应用于汽车，飞机，机械部件，桥梁，建筑物等的变形和应力分析中。各类工程问题基本上都可以通过一些常微分方程或者偏微分方程进行求解，但是只有在某些特殊情况下，这些方程的解析解才能够求解得出，在更多的情况下，只能通过计算机采用一些数值计算方法得出足够精度的数值解。对于绝大多数工程问题来说，所需求解的问题是连续的，有少数情况下连续的介质是会自动离散化的，比如桁架结构。对于这类问题，它的几何变形或者是物理响应是可以通过结点位置的变化以及相关物理响应来进行精确求解的，数值解可以简单地用一组有限的数值表示。但是对于大多数常见问题来说，对于没有自动离散化的求解介质，是无法利用一组有限自由度的数值解来表达准确的，对于这类问题来说，数值解可以通过一组采样点和特定的插值方程来进行表示。从数学的角度来看，样本点以及插值方程的选择很多。但是，在工程应用中，有限元方法采用分段插值法，如下所示：</p>
@@ -18,38 +18,37 @@
 
 <p>可以假设温度分布函数可以表示为下面这个式子:</p>
 
-<script type="math/tex; mode=display">T=a\xi^2+b\xi^2+c</script>
+\[T=a\xi^2+b\xi^2+c\]
 
 <p>其中，</p>
 
-<script type="math/tex; mode=display">\xi\in[-1,1]</script>
+\[\xi\in[-1,1]\]
 
 <p>这里可以简单看为将这个二次插值函数自变量归一化，使得函数在[-1,1]的范围内变化，那么可以根据三个点处的温度值求解出a，b，c的值来：</p>
 
-<script type="math/tex; mode=display">T=T_1 \quad when \quad \xi=-1 \\
+\[T=T_1 \quad when \quad \xi=-1 \\
 T=T_2 \quad when \quad \xi=0  \\
-T=T_3 \quad when \quad \xi=1</script>
+T=T_3 \quad when \quad \xi=1\]
 
 <p>可得：</p>
 
-<script type="math/tex; mode=display">a=\frac{1}{2}(T_3+T_1)-T_2 \\
+\[a=\frac{1}{2}(T_3+T_1)-T_2 \\
 b=\frac{1}{2}(T_3-T_1) \\
-c=T_2</script>
+c=T_2\]
 
 <p>带入原方程，重新整理可以得到：</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-T&=[\frac{1}{2}(T_3+T_1)-T_2]\xi^2+\frac{1}{2}(T_3-T_1)\xi+T_2 \\
-&=\frac{1}{2}\xi(\xi-1)T_1-(\xi-1)(\xi+1)T_2+\frac{1}{2}\xi(\xi+1)T_3 \\
-&=N_1(\xi)T_1+N_2(\xi)T_2+N_3(\xi)T_3
-\end{align} %]]></script>
+\[\begin{align}
+T&amp;=[\frac{1}{2}(T_3+T_1)-T_2]\xi^2+\frac{1}{2}(T_3-T_1)\xi+T_2 \\
+&amp;=\frac{1}{2}\xi(\xi-1)T_1-(\xi-1)(\xi+1)T_2+\frac{1}{2}\xi(\xi+1)T_3 \\
+&amp;=N_1(\xi)T_1+N_2(\xi)T_2+N_3(\xi)T_3
+\end{align}\]
 
 <p>这里的N<sub>1</sub>，N<sub>2</sub>，N<sub>3</sub>即为三个形函数</p>
 
-<script type="math/tex; mode=display">N_1(\xi)=\frac{1}{2}\xi(\xi-1);\quad
+\[N_1(\xi)=\frac{1}{2}\xi(\xi-1);\quad
 N_2(\xi)=-(\xi+1)(\xi-1);\quad
-N_3(\xi)=\frac{1}{2}\xi(\xi+1)</script>
+N_3(\xi)=\frac{1}{2}\xi(\xi+1)\]
 
 <p>可以发现，形函数具有以下几个性质：</p>
 
@@ -58,12 +57,12 @@ N_3(\xi)=\frac{1}{2}\xi(\xi+1)</script>
 
 <p>同理，这三个点在实际二维空间中连成的曲线也可以通过这三个形函数来进行构造：</p>
 
-<script type="math/tex; mode=display">\left\{
+\[\left\{
     \begin{array}{c}
         x=N_1(\xi)x_1+N_2(\xi)x_2+N_3(\xi)x_3 \\
         y=N_1(\xi)y_1+N_2(\xi)y_2+N_3(\xi)y_3
     \end{array}
-\right.</script>
+\right.\]
 
 <p>通过给定的三个点就可以构造出整个单元的边界，换句话说就是确定了单元的形状，所以这个函数被称为形函数。通过形函数的插值，我们可以将单元的参数空间与实际分析中的真实空间形成一个映射关系。</p>
 

@@ -75,7 +75,7 @@
 
 <p>通过检测第一个助战位是否为CBA来确定是否选择到了所需要的助战，当然蓝卡队需要用狐狸或者花嫁的话只需要在此基础上进行一定修改即可，按键精灵脚本如下所示：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FindPic 590, 450, 970, 520, "Attachment:\CBA.bmp", 0.9, intX1, intY1      //590, 450, 970, 520分别为搜寻区域的左下角横坐标，左下角纵坐标，右上角横坐标，右上角纵坐标，0.9为相似程度
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FindPic 590, 450, 970, 520, "Attachment:\CBA.bmp", 0.9, intX1, intY1      //590, 450, 970, 520分别为搜寻区域的左下角横坐标，左下角纵坐标，右上角横坐标，右上角纵坐标，0.9为相似程度
 If intX1 &lt; 0 Or intY1 &lt; 0 Then
 Do Until intX1 &gt; 0 And intY1 &gt; 0
 	Call Plugin.Bkgnd.KeyPress(Hwnd,89)
@@ -96,7 +96,7 @@ End If
 
 <p>同自动选择助战一样，在每次进本之前需要判断是否需要进行补充体力的操作，这里可以通过识别副本的体力需求的颜色来进行区分（体力足够时进本的体力需求为白色，体力不足时为红色）或者通过识别区域图片来进行区分，为了留有一定余量，这里采用的是区域识图的方法，脚本如下所示：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FindPic 1140,360,1240,440, "Attachment:\apple.bmp", 0.9, intX, intY
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FindPic 1140,360,1240,440, "Attachment:\apple.bmp", 0.9, intX, intY
 Call Plugin.Bkgnd.KeyPress(Hwnd,88)      //点开副本
 Delay 3000
 If intX &gt; 0 Or intY &gt; 0 Then       //若找到图片，则吃金苹果
@@ -109,7 +109,7 @@ End If
 
 <h2 id="具体脚本流程">具体脚本流程</h2>
 <p>解决掉两个比较麻烦需要进行识别的部分之后，整个脚本剩下来的部分基本上就都是重复性的工作了，这里提供我的刷本策略。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()     //识别鼠标点击的窗口句柄，这样就可以实现后台操作不影响其他工作了
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()     //识别鼠标点击的窗口句柄，这样就可以实现后台操作不影响其他工作了
 Do
 FindPic 2550,1150,2650,1200, "Attachment:\apple.bmp", 0.9, intX, intY
 Call Plugin.Bkgnd.KeyPress(Hwnd,88)
@@ -221,14 +221,14 @@ Loop
   <li>由于宝具没打死需要补刀导致开环程序出现问题；</li>
   <li>由于按键精灵后台识图效果不好，所以必须将网易mumu模拟器一直显示在屏幕上从而拾取屏幕区域图片；</li>
   <li>由于不知道是网易mumu的问题还是按键精灵的问题，将程序最小化之后有一定几率脚本无法运行；</li>
-  <li>为了保证脚本的稳定性，很多地方放出了一定的时间余量，并不能以最高效率完成刷本。
+  <li>为了保证脚本的稳定性，很多地方放出了一定的时间余量，并不能以最高效率完成刷本。                     <br />
 不过尽管存在一定的问题，总体上还是很大程度上解放了双手，提高了刷本的效率。</li>
 </ul>
 
 <h2 id="reference">Reference</h2>
 <p>[1]百度百科     <br />
-[2]http://zy.anjian.com/?action-study
-[3]http://conceptclear.cn/mobilegame/2018/10/07/MoblieGame-ArkOrder-blog.html
+[2]http://zy.anjian.com/?action-study                             <br />
+[3]http://conceptclear.cn/mobilegame/2018/10/07/MoblieGame-ArkOrder-blog.html                        <br />
 [4]http://conceptclear.cn/mobilegame/2019/10/02/homedream.html</p>
 
 
@@ -293,9 +293,11 @@ gitment.render('container')
           
           <details class="menu" open>
             <summary>
-              <font size="4"><b>MobileGame（3）</b></font>
+              <font size="4"><b>MobileGame（4）</b></font>
             </summary>
             <ul class="arc-list">
+              
+              <li>17/06/2020<a href="/mobilegame/2020/06/17/MobileGame-fgo-py.html">手游fgo网易mumu模拟器自动挂机py脚本</a></li>
               
               <li>18/02/2020<a href="/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a></li>
               
@@ -343,17 +345,6 @@ gitment.render('container')
             <ul class="arc-list">
               
               <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">Windows下jekyll的配置</a></li>
-              
-            </ul>
-          </details>
-          
-          <details class="menu" open>
-            <summary>
-              <font size="4"><b>matrix（1）</b></font>
-            </summary>
-            <ul class="arc-list">
-              
-              <li>18/09/2019<a href="/matrix/2019/09/18/matrix-decomposition.html">矩阵分解</a></li>
               
             </ul>
           </details>

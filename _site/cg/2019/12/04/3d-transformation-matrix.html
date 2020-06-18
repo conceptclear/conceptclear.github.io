@@ -43,21 +43,21 @@
 
         <h1>三维空间中根据线段变换前后坐标求解变换矩阵</h1>
 <p class="meta"><b>Date:</b>04 December 2019
-  | <b>Number of words:</b>1215
-  | <b>Approximately reading time:</b>4 minutes</p>
+  | <b>Number of words:</b>3317
+  | <b>Approximately reading time:</b>10 minutes</p>
 
-<p>对于三维空间中的一条线段<script type="math/tex">P_1P_2</script>如下图所示，若已知变换前后的线段端点坐标<script type="math/tex">P_1(x_1,y_1),P_2(x_2,y_2)</script>以及<script type="math/tex">P_1'(x_1',y_1'),P_2'(x_1',y_1')</script>，如何求解该线段的三维变换矩阵？本文针对该问题进行分析。线段的空间三维变换可以主要分解为线段所构成向量的旋转，顶点的平移，以及大小的变换三个变换矩阵，这里分开讨论。</p>
+<p>对于三维空间中的一条线段\(P_1P_2\)如下图所示，若已知变换前后的线段端点坐标\(P_1(x_1,y_1),P_2(x_2,y_2)\)以及\(P_1'(x_1',y_1'),P_2'(x_1',y_1')\)，如何求解该线段的三维变换矩阵？本文针对该问题进行分析。线段的空间三维变换可以主要分解为线段所构成向量的旋转，顶点的平移，以及大小的变换三个变换矩阵，这里分开讨论。</p>
 
 <div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/CG/line_transformation.png" /></div>
 
 <h2 id="旋转矩阵">旋转矩阵</h2>
-<p>不考虑线段的绕着自身的自旋，求解线段的旋转矩阵可以简化为所构成向量的旋转。已知旋转前的向量为<script type="math/tex">\boldsymbol {P_1P_2}</script>，旋转后的向量为<script type="math/tex">\boldsymbol {P_1'P_2'}</script>，可以计算出向量之间的夹角为：</p>
+<p>不考虑线段的绕着自身的自旋，求解线段的旋转矩阵可以简化为所构成向量的旋转。已知旋转前的向量为\(\boldsymbol {P_1P_2}\)，旋转后的向量为\(\boldsymbol {P_1'P_2'}\)，可以计算出向量之间的夹角为：</p>
 
-<script type="math/tex; mode=display">\theta = arccos \left( \frac{\boldsymbol{P_1P_2} \cdot \boldsymbol{P_1'P_2'}}{\|\boldsymbol {P_1P_2}\|\|\boldsymbol {P_1'P_2'}\|} \right)</script>
+\[\theta = arccos \left( \frac{\boldsymbol{P_1P_2} \cdot \boldsymbol{P_1'P_2'}}{\|\boldsymbol {P_1P_2}\|\|\boldsymbol {P_1'P_2'}\|} \right)\]
 
 <p>为了方便表示，令</p>
 
-<script type="math/tex; mode=display">\boldsymbol{P_1P_2}=\left[
+\[\boldsymbol{P_1P_2}=\left[
  \begin{matrix}
    x_2-x_1 \\ y_2-y_1 \\ z_2-z_1
   \end{matrix}
@@ -74,82 +74,77 @@
        \begin{matrix}
          b_1 \\ b_2 \\ b_3
         \end{matrix}  
-        \right]</script>
+        \right]\]
 
-<p>则夹角<script type="math/tex">\theta</script>可以表示为：</p>
+<p>则夹角\(\theta\)可以表示为：</p>
 
-<script type="math/tex; mode=display">\theta = arccos \left( \frac{a_1b_1+a_2b_2+a_3b_3}{\sqrt{a_1^2+a_2^2+a_3^2}\cdot\sqrt{b_1^2+b_2^2+b_3^2}} \right)</script>
+\[\theta = arccos \left( \frac{a_1b_1+a_2b_2+a_3b_3}{\sqrt{a_1^2+a_2^2+a_3^2}\cdot\sqrt{b_1^2+b_2^2+b_3^2}} \right)\]
 
-<p>根据两个向量可以求出向量旋转的旋转轴，旋转轴垂直于两个向量所构成的平面，利用向量的叉乘可以计算出旋转轴<script type="math/tex">\boldsymbol{k}</script>的向量：</p>
+<p>根据两个向量可以求出向量旋转的旋转轴，旋转轴垂直于两个向量所构成的平面，利用向量的叉乘可以计算出旋转轴\(\boldsymbol{k}\)的向量：</p>
 
-<script type="math/tex; mode=display">\boldsymbol{k}=\boldsymbol{P_1P_2} \times \boldsymbol{P_1'P_2'}=\left[
+\[\boldsymbol{k}=\boldsymbol{P_1P_2} \times \boldsymbol{P_1'P_2'}=\left[
  \begin{matrix}
    a_2b_3-a_3b_2 \\ a_3b_1-a_1b_3 \\ a_1b_2-a_2b_1
   \end{matrix}
-  \right]</script>
+  \right]\]
 
-<p>得到了向量的旋转角和旋转轴之后，旋转轴<script type="math/tex">\boldsymbol{k}</script>和原始向量<script type="math/tex">\boldsymbol{P_1P_2}</script>的外积可以表示成矩阵积的形式：</p>
+<p>得到了向量的旋转角和旋转轴之后，旋转轴\(\boldsymbol{k}\)和原始向量\(\boldsymbol{P_1P_2}\)的外积可以表示成矩阵积的形式：</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\boldsymbol{k} \times \boldsymbol{P_1P_2}=\left[
+\[\boldsymbol{k} \times \boldsymbol{P_1P_2}=\left[
  \begin{matrix}
    k_ya_3-k_za_2 \\ k_za_1-k_xa_3 \\ k_xa_2-k_ya_1
   \end{matrix}
   \right]=\left[
    \begin{matrix}
-     0  &  -k_z  &  k_y\\ k_z  &  0  &  -k_x \\ -k_y  &  k_x  &  0
+     0  &amp;  -k_z  &amp;  k_y\\ k_z  &amp;  0  &amp;  -k_x \\ -k_y  &amp;  k_x  &amp;  0
     \end{matrix}
     \right]\left[
      \begin{matrix}
        a_1 \\ a_2 \\ a_3
       \end{matrix}
-      \right] %]]></script>
+      \right]\]
 
-<p>用矩阵<script type="math/tex">\boldsymbol{K}</script>来表示向量<script type="math/tex">\boldsymbol{k}</script>的叉乘矩阵，即</p>
+<p>用矩阵\(\boldsymbol{K}\)来表示向量\(\boldsymbol{k}\)的叉乘矩阵，即</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\boldsymbol{K}=\left[
+\[\boldsymbol{K}=\left[
  \begin{matrix}
-   0  &  -k_z  &  k_y\\ k_z  &  0  &  -k_x \\ -k_y  &  k_x  &  0
+   0  &amp;  -k_z  &amp;  k_y\\ k_z  &amp;  0  &amp;  -k_x \\ -k_y  &amp;  k_x  &amp;  0
   \end{matrix}
-  \right] %]]></script>
+  \right]\]
 
-<p>可以利用罗德里格旋转公式来得到旋转矩阵，旋转矩阵<script type="math/tex">\boldsymbol{R}</script>表示如下：</p>
+<p>可以利用罗德里格旋转公式来得到旋转矩阵，旋转矩阵\(\boldsymbol{R}\)表示如下：</p>
 
-<script type="math/tex; mode=display">\boldsymbol{R}=\boldsymbol{E}+sin\theta\boldsymbol{K}+(1-cos\theta)\boldsymbol{K^2}</script>
+\[\boldsymbol{R}=\boldsymbol{E}+sin\theta\boldsymbol{K}+(1-cos\theta)\boldsymbol{K^2}\]
 
-<p>公式中的<script type="math/tex">\boldsymbol{K}</script>需要归一化，即</p>
+<p>公式中的\(\boldsymbol{K}\)需要归一化，即</p>
 
-<script type="math/tex; mode=display">{\|\boldsymbol{K}\|}_2=1</script>
+\[{\|\boldsymbol{K}\|}_2=1\]
 
 <p>为了和后面的平移缩放矩阵保持一致性，这里将三维旋转矩阵拓展至四维，即</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-{\boldsymbol{R}}_{4 \times 4}=\left[
+\[{\boldsymbol{R}}_{4 \times 4}=\left[
  \begin{matrix}
-   {\boldsymbol{R}}_{3 \times 3}  &  {\boldsymbol{0}}_{1 \times 3}\\ {\boldsymbol{0}}_{3 \times 1}  &  1
+   {\boldsymbol{R}}_{3 \times 3}  &amp;  {\boldsymbol{0}}_{1 \times 3}\\ {\boldsymbol{0}}_{3 \times 1}  &amp;  1
   \end{matrix}
-  \right] %]]></script>
+  \right]\]
 
 <h2 id="比例变换矩阵">比例变换矩阵</h2>
-<p>经过旋转之后，由于之前做过了归一化处理，这里比例变换因子即为<script type="math/tex">\|\boldsymbol {P_1'P_2'}\|</script>，直接通过比例变换矩阵<script type="math/tex">{\boldsymbol{S}}</script>进行整体放缩即可：</p>
+<p>经过旋转之后，由于之前做过了归一化处理，这里比例变换因子即为\(\|\boldsymbol {P_1'P_2'}\|\)，直接通过比例变换矩阵\({\boldsymbol{S}}\)进行整体放缩即可：</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-{\boldsymbol{S}}_{4 \times 4}=\left[
+\[{\boldsymbol{S}}_{4 \times 4}=\left[
  \begin{matrix}
-   \|\boldsymbol {P_1'P_2'}\|  &  0  &  0  &  0  \\ 0  &  \|\boldsymbol {P_1'P_2'}\|  &  0  &  0 \\ 0  &  0  &  \|\boldsymbol {P_1'P_2'}\|  &  0  \\ 0  &  0  &  0  &  1
+   \|\boldsymbol {P_1'P_2'}\|  &amp;  0  &amp;  0  &amp;  0  \\ 0  &amp;  \|\boldsymbol {P_1'P_2'}\|  &amp;  0  &amp;  0 \\ 0  &amp;  0  &amp;  \|\boldsymbol {P_1'P_2'}\|  &amp;  0  \\ 0  &amp;  0  &amp;  0  &amp;  1
   \end{matrix}
-  \right] %]]></script>
+  \right]\]
 
 <h2 id="平移矩阵">平移矩阵</h2>
-<p>已知起点<script type="math/tex">P_1</script>和终点<script type="math/tex">P_1'</script>，平移矩阵<script type="math/tex">{\boldsymbol{T}}</script>很容易表示：</p>
+<p>已知起点\(P_1\)和终点\(P_1'\)，平移矩阵\({\boldsymbol{T}}\)很容易表示：</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-{\boldsymbol{T}}_{4 \times 4}=\left[
+\[{\boldsymbol{T}}_{4 \times 4}=\left[
  \begin{matrix}
-   1  &  0  &  0  &  0  \\ 0  &  1  &  0  &  0 \\ 0  &  0  &  1  &  0  \\  x_1'-x_1  &  y_1'-y_1  &  z_1'-z_1  &  1
+   1  &amp;  0  &amp;  0  &amp;  0  \\ 0  &amp;  1  &amp;  0  &amp;  0 \\ 0  &amp;  0  &amp;  1  &amp;  0  \\  x_1'-x_1  &amp;  y_1'-y_1  &amp;  z_1'-z_1  &amp;  1
   \end{matrix}
-  \right] %]]></script>
+  \right]\]
 
 <h2 id="示例">示例</h2>
 <p>针对于三维空间中的回转体，若已知回转体旋转轴上任意不相同两点空间变换前后的坐标，即可以利用该方法对整个回转体进行空间变换。如图所示：</p>
@@ -159,7 +154,7 @@
 <div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/CG/clinder2.png" /></div>
 
 <p>matlab的源码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v1=[0;0;1];
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v1=[0;0;1];
 v2=[1;1;1];
 theta = acos(dot(v1,v2)/(norm(v1)*norm(v2)));
 k=cross(v1,v2);
@@ -246,9 +241,11 @@ gitment.render('container')
           
           <details class="menu" open>
             <summary>
-              <font size="4"><b>MobileGame（3）</b></font>
+              <font size="4"><b>MobileGame（4）</b></font>
             </summary>
             <ul class="arc-list">
+              
+              <li>17/06/2020<a href="/mobilegame/2020/06/17/MobileGame-fgo-py.html">手游fgo网易mumu模拟器自动挂机py脚本</a></li>
               
               <li>18/02/2020<a href="/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a></li>
               
@@ -296,17 +293,6 @@ gitment.render('container')
             <ul class="arc-list">
               
               <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">Windows下jekyll的配置</a></li>
-              
-            </ul>
-          </details>
-          
-          <details class="menu" open>
-            <summary>
-              <font size="4"><b>matrix（1）</b></font>
-            </summary>
-            <ul class="arc-list">
-              
-              <li>18/09/2019<a href="/matrix/2019/09/18/matrix-decomposition.html">矩阵分解</a></li>
               
             </ul>
           </details>

@@ -50,7 +50,7 @@
 <p>mesh中主要定义了关于三角形网格三个类和这三个类的一些成员函数，分别是MeshVertex，MeshFace以及Mesh。</p>
 
 <h3 id="全局变量">全局变量</h3>
-<p><code class="highlighter-rouge">const int</code>类型的全局变量vertex_meld_distance，其值设定为MM2INT(0.03)；</p>
+<p><code class="language-plaintext highlighter-rouge">const int</code>类型的全局变量vertex_meld_distance，其值设定为MM2INT(0.03)；</p>
 <h3 id="全局函数">全局函数</h3>
 <ul>
   <li><strong>static inline uint32_t pointHash(const Point3&amp; p)</strong>。构造了一个基于vertex_meld_distance的函数，所有在vertex_meld_distance范围内的点都会映射到一个哈希值上。</li>
@@ -59,8 +59,8 @@
 <h3 id="meshvertex">MeshVertex</h3>
 <p>MeshVertex类是在网格中使用的顶点类型，其包含了顶点的坐标信息以及跟踪连接到这个点上的面片信息。</p>
 <h4 id="成员变量">成员变量</h4>
-<p><code class="highlighter-rouge">Point3</code>类型的成员变量p，用于存储顶点的坐标信息；          <br />
-<code class="highlighter-rouge">uint32_t</code>类型的vector容器connected_faces，用于存储连接面的索引列表。</p>
+<p><code class="language-plaintext highlighter-rouge">Point3</code>类型的成员变量p，用于存储顶点的坐标信息；          <br />
+<code class="language-plaintext highlighter-rouge">uint32_t</code>类型的vector容器connected_faces，用于存储连接面的索引列表。</p>
 <h4 id="成员函数">成员函数</h4>
 <ul>
   <li><strong>构造函数</strong>。构造函数中只提供Point3类型的参数p用于初始化成员变量p，默认给connected_faces容器预留8个空间大小；</li>
@@ -69,20 +69,20 @@
 <h3 id="meshface">MeshFace</h3>
 <p>MehsFace类用来表示一个三维模型中的一个三角形面片，面片包含了三个顶点的信息以及三条边所连接的其它三个面片的信息。一个正确的模型同样有可能一条边连接了超过两个面，在这种情况之下，存储在connected_face_index数组中的面片为连接模型外部的面片。</p>
 <h4 id="成员变量-1">成员变量</h4>
-<p><code class="highlighter-rouge">int</code>类型的vertex_index[3]数组，用于存储三个顶点的索引，三个顶点按照逆时针排序；       <br />
-<code class="highlighter-rouge">int</code>类型的connected_face_index[3]数组，用于存储连接三个边的另一个面片的索引号，其中connected_face_index[0]对应的面片和当前面片所共享的边是vertex_index[0]和vertex_index[1]所连接形成的边。</p>
+<p><code class="language-plaintext highlighter-rouge">int</code>类型的vertex_index[3]数组，用于存储三个顶点的索引，三个顶点按照逆时针排序；       <br />
+<code class="language-plaintext highlighter-rouge">int</code>类型的connected_face_index[3]数组，用于存储连接三个边的另一个面片的索引号，其中connected_face_index[0]对应的面片和当前面片所共享的边是vertex_index[0]和vertex_index[1]所连接形成的边。</p>
 
 <h3 id="mesh-1">Mesh</h3>
 <p>Mesh类是3D模型最基本的表示类，以MeshFace存储所有面的信息。Mesh类是SettingsBase类的继承类，SettingsBase是设置一些值的基础类，这里可以不做深究。</p>
 <h4 id="成员变量-2">成员变量</h4>
-<p><code class="highlighter-rouge">&lt;uint32_t, std::vector&lt;uint32_t&gt; &gt; </code>类型的unordered_map容器vertex_hash_map，用于存储该位置的散列的每个顶点的索引引用，允许快速检索具有相同位置的点。类型的unordered_map容器相较于map容器具有更高的查询效率，采用以哈希表为底层；          <br />
-<code class="highlighter-rouge">AABB</code>类型的成员变量aabb，用于构建整个模型的包围盒；              <br />
-<code class="highlighter-rouge">MeshVertex</code>类型的vector容器vertices，用于存储网格的所有顶点数据；            <br />
-<code class="highlighter-rouge">MeshFace</code>类型的vector容器faces，用于存储网格的所有面片数据；          <br />
-<code class="highlighter-rouge">bool</code>类型的has_disconnected_faces，判定mesh中是否存在断开连接的面；               <br />
-<code class="highlighter-rouge">bool</code>类型的has_overlapping_faces，判定mesh中是否存在交叠的面；               <br />
-<code class="highlighter-rouge">Settings</code>类的对象settings，用于存储基础设定；                <br />
-<code class="highlighter-rouge">string</code>类型的mesh_name，用于存储读取进来的模型名称。</p>
+<p><code class="language-plaintext highlighter-rouge">&lt;uint32_t, std::vector&lt;uint32_t&gt; &gt; </code>类型的unordered_map容器vertex_hash_map，用于存储该位置的散列的每个顶点的索引引用，允许快速检索具有相同位置的点。类型的unordered_map容器相较于map容器具有更高的查询效率，采用以哈希表为底层；          <br />
+<code class="language-plaintext highlighter-rouge">AABB</code>类型的成员变量aabb，用于构建整个模型的包围盒；              <br />
+<code class="language-plaintext highlighter-rouge">MeshVertex</code>类型的vector容器vertices，用于存储网格的所有顶点数据；            <br />
+<code class="language-plaintext highlighter-rouge">MeshFace</code>类型的vector容器faces，用于存储网格的所有面片数据；          <br />
+<code class="language-plaintext highlighter-rouge">bool</code>类型的has_disconnected_faces，判定mesh中是否存在断开连接的面；               <br />
+<code class="language-plaintext highlighter-rouge">bool</code>类型的has_overlapping_faces，判定mesh中是否存在交叠的面；               <br />
+<code class="language-plaintext highlighter-rouge">Settings</code>类的对象settings，用于存储基础设定；                <br />
+<code class="language-plaintext highlighter-rouge">string</code>类型的mesh_name，用于存储读取进来的模型名称。</p>
 <h4 id="成员函数-1">成员函数</h4>
 <ul>
   <li><strong>构造函数</strong>。构造函数中不直接输入模型的面片信息，而是对其一些设定值进行初始化，形参为其虚基类SettingsBaseVirtual类所构造对象的指针；</li>
@@ -104,8 +104,8 @@
 <h3 id="meshgroup类">MeshGroup类</h3>
 <p>MeshGroup类是NoCopy类的继承类，所以不能直接进行拷贝。</p>
 <h4 id="成员变量-3">成员变量</h4>
-<p><code class="highlighter-rouge">Mesh</code>类型的vector容器meshes，用于存储多个mesh模型；         <br />
-<code class="highlighter-rouge">Settings</code>类的对象settings，用于基础设定。</p>
+<p><code class="language-plaintext highlighter-rouge">Mesh</code>类型的vector容器meshes，用于存储多个mesh模型；         <br />
+<code class="language-plaintext highlighter-rouge">Settings</code>类的对象settings，用于基础设定。</p>
 <h4 id="成员函数-2">成员函数</h4>
 <ul>
   <li><strong>Point3 min() const</strong>。用于返回AABB包围盒最小点；</li>
@@ -114,7 +114,7 @@
   <li><strong>void finalize()</strong>。主要是用于调整mesh的位置。
     <h4 id="全局函数-1">全局函数</h4>
   </li>
-  <li><strong>bool loadMeshIntoMeshGroup(MeshGroup* meshgroup, const char* filename, const FMatrix3x3&amp; transformation, Settings&amp; object_parent_settings)</strong>。从文件中读取网格并将其存储在MeshGroup的meshes当中，其中meshgroup为网格存储位置，filename为文件名，transformation为对该模型所有顶点的变换矩阵，object_parent_settings为父类设置，函数返回是否成功读取面片模型并将其保存于meshgroup当中。该函数通过调用<code class="highlighter-rouge">loadMeshSTL_ascii</code>或<code class="highlighter-rouge">loadMeshSTL_binary</code>对ASCII格式或二进制格式的STL文件进行读取。</li>
+  <li><strong>bool loadMeshIntoMeshGroup(MeshGroup* meshgroup, const char* filename, const FMatrix3x3&amp; transformation, Settings&amp; object_parent_settings)</strong>。从文件中读取网格并将其存储在MeshGroup的meshes当中，其中meshgroup为网格存储位置，filename为文件名，transformation为对该模型所有顶点的变换矩阵，object_parent_settings为父类设置，函数返回是否成功读取面片模型并将其保存于meshgroup当中。该函数通过调用<code class="language-plaintext highlighter-rouge">loadMeshSTL_ascii</code>或<code class="language-plaintext highlighter-rouge">loadMeshSTL_binary</code>对ASCII格式或二进制格式的STL文件进行读取。</li>
 </ul>
 
 
@@ -179,9 +179,11 @@ gitment.render('container')
           
           <details class="menu" open>
             <summary>
-              <font size="4"><b>MobileGame（3）</b></font>
+              <font size="4"><b>MobileGame（4）</b></font>
             </summary>
             <ul class="arc-list">
+              
+              <li>17/06/2020<a href="/mobilegame/2020/06/17/MobileGame-fgo-py.html">手游fgo网易mumu模拟器自动挂机py脚本</a></li>
               
               <li>18/02/2020<a href="/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a></li>
               
@@ -229,17 +231,6 @@ gitment.render('container')
             <ul class="arc-list">
               
               <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">Windows下jekyll的配置</a></li>
-              
-            </ul>
-          </details>
-          
-          <details class="menu" open>
-            <summary>
-              <font size="4"><b>matrix（1）</b></font>
-            </summary>
-            <ul class="arc-list">
-              
-              <li>18/09/2019<a href="/matrix/2019/09/18/matrix-decomposition.html">矩阵分解</a></li>
               
             </ul>
           </details>

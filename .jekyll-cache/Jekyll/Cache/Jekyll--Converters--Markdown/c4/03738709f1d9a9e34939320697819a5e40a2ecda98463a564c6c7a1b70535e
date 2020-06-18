@@ -1,4 +1,4 @@
-I"h <p>最近腾讯和人民日报出了个手游，虽然游戏本质上是放置类手游，但是因为游戏无法氪金，玩了几天感觉如果光靠人工的话太肝了，针对于游戏里比较肝的两个部分分别编写了一个脚本。</p>
+I"� <p>最近腾讯和人民日报出了个手游，虽然游戏本质上是放置类手游，但是因为游戏无法氪金，玩了几天感觉如果光靠人工的话太肝了，针对于游戏里比较肝的两个部分分别编写了一个脚本。</p>
 
 <h2 id="游戏机制">游戏机制</h2>
 <p>游戏是通过抽卡来收集建筑，建筑经过抽卡升星和金币升级之后可以加速金币的获取速度。但是随着游戏的进行，光靠建筑的等级升级来提升金币获取速度会越来越慢，所以同时需要提升建筑的星级。              <br />
@@ -33,7 +33,7 @@
 <div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/MobileGame/mousesimulate.png" /></div>
 <p>其中由于游戏有时候火车来了并没有刷新出货物，可以通过采集一下金币来实现火舞的刷新，所以设置了一个按键1实现金币收集。               <br />
 因为火车有火车之间的时间间隔是不确定的，这里利用颜色识别的方法来判定火车是否到站，具体代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()
 Do
     Call Plugin.Bkgnd.KeyPress(Hwnd, 49)
     Delay 10000
@@ -82,7 +82,7 @@ Loop
 
 <h2 id="自动收集金币升级">自动收集金币升级</h2>
 <p>相对于收货，这个脚本要简单的多，只需要事先录制好几组收集金币的鼠标滑动路径，为了防止检测出利用脚本，这里使用了一个随机函数，每次随机调用一个路径来收集金币，代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()
 For 100
 	Call Plugin.Bkgnd.KeyPress(Hwnd,54)
     Delay 1000

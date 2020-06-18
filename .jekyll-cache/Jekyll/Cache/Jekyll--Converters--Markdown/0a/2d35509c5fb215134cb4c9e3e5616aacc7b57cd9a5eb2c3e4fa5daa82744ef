@@ -1,4 +1,4 @@
-I"�'<p>fgo这游戏虽然平时很长草，打一般的可以自回体拿完奖励的活动的时候也就是半天上线打三个副本就下线了，消耗的时间不多；但是当无限池或者出什么掉落材料很好的副本的时候，还是需要花费不少时间去刷的，本文对于fgo这种需要重复刷的副本进行分析并提出一种自动挂机的方法。</p>
+I"�(<p>fgo这游戏虽然平时很长草，打一般的可以自回体拿完奖励的活动的时候也就是半天上线打三个副本就下线了，消耗的时间不多；但是当无限池或者出什么掉落材料很好的副本的时候，还是需要花费不少时间去刷的，本文对于fgo这种需要重复刷的副本进行分析并提出一种自动挂机的方法。</p>
 
 <h2 id="游戏机制">游戏机制</h2>
 <p>对于绝大多数的自由副本，一般都是由三面构成，且每面不会超过三个敌人，对于这种副本现在比较流行的方法主要是通过三面光炮解决战斗，当然想要3回合解决副本的话方法有很多，但是在活动刷副本的时候，总共六个位置自然是越多加成位越好，这样最好就是两个拐配合一个输出实现这一个光炮输出能够打3面，常用的方法分为两种：</p>
@@ -27,7 +27,7 @@
 
 <p>通过检测第一个助战位是否为CBA来确定是否选择到了所需要的助战，当然蓝卡队需要用狐狸或者花嫁的话只需要在此基础上进行一定修改即可，按键精灵脚本如下所示：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FindPic 590, 450, 970, 520, "Attachment:\CBA.bmp", 0.9, intX1, intY1      //590, 450, 970, 520分别为搜寻区域的左下角横坐标，左下角纵坐标，右上角横坐标，右上角纵坐标，0.9为相似程度
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FindPic 590, 450, 970, 520, "Attachment:\CBA.bmp", 0.9, intX1, intY1      //590, 450, 970, 520分别为搜寻区域的左下角横坐标，左下角纵坐标，右上角横坐标，右上角纵坐标，0.9为相似程度
 If intX1 &lt; 0 Or intY1 &lt; 0 Then
 Do Until intX1 &gt; 0 And intY1 &gt; 0
 	Call Plugin.Bkgnd.KeyPress(Hwnd,89)
@@ -48,7 +48,7 @@ End If
 
 <p>同自动选择助战一样，在每次进本之前需要判断是否需要进行补充体力的操作，这里可以通过识别副本的体力需求的颜色来进行区分（体力足够时进本的体力需求为白色，体力不足时为红色）或者通过识别区域图片来进行区分，为了留有一定余量，这里采用的是区域识图的方法，脚本如下所示：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FindPic 1140,360,1240,440, "Attachment:\apple.bmp", 0.9, intX, intY
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FindPic 1140,360,1240,440, "Attachment:\apple.bmp", 0.9, intX, intY
 Call Plugin.Bkgnd.KeyPress(Hwnd,88)      //点开副本
 Delay 3000
 If intX &gt; 0 Or intY &gt; 0 Then       //若找到图片，则吃金苹果
@@ -61,7 +61,7 @@ End If
 
 <h2 id="具体脚本流程">具体脚本流程</h2>
 <p>解决掉两个比较麻烦需要进行识别的部分之后，整个脚本剩下来的部分基本上就都是重复性的工作了，这里提供我的刷本策略。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()     //识别鼠标点击的窗口句柄，这样就可以实现后台操作不影响其他工作了
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()     //识别鼠标点击的窗口句柄，这样就可以实现后台操作不影响其他工作了
 Do
 FindPic 2550,1150,2650,1200, "Attachment:\apple.bmp", 0.9, intX, intY
 Call Plugin.Bkgnd.KeyPress(Hwnd,88)
@@ -173,13 +173,13 @@ Loop
   <li>由于宝具没打死需要补刀导致开环程序出现问题；</li>
   <li>由于按键精灵后台识图效果不好，所以必须将网易mumu模拟器一直显示在屏幕上从而拾取屏幕区域图片；</li>
   <li>由于不知道是网易mumu的问题还是按键精灵的问题，将程序最小化之后有一定几率脚本无法运行；</li>
-  <li>为了保证脚本的稳定性，很多地方放出了一定的时间余量，并不能以最高效率完成刷本。
+  <li>为了保证脚本的稳定性，很多地方放出了一定的时间余量，并不能以最高效率完成刷本。                     <br />
 不过尽管存在一定的问题，总体上还是很大程度上解放了双手，提高了刷本的效率。</li>
 </ul>
 
 <h2 id="reference">Reference</h2>
 <p>[1]百度百科     <br />
-[2]http://zy.anjian.com/?action-study
-[3]http://conceptclear.cn/mobilegame/2018/10/07/MoblieGame-ArkOrder-blog.html
+[2]http://zy.anjian.com/?action-study                             <br />
+[3]http://conceptclear.cn/mobilegame/2018/10/07/MoblieGame-ArkOrder-blog.html                        <br />
 [4]http://conceptclear.cn/mobilegame/2019/10/02/homedream.html</p>
 :ET

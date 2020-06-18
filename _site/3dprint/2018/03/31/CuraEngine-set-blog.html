@@ -69,26 +69,26 @@
 <p>安装可以分为三部分：编译protobuf，编译libArcus和编译CuraEngine</p>
 
 <h3 id="编译protobuf">编译protobuf</h3>
-<p>1.确保自己配置了<code class="highlighter-rouge">libtool</code>，若未安装，可以利用<code class="highlighter-rouge">apt</code>进行安装。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install libtool
+<p>1.确保自己配置了<code class="language-plaintext highlighter-rouge">libtool</code>，若未安装，可以利用<code class="language-plaintext highlighter-rouge">apt</code>进行安装。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install libtool
 </code></pre></div></div>
 <p>2.从<a href="https://github.com/google/protobuf/releases/tag/v3.5.1">protobuf</a>的发行版上下载protobuf(&gt;3.0.0)。<br />
-3.在protobuf的文件夹中运行<code class="highlighter-rouge">autogen.sh</code>文件</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd protobuf-×
+3.在protobuf的文件夹中运行<code class="language-plaintext highlighter-rouge">autogen.sh</code>文件</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd protobuf-×
 ./autogen.sh
 </code></pre></div></div>
-<p>如果安装过程中出现<code class="highlighter-rouge">autoreconf:not found</code>的错误提示，是由于系统中没有安装autoreconf工具，可以利用<code class="highlighter-rouge">apt</code>进行安装</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install autoreconf
+<p>如果安装过程中出现<code class="language-plaintext highlighter-rouge">autoreconf:not found</code>的错误提示，是由于系统中没有安装autoreconf工具，可以利用<code class="language-plaintext highlighter-rouge">apt</code>进行安装</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install autoreconf
 </code></pre></div></div>
-<p>4.运行configure：<code class="highlighter-rouge">./configure</code><br />
-5.<code class="highlighter-rouge">make</code><br />
-6.<code class="highlighter-rouge">sudo make install</code></p>
+<p>4.运行configure：<code class="language-plaintext highlighter-rouge">./configure</code><br />
+5.<code class="language-plaintext highlighter-rouge">make</code><br />
+6.<code class="language-plaintext highlighter-rouge">sudo make install</code></p>
 
 <h3 id="编译libarcus库">编译libArcus库</h3>
-<p>1.需要安装<code class="highlighter-rouge">CMake</code>，<code class="highlighter-rouge">python3-dev(3.4+)</code>和<code class="highlighter-rouge">python3-sip-dev(4.16+)</code>。<br />
+<p>1.需要安装<code class="language-plaintext highlighter-rouge">CMake</code>，<code class="language-plaintext highlighter-rouge">python3-dev(3.4+)</code>和<code class="language-plaintext highlighter-rouge">python3-sip-dev(4.16+)</code>。<br />
 2.git clone <a href="https://github.com/Ultimaker/libArcus">libArcus</a>的仓库或者直接下载zip包。<br />
 3.利用CMake对libArcus进行编译</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir build
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir build
 cd build
 cmake ..
 make
@@ -98,7 +98,7 @@ sudo make install
 <h3 id="编译curaengine库">编译CuraEngine库</h3>
 <p>1.git clone <a href="https://github.com/Ultimaker/CuraEngine">CuraEngine</a>的仓库或者直接下载zip包。<br />
 2.利用CMake对CuraEngine进行编译</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir build
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir build
 cd build
 cmake ..
 make
@@ -108,7 +108,7 @@ cmake . -G "CodeBlocks - Unix Makefiles"
 <h2 id="运行curaengine">运行CuraEngine</h2>
 <p>与Cura软件所不同的是，CuraEngine需要通过命令行的方式进行运行。运行CuraEngine需要一个JSON的配置文件，在Cura的repository中可以找到。自Cura2.1版本后，json文件结构发生了变化。
 CuraEngine切片的用法在CuraEngine Help中提供如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CuraEngine slice [-v] [-p] [-j &lt;settings.json&gt;] [-s &lt;settingkey&gt;=&lt;value&gt;] [-g] [-e&lt;extruder_nr&gt;] [-o &lt;output.gcode&gt;] [-l &lt;model.stl&gt;] [--next]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CuraEngine slice [-v] [-p] [-j &lt;settings.json&gt;] [-s &lt;settingkey&gt;=&lt;value&gt;] [-g] [-e&lt;extruder_nr&gt;] [-o &lt;output.gcode&gt;] [-l &lt;model.stl&gt;] [--next]
 </code></pre></div></div>
 <ul>
   <li>-v：增加详细级别（这里可以输出log消息）</li>
@@ -125,7 +125,7 @@ CuraEngine切片的用法在CuraEngine Help中提供如下：</p>
 
 <p>由于文件一直在更新，官方文件所提供的例子无法直接运行，这里提供一个例子：<br />
 进入CuraEngine所在文件夹</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./build/CuraEngine slice -v -j ../Cura/resources/definitions/zone3d_printer.def.json -o "./output/test.gcode" -e0 -s infill_line_distance=1 -e0 -l "./build/testcub1.STL"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./build/CuraEngine slice -v -j ../Cura/resources/definitions/zone3d_printer.def.json -o "./output/test.gcode" -e0 -s infill_line_distance=1 -e0 -l "./build/testcub1.STL"
 </code></pre></div></div>
 
 <p>运行结果如图所示：<br />
@@ -203,9 +203,11 @@ gitment.render('container')
           
           <details class="menu" open>
             <summary>
-              <font size="4"><b>MobileGame（3）</b></font>
+              <font size="4"><b>MobileGame（4）</b></font>
             </summary>
             <ul class="arc-list">
+              
+              <li>17/06/2020<a href="/mobilegame/2020/06/17/MobileGame-fgo-py.html">手游fgo网易mumu模拟器自动挂机py脚本</a></li>
               
               <li>18/02/2020<a href="/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a></li>
               
@@ -253,17 +255,6 @@ gitment.render('container')
             <ul class="arc-list">
               
               <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">Windows下jekyll的配置</a></li>
-              
-            </ul>
-          </details>
-          
-          <details class="menu" open>
-            <summary>
-              <font size="4"><b>matrix（1）</b></font>
-            </summary>
-            <ul class="arc-list">
-              
-              <li>18/09/2019<a href="/matrix/2019/09/18/matrix-decomposition.html">矩阵分解</a></li>
               
             </ul>
           </details>

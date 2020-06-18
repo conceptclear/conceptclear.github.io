@@ -1,4 +1,4 @@
-I"j<p>3D打印行业近些年在国内发展迅猛，很多新的3D打印公司在国家政策的支持下纷纷建立起来。然而虽然3d打印机型号外形众多，绝大多数公司打印程序仍然采用的是Ultimaker公司提供在github上的一个开源项目——CuraEngine作为内核，
+I"�<p>3D打印行业近些年在国内发展迅猛，很多新的3D打印公司在国家政策的支持下纷纷建立起来。然而虽然3d打印机型号外形众多，绝大多数公司打印程序仍然采用的是Ultimaker公司提供在github上的一个开源项目——CuraEngine作为内核，
 理解学习CuraEngine对于3D打印行业内部程序开发来说还是必不可少的一步。</p>
 
 <h2 id="cura">Cura</h2>
@@ -21,26 +21,26 @@
 <p>安装可以分为三部分：编译protobuf，编译libArcus和编译CuraEngine</p>
 
 <h3 id="编译protobuf">编译protobuf</h3>
-<p>1.确保自己配置了<code class="highlighter-rouge">libtool</code>，若未安装，可以利用<code class="highlighter-rouge">apt</code>进行安装。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install libtool
+<p>1.确保自己配置了<code class="language-plaintext highlighter-rouge">libtool</code>，若未安装，可以利用<code class="language-plaintext highlighter-rouge">apt</code>进行安装。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install libtool
 </code></pre></div></div>
 <p>2.从<a href="https://github.com/google/protobuf/releases/tag/v3.5.1">protobuf</a>的发行版上下载protobuf(&gt;3.0.0)。<br />
-3.在protobuf的文件夹中运行<code class="highlighter-rouge">autogen.sh</code>文件</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd protobuf-×
+3.在protobuf的文件夹中运行<code class="language-plaintext highlighter-rouge">autogen.sh</code>文件</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd protobuf-×
 ./autogen.sh
 </code></pre></div></div>
-<p>如果安装过程中出现<code class="highlighter-rouge">autoreconf:not found</code>的错误提示，是由于系统中没有安装autoreconf工具，可以利用<code class="highlighter-rouge">apt</code>进行安装</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install autoreconf
+<p>如果安装过程中出现<code class="language-plaintext highlighter-rouge">autoreconf:not found</code>的错误提示，是由于系统中没有安装autoreconf工具，可以利用<code class="language-plaintext highlighter-rouge">apt</code>进行安装</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install autoreconf
 </code></pre></div></div>
-<p>4.运行configure：<code class="highlighter-rouge">./configure</code><br />
-5.<code class="highlighter-rouge">make</code><br />
-6.<code class="highlighter-rouge">sudo make install</code></p>
+<p>4.运行configure：<code class="language-plaintext highlighter-rouge">./configure</code><br />
+5.<code class="language-plaintext highlighter-rouge">make</code><br />
+6.<code class="language-plaintext highlighter-rouge">sudo make install</code></p>
 
 <h3 id="编译libarcus库">编译libArcus库</h3>
-<p>1.需要安装<code class="highlighter-rouge">CMake</code>，<code class="highlighter-rouge">python3-dev(3.4+)</code>和<code class="highlighter-rouge">python3-sip-dev(4.16+)</code>。<br />
+<p>1.需要安装<code class="language-plaintext highlighter-rouge">CMake</code>，<code class="language-plaintext highlighter-rouge">python3-dev(3.4+)</code>和<code class="language-plaintext highlighter-rouge">python3-sip-dev(4.16+)</code>。<br />
 2.git clone <a href="https://github.com/Ultimaker/libArcus">libArcus</a>的仓库或者直接下载zip包。<br />
 3.利用CMake对libArcus进行编译</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir build
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir build
 cd build
 cmake ..
 make
@@ -50,7 +50,7 @@ sudo make install
 <h3 id="编译curaengine库">编译CuraEngine库</h3>
 <p>1.git clone <a href="https://github.com/Ultimaker/CuraEngine">CuraEngine</a>的仓库或者直接下载zip包。<br />
 2.利用CMake对CuraEngine进行编译</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir build
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir build
 cd build
 cmake ..
 make
@@ -60,7 +60,7 @@ cmake . -G "CodeBlocks - Unix Makefiles"
 <h2 id="运行curaengine">运行CuraEngine</h2>
 <p>与Cura软件所不同的是，CuraEngine需要通过命令行的方式进行运行。运行CuraEngine需要一个JSON的配置文件，在Cura的repository中可以找到。自Cura2.1版本后，json文件结构发生了变化。
 CuraEngine切片的用法在CuraEngine Help中提供如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CuraEngine slice [-v] [-p] [-j &lt;settings.json&gt;] [-s &lt;settingkey&gt;=&lt;value&gt;] [-g] [-e&lt;extruder_nr&gt;] [-o &lt;output.gcode&gt;] [-l &lt;model.stl&gt;] [--next]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CuraEngine slice [-v] [-p] [-j &lt;settings.json&gt;] [-s &lt;settingkey&gt;=&lt;value&gt;] [-g] [-e&lt;extruder_nr&gt;] [-o &lt;output.gcode&gt;] [-l &lt;model.stl&gt;] [--next]
 </code></pre></div></div>
 <ul>
   <li>-v：增加详细级别（这里可以输出log消息）</li>
@@ -77,7 +77,7 @@ CuraEngine切片的用法在CuraEngine Help中提供如下：</p>
 
 <p>由于文件一直在更新，官方文件所提供的例子无法直接运行，这里提供一个例子：<br />
 进入CuraEngine所在文件夹</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./build/CuraEngine slice -v -j ../Cura/resources/definitions/zone3d_printer.def.json -o "./output/test.gcode" -e0 -s infill_line_distance=1 -e0 -l "./build/testcub1.STL"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./build/CuraEngine slice -v -j ../Cura/resources/definitions/zone3d_printer.def.json -o "./output/test.gcode" -e0 -s infill_line_distance=1 -e0 -l "./build/testcub1.STL"
 </code></pre></div></div>
 
 <p>运行结果如图所示：<br />

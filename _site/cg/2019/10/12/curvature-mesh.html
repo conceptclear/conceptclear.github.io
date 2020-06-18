@@ -43,165 +43,161 @@
 
         <h1>面片模型的曲率估计</h1>
 <p class="meta"><b>Date:</b>12 October 2019
-  | <b>Number of words:</b>1323
-  | <b>Approximately reading time:</b>4 minutes</p>
+  | <b>Number of words:</b>4324
+  | <b>Approximately reading time:</b>13 minutes</p>
 
 <p>在计算机图形学中，面片模型是最常用的表示三维模型的表达方式。从具有大量小面的多面近似中估计曲面的主曲率和主方向，例如由等值面构造算法生成的那些面，已成为许多计算机视觉算法中的基本步骤。Gabriel Taubin[1]在95年提出了一种计算多面体近似顶点处的曲面曲率的方法。通过计算对称矩阵的特征值和特征向量可以得出主曲率和主方向，而该对称矩阵是由积分公式定义并且与曲率张量的矩阵表达密切相关。</p>
 
 <h2 id="顶点的法向量">顶点的法向量</h2>
 <p>三角网格模型一般可以由一对线性表来表示，</p>
 
-<script type="math/tex; mode=display">M=(V,F)</script>
+\[M=(V,F)\]
 
-<p>其中，<script type="math/tex">V={v_i:1\le i \le n_v}</script>用于表示顶点集，<script type="math/tex">n_v</script>代表顶点数量，<script type="math/tex">F={f_k:1 \le k \le n_f}</script>用于表示三角面片集，<script type="math/tex">n_f</script>代表面片数量。对于任意一点<script type="math/tex">v_i</script>，所有包含<script type="math/tex">v_i</script>的三角面片集合记为<script type="math/tex">F^i</script>，若面片<script type="math/tex">f_k</script>属于<script type="math/tex">F^i</script>，记为<script type="math/tex">f_k \in F^i</script>，<script type="math/tex">f_k</script>的绝对值记为三角形面片的面积，包含点<script type="math/tex">v_i</script>的三角面片的面积之和记为<script type="math/tex">N(v_i)</script>。<script type="math/tex">F_i</script>中除了顶点<script type="math/tex">v_i</script>之外的其他顶点组成的集合记为<script type="math/tex">V^i</script>，如果顶点<script type="math/tex">v_i \in V^I</script>，则<script type="math/tex">v_j</script>是<script type="math/tex">v_i</script>的相邻点，<script type="math/tex">V^i</script>中顶点的个数称为顶点的度，用<script type="math/tex">N(i)</script>的绝对值来表示。</p>
+<p>其中，\(V={v_i:1\le i \le n_v}\)用于表示顶点集，\(n_v\)代表顶点数量，\(F={f_k:1 \le k \le n_f}\)用于表示三角面片集，\(n_f\)代表面片数量。对于任意一点\(v_i\)，所有包含\(v_i\)的三角面片集合记为\(F^i\)，若面片\(f_k\)属于\(F^i\)，记为\(f_k \in F^i\)，\(f_k\)的绝对值记为三角形面片的面积，包含点\(v_i\)的三角面片的面积之和记为\(N(v_i)\)。\(F_i\)中除了顶点\(v_i\)之外的其他顶点组成的集合记为\(V^i\)，如果顶点\(v_i \in V^I\)，则\(v_j\)是\(v_i\)的相邻点，\(V^i\)中顶点的个数称为顶点的度，用\(N(i)\)的绝对值来表示。</p>
 
-<p>在离散三角网格面片模型中，任意顶点的法向量是一个非常重要的量，对顶点法向量的求解一般采用对该顶点所连接的三角形的某些几何量加权平均值得到。最简单的加权方法为<script type="math/tex">F_i</script>中所有三角面片的法向量的平均值：</p>
+<p>在离散三角网格面片模型中，任意顶点的法向量是一个非常重要的量，对顶点法向量的求解一般采用对该顶点所连接的三角形的某些几何量加权平均值得到。最简单的加权方法为\(F_i\)中所有三角面片的法向量的平均值：</p>
 
-<script type="math/tex; mode=display">N_{v_i}=\frac{1}{N(i)} \sum_{f_k \in F^i}N_{f_k}</script>
+\[N_{v_i}=\frac{1}{N(i)} \sum_{f_k \in F^i}N_{f_k}\]
 
 <p>Taubin给出的面积加权和为：</p>
 
-<script type="math/tex; mode=display">N_{v_i}=\frac{\sum_{f_k \in F^i}|f_k|N_{f_k}}{||\sum_{f_k \in F^i}|f_k|N_{f_k}||}</script>
+\[N_{v_i}=\frac{\sum_{f_k \in F^i}|f_k|N_{f_k}}{||\sum_{f_k \in F^i}|f_k|N_{f_k}||}\]
 
-<p>对于三角形网格上的任一点<script type="math/tex">v_i</script>，法曲率通常使用公式</p>
+<p>对于三角形网格上的任一点\(v_i\)，法曲率通常使用公式</p>
 
-<script type="math/tex; mode=display">\kappa_{ij}=\frac{2N_{v_i}^T(v_j-v_i)}{||v_j-v_i||}</script>
+\[\kappa_{ij}=\frac{2N_{v_i}^T(v_j-v_i)}{||v_j-v_i||}\]
 
 <p>具体证明详见文献[1]，这里不做赘述。</p>
 
 <h2 id="taubin主曲率估计方法">Taubin主曲率估计方法</h2>
-<p>对于曲面<script type="math/tex">S</script>上的点<script type="math/tex">p</script>，设<script type="math/tex">{T_1,T_2}</script>为其切平面上的一组正交基，设<script type="math/tex">T</script>为点<script type="math/tex">p</script>上的单位切向量，有<script type="math/tex">T=t_1T_1+t_2T_2</script>，这样可以表示出点p沿着T方向的法曲率为</p>
+<p>对于曲面\(S\)上的点\(p\)，设\({T_1,T_2}\)为其切平面上的一组正交基，设\(T\)为点\(p\)上的单位切向量，有\(T=t_1T_1+t_2T_2\)，这样可以表示出点p沿着T方向的法曲率为</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\kappa_p(T)= \left[
+\[\kappa_p(T)= \left[
  \begin{matrix}
-   t_1 & t_2
+   t_1 &amp; t_2
   \end{matrix}
   \right]\left[
    \begin{matrix}
-     \kappa_p^{11} & \kappa_p^{12} \\
-     \kappa_p^{21} & \kappa_p^{22}
+     \kappa_p^{11} &amp; \kappa_p^{12} \\
+     \kappa_p^{21} &amp; \kappa_p^{22}
     \end{matrix}
     \right]\left[
      \begin{matrix}
        t_1 \\ t_2
       \end{matrix}
-      \right] %]]></script>
+      \right]\]
 
-<p>其中，<script type="math/tex">\kappa_p^{11}=\kappa_p(T_1),\kappa_p^{22}=\kappa_p(T_2),\kappa_p^{12}=\kappa_p^{21}</script>。当<script type="math/tex">\kappa_p^{12}=\kappa_p^{21}=0</script>时，<script type="math/tex">\{T_1,T_2\}</script>为S点的两个主曲率。此时用<script type="math/tex">\kappa_p^1</script>和<script type="math/tex">\kappa_p^2</script>来代替<script type="math/tex">\kappa_p^{11}</script>和<script type="math/tex">\kappa_p^{22}</script>。           <br />
-若在正交基中加入法向量<script type="math/tex">N</script>，可以得到三个正交基<script type="math/tex">\{N,T_1,T_2\}</script>，这样p点的法曲率也可以表示为：</p>
+<p>其中，\(\kappa_p^{11}=\kappa_p(T_1),\kappa_p^{22}=\kappa_p(T_2),\kappa_p^{12}=\kappa_p^{21}\)。当\(\kappa_p^{12}=\kappa_p^{21}=0\)时，\(\{T_1,T_2\}\)为S点的两个主曲率。此时用\(\kappa_p^1\)和\(\kappa_p^2\)来代替\(\kappa_p^{11}\)和\(\kappa_p^{22}\)。           <br />
+若在正交基中加入法向量\(N\)，可以得到三个正交基\(\{N,T_1,T_2\}\)，这样p点的法曲率也可以表示为：</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\kappa_p(T)= \left[
+\[\kappa_p(T)= \left[
  \begin{matrix}
-   n & t_1 & t_2
+   n &amp; t_1 &amp; t_2
   \end{matrix}
   \right]\left[
    \begin{matrix}
-      0 & 0 & 0 \\
-     0 & \kappa_p^{1} & 0 \\
-     0 & 0 & \kappa_p^{2}
+      0 &amp; 0 &amp; 0 \\
+     0 &amp; \kappa_p^{1} &amp; 0 \\
+     0 &amp; 0 &amp; \kappa_p^{2}
     \end{matrix}
     \right]\left[
      \begin{matrix}
        n \\ t_1 \\ t_2
       \end{matrix}
-      \right] %]]></script>
+      \right]\]
 
-<p>其中<script type="math/tex">T=nN+t_1T_1+t_2T_2</script>可以表示p点上的任意向量。将<script type="math/tex">t_1,t_2</script>用该向量与主方向<script type="math/tex">T_1,T_2</script>来表示，即</p>
+<p>其中\(T=nN+t_1T_1+t_2T_2\)可以表示p点上的任意向量。将\(t_1,t_2\)用该向量与主方向\(T_1,T_2\)来表示，即</p>
 
-<script type="math/tex; mode=display">T_{\theta}=\kappa_p^1cos^2\theta+\kappa_p^2sin^2\theta</script>
+\[T_{\theta}=\kappa_p^1cos^2\theta+\kappa_p^2sin^2\theta\]
 
 <p>定义对称矩阵：</p>
 
-<script type="math/tex; mode=display">M_p = \frac{1}{2\pi}\int_{-\pi}^{+\pi}\kappa_p(T_{\theta})T_{\theta}T_{\theta}^Td\theta</script>
+\[M_p = \frac{1}{2\pi}\int_{-\pi}^{+\pi}\kappa_p(T_{\theta})T_{\theta}T_{\theta}^Td\theta\]
 
-<p>由于<script type="math/tex">T_{\theta}T_{\theta}^T</script>的秩为1，因此法向量N为该矩阵特征值为0时所对应的特征向量。          <br />
-令<script type="math/tex">T_{12}=[T_1\ T_2]</script>，对称矩阵可以分解为</p>
+<p>由于\(T_{\theta}T_{\theta}^T\)的秩为1，因此法向量N为该矩阵特征值为0时所对应的特征向量。          <br />
+令\(T_{12}=[T_1\ T_2]\)，对称矩阵可以分解为</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-M_p=T_{12}\left[
+\[M_p=T_{12}\left[
  \begin{matrix}
-   m_p^{11} & m_p^{12} \\
-   m_p^{21} & m_p^{22}
+   m_p^{11} &amp; m_p^{12} \\
+   m_p^{21} &amp; m_p^{22}
   \end{matrix}
-  \right]T_{12}^T %]]></script>
+  \right]T_{12}^T\]
 
 <p>其中，</p>
 
-<script type="math/tex; mode=display">m_p^{11}=T_1^TM_PT_1\\
+\[m_p^{11}=T_1^TM_PT_1\\
 m_p^{12}=m_p^{21}=T_1^TM_PT_2\\
-m_p^{22}=T_2^TM_PT_2\\</script>
+m_p^{22}=T_2^TM_PT_2\\\]
 
 <p>通过积分运算可以得到</p>
 
-<script type="math/tex; mode=display">m_p^{11}=\frac{3}{8}\kappa_p^1+\frac{1}{8}\kappa_p^2 \\
+\[m_p^{11}=\frac{3}{8}\kappa_p^1+\frac{1}{8}\kappa_p^2 \\
 m_p^{22}=\frac{1}{8}\kappa_p^1+\frac{3}{8}\kappa_p^2 \\
-m_p^{12}=m_p^{21}=0</script>
+m_p^{12}=m_p^{21}=0\]
 
 <p>转换可得</p>
 
-<script type="math/tex; mode=display">\kappa_p^1=3m_p^{11}-m_p^{22}\\
-\kappa_p^2=3m_p^{22}-m_p^{11}\\</script>
+\[\kappa_p^1=3m_p^{11}-m_p^{22}\\
+\kappa_p^2=3m_p^{22}-m_p^{11}\\\]
 
-<p>这样只要确定了<script type="math/tex">M_p</script>中的<script type="math/tex">\kappa_p(T_{\theta})</script>，就可以通过特征值和特征向量反求出主曲率和主方向。在离散三角面片模型中，可以利用上面提到的公式来计算：</p>
+<p>这样只要确定了\(M_p\)中的\(\kappa_p(T_{\theta})\)，就可以通过特征值和特征向量反求出主曲率和主方向。在离散三角面片模型中，可以利用上面提到的公式来计算：</p>
 
-<script type="math/tex; mode=display">\kappa_{ij}=\frac{2N_{v_i}^T(v_j-v_i)}{||v_j-v_i||}</script>
+\[\kappa_{ij}=\frac{2N_{v_i}^T(v_j-v_i)}{||v_j-v_i||}\]
 
 <h2 id="算法实现">算法实现</h2>
 <p>对于任意一个输入的三维离散三角网格模型，可以通过公式求解出顶点的法向量：</p>
 
-<script type="math/tex; mode=display">N_{v_i}=\frac{\sum_{f_k \in F^i}|f_k|N_{f_k}}{||\sum_{f_k \in F^i}|f_k|N_{f_k}||}</script>
+\[N_{v_i}=\frac{\sum_{f_k \in F^i}|f_k|N_{f_k}}{||\sum_{f_k \in F^i}|f_k|N_{f_k}||}\]
 
-<p>计算矩阵<script type="math/tex">M_p</script>的值，这里通过离散化近似的方法使用以下公式计算：</p>
+<p>计算矩阵\(M_p\)的值，这里通过离散化近似的方法使用以下公式计算：</p>
 
-<script type="math/tex; mode=display">M_{v_i}=\sum_{v_j \in V^i}\omega_{ij}\kappa_{ij}T_{ij}T_{ij}^T</script>
+\[M_{v_i}=\sum_{v_j \in V^i}\omega_{ij}\kappa_{ij}T_{ij}T_{ij}^T\]
 
-<p>对于每个<script type="math/tex">v_i</script>的相邻点<script type="math/tex">v_j</script>，单位向量<script type="math/tex">T_{ij}</script>为向量<script type="math/tex">v_i-v_j</script>在i点的切平面上的投影：</p>
+<p>对于每个\(v_i\)的相邻点\(v_j\)，单位向量\(T_{ij}\)为向量\(v_i-v_j\)在i点的切平面上的投影：</p>
 
-<script type="math/tex; mode=display">T_{ij}=\frac{(I-N_{v_i}N_{v_i}^T)(v_i-v_j)}{||(I-N_{v_i}N_{v_i}^T)(v_i-v_j)||}</script>
+\[T_{ij}=\frac{(I-N_{v_i}N_{v_i}^T)(v_i-v_j)}{||(I-N_{v_i}N_{v_i}^T)(v_i-v_j)||}\]
 
-<p>对法曲率<script type="math/tex">\kappa_{ij}</script>的求解，直接通过公式：</p>
+<p>对法曲率\(\kappa_{ij}\)的求解，直接通过公式：</p>
 
-<script type="math/tex; mode=display">\kappa_{ij}=\frac{2N_{v_i}^T(v_j-v_i)}{||v_j-v_i||}</script>
+\[\kappa_{ij}=\frac{2N_{v_i}^T(v_j-v_i)}{||v_j-v_i||}\]
 
-<p><script type="math/tex">\omega_{ij}</script>采用面积加权平均值，即与所有包含<script type="math/tex">v_i,v_j</script>的三角面片面积成正比，如果模型是封闭的，则有两个面片，即</p>
+<p>\(\omega_{ij}\)采用面积加权平均值，即与所有包含\(v_i,v_j\)的三角面片面积成正比，如果模型是封闭的，则有两个面片，即</p>
 
-<script type="math/tex; mode=display">\omega_{ij}=\frac{|f_{k_i}+f_{k_j}|}{2\sum|f_k|}</script>
+\[\omega_{ij}=\frac{|f_{k_i}+f_{k_j}|}{2\sum|f_k|}\]
 
 <p>利用Householder变化，令</p>
 
-<script type="math/tex; mode=display">E=\left[
+\[E=\left[
  \begin{matrix}
    1 \\ 0 \\ 0
   \end{matrix}
-  \right], \  W_{v_i}=\frac{E\pm N_{v_i}}{||E\pm N_{v_i}||}</script>
+  \right], \  W_{v_i}=\frac{E\pm N_{v_i}}{||E\pm N_{v_i}||}\]
 
-<p>其中，当<script type="math/tex">E-N_{v_i}的量>E+N_{v_i}的量</script>时符号取负，反之取正。
+<p>其中，当\(E-N_{v_i}的量&gt;E+N_{v_i}的量\)时符号取负，反之取正。
 得到Householder矩阵为：</p>
 
-<script type="math/tex; mode=display">Q_{v_i}=I-2W_{v_i}W_{v_i}^T</script>
+\[Q_{v_i}=I-2W_{v_i}W_{v_i}^T\]
 
-<p>该矩阵是正交的切第一列为<script type="math/tex">N_{v_i}</script>或者<script type="math/tex">-N_{v_i}</script>(取决于之前的符号选择)，其余两列决定了一组标准正交基,定义这两列向量为<script type="math/tex">\widetilde{T_1},\widetilde{T_2}</script>。由于<script type="math/tex">N_{v_i}</script>是矩阵特征值为0的特征向量，所以有：</p>
+<p>该矩阵是正交的切第一列为\(N_{v_i}\)或者\(-N_{v_i}\)(取决于之前的符号选择)，其余两列决定了一组标准正交基,定义这两列向量为\(\widetilde{T_1},\widetilde{T_2}\)。由于\(N_{v_i}\)是矩阵特征值为0的特征向量，所以有：</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-Q_{v_i}^TM_{v_i}Q_{v_i}=\left[
+\[Q_{v_i}^TM_{v_i}Q_{v_i}=\left[
  \begin{matrix}
-    0 & 0 & 0 \\
-   0 & \widetilde{m_{v_i}^{11}} & \widetilde{m_{v_i}^{12}} \\
-   0 & \widetilde{m_{v_i}^{21}} & \widetilde{m_{v_i}^{22}}
+    0 &amp; 0 &amp; 0 \\
+   0 &amp; \widetilde{m_{v_i}^{11}} &amp; \widetilde{m_{v_i}^{12}} \\
+   0 &amp; \widetilde{m_{v_i}^{21}} &amp; \widetilde{m_{v_i}^{22}}
   \end{matrix}
-  \right] %]]></script>
+  \right]\]
 
-<p>其中有，<script type="math/tex">\widetilde{m_{v_i}^{12}}=\widetilde{m_{v_i}^{21}}</script>。通过Givens变换可以得到：</p>
+<p>其中有，\(\widetilde{m_{v_i}^{12}}=\widetilde{m_{v_i}^{21}}\)。通过Givens变换可以得到：</p>
 
-<script type="math/tex; mode=display">\widetilde{m_{v_i}^{11}}cos\theta+\widetilde{m_{v_i}^{21}}sin\theta=0\\
--\widetilde{m_{v_i}^{12}}sin\theta+\widetilde{m_{v_i}^{22}}cos\theta=0</script>
+\[\widetilde{m_{v_i}^{11}}cos\theta+\widetilde{m_{v_i}^{21}}sin\theta=0\\
+-\widetilde{m_{v_i}^{12}}sin\theta+\widetilde{m_{v_i}^{22}}cos\theta=0\]
 
-<p>通过计算可以得到<script type="math/tex">cos\theta,sin\theta</script>，从而可以求出主方向：</p>
+<p>通过计算可以得到\(cos\theta,sin\theta\)，从而可以求出主方向：</p>
 
-<script type="math/tex; mode=display">T_1=cos\theta \widetilde{T_1}-sin\theta \widetilde{T_2}\\
-T_2=sin\theta \widetilde{T_1}+cos\theta \widetilde{T_2}</script>
+\[T_1=cos\theta \widetilde{T_1}-sin\theta \widetilde{T_2}\\
+T_2=sin\theta \widetilde{T_1}+cos\theta \widetilde{T_2}\]
 
 <p>计算出主方向后即可以求出主曲率的大小。</p>
 
@@ -270,9 +266,11 @@ gitment.render('container')
           
           <details class="menu" open>
             <summary>
-              <font size="4"><b>MobileGame（3）</b></font>
+              <font size="4"><b>MobileGame（4）</b></font>
             </summary>
             <ul class="arc-list">
+              
+              <li>17/06/2020<a href="/mobilegame/2020/06/17/MobileGame-fgo-py.html">手游fgo网易mumu模拟器自动挂机py脚本</a></li>
               
               <li>18/02/2020<a href="/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a></li>
               
@@ -320,17 +318,6 @@ gitment.render('container')
             <ul class="arc-list">
               
               <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">Windows下jekyll的配置</a></li>
-              
-            </ul>
-          </details>
-          
-          <details class="menu" open>
-            <summary>
-              <font size="4"><b>matrix（1）</b></font>
-            </summary>
-            <ul class="arc-list">
-              
-              <li>18/09/2019<a href="/matrix/2019/09/18/matrix-decomposition.html">矩阵分解</a></li>
               
             </ul>
           </details>

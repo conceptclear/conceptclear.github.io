@@ -43,8 +43,8 @@
 
         <h1>有限元分析基础理论</h1>
 <p class="meta"><b>Date:</b>27 August 2018
-  | <b>Number of words:</b>2021
-  | <b>Approximately reading time:</b>6 minutes</p>
+  | <b>Number of words:</b>2633
+  | <b>Approximately reading time:</b>8 minutes</p>
 
 <p>这段时间由于项目原因去了企业教企业员工关于ANSYS的一些操作，虽然说如果只教软件的话，可能对于有限元理论并不是需要那么了解，但是知其然知其所以然，正好趁着这个机会巩固了一下有限元分析的一些基础。</p>
 
@@ -66,38 +66,37 @@
 
 <p>可以假设温度分布函数可以表示为下面这个式子:</p>
 
-<script type="math/tex; mode=display">T=a\xi^2+b\xi^2+c</script>
+\[T=a\xi^2+b\xi^2+c\]
 
 <p>其中，</p>
 
-<script type="math/tex; mode=display">\xi\in[-1,1]</script>
+\[\xi\in[-1,1]\]
 
 <p>这里可以简单看为将这个二次插值函数自变量归一化，使得函数在[-1,1]的范围内变化，那么可以根据三个点处的温度值求解出a，b，c的值来：</p>
 
-<script type="math/tex; mode=display">T=T_1 \quad when \quad \xi=-1 \\
+\[T=T_1 \quad when \quad \xi=-1 \\
 T=T_2 \quad when \quad \xi=0  \\
-T=T_3 \quad when \quad \xi=1</script>
+T=T_3 \quad when \quad \xi=1\]
 
 <p>可得：</p>
 
-<script type="math/tex; mode=display">a=\frac{1}{2}(T_3+T_1)-T_2 \\
+\[a=\frac{1}{2}(T_3+T_1)-T_2 \\
 b=\frac{1}{2}(T_3-T_1) \\
-c=T_2</script>
+c=T_2\]
 
 <p>带入原方程，重新整理可以得到：</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-T&=[\frac{1}{2}(T_3+T_1)-T_2]\xi^2+\frac{1}{2}(T_3-T_1)\xi+T_2 \\
-&=\frac{1}{2}\xi(\xi-1)T_1-(\xi-1)(\xi+1)T_2+\frac{1}{2}\xi(\xi+1)T_3 \\
-&=N_1(\xi)T_1+N_2(\xi)T_2+N_3(\xi)T_3
-\end{align} %]]></script>
+\[\begin{align}
+T&amp;=[\frac{1}{2}(T_3+T_1)-T_2]\xi^2+\frac{1}{2}(T_3-T_1)\xi+T_2 \\
+&amp;=\frac{1}{2}\xi(\xi-1)T_1-(\xi-1)(\xi+1)T_2+\frac{1}{2}\xi(\xi+1)T_3 \\
+&amp;=N_1(\xi)T_1+N_2(\xi)T_2+N_3(\xi)T_3
+\end{align}\]
 
 <p>这里的N<sub>1</sub>，N<sub>2</sub>，N<sub>3</sub>即为三个形函数</p>
 
-<script type="math/tex; mode=display">N_1(\xi)=\frac{1}{2}\xi(\xi-1);\quad
+\[N_1(\xi)=\frac{1}{2}\xi(\xi-1);\quad
 N_2(\xi)=-(\xi+1)(\xi-1);\quad
-N_3(\xi)=\frac{1}{2}\xi(\xi+1)</script>
+N_3(\xi)=\frac{1}{2}\xi(\xi+1)\]
 
 <p>可以发现，形函数具有以下几个性质：</p>
 
@@ -106,12 +105,12 @@ N_3(\xi)=\frac{1}{2}\xi(\xi+1)</script>
 
 <p>同理，这三个点在实际二维空间中连成的曲线也可以通过这三个形函数来进行构造：</p>
 
-<script type="math/tex; mode=display">\left\{
+\[\left\{
     \begin{array}{c}
         x=N_1(\xi)x_1+N_2(\xi)x_2+N_3(\xi)x_3 \\
         y=N_1(\xi)y_1+N_2(\xi)y_2+N_3(\xi)y_3
     \end{array}
-\right.</script>
+\right.\]
 
 <p>通过给定的三个点就可以构造出整个单元的边界，换句话说就是确定了单元的形状，所以这个函数被称为形函数。通过形函数的插值，我们可以将单元的参数空间与实际分析中的真实空间形成一个映射关系。</p>
 
@@ -205,9 +204,11 @@ gitment.render('container')
           
           <details class="menu" open>
             <summary>
-              <font size="4"><b>MobileGame（3）</b></font>
+              <font size="4"><b>MobileGame（4）</b></font>
             </summary>
             <ul class="arc-list">
+              
+              <li>17/06/2020<a href="/mobilegame/2020/06/17/MobileGame-fgo-py.html">手游fgo网易mumu模拟器自动挂机py脚本</a></li>
               
               <li>18/02/2020<a href="/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a></li>
               
@@ -255,17 +256,6 @@ gitment.render('container')
             <ul class="arc-list">
               
               <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">Windows下jekyll的配置</a></li>
-              
-            </ul>
-          </details>
-          
-          <details class="menu" open>
-            <summary>
-              <font size="4"><b>matrix（1）</b></font>
-            </summary>
-            <ul class="arc-list">
-              
-              <li>18/09/2019<a href="/matrix/2019/09/18/matrix-decomposition.html">矩阵分解</a></li>
               
             </ul>
           </details>

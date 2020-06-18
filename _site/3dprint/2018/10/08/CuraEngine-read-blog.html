@@ -43,7 +43,7 @@
 
         <h1>CuraEngine开源程序解读————工具类</h1>
 <p class="meta"><b>Date:</b>08 October 2018
-  | <b>Number of words:</b>4901
+  | <b>Number of words:</b>4913
   | <b>Approximately reading time:</b>15 minutes</p>
 
 <p>CuraEngine作为一个不断在维护的开源软件，在版本更新的过程中代码经常会有一些变化，这里尽力按照类别来对其进行解读，也方便代码更新之后进行修改。
@@ -178,7 +178,7 @@
 <p>C++11开始不再对M_PI有宏定义，这里定义M_PI。</p>
 <h3 id="全局函数">全局函数</h3>
 <ul>
-  <li><strong>static const float sqrt2</strong>。全局常量，值为 <script type="math/tex">\sqrt{2}</script>。</li>
+  <li><strong>static const float sqrt2</strong>。全局常量，值为 \(\sqrt{2}\)。</li>
   <li><strong>inline T square(const T&amp; a)</strong>。计算模板类型的平方。</li>
   <li><strong>inline unsigned int round_divide(unsigned int dividend, unsigned int divisor)</strong>。计算dividend被divisor平分后最接近的的组数。</li>
   <li><strong>inline unsigned int round_up_divide(unsigned int dividend, unsigned int divisor)</strong>。计算平分后的组数，向上取整。</li>
@@ -211,7 +211,7 @@
 <h3 id="constpolygonref">ConstPolygonRef</h3>
 <p>构造了一个存储多边形轮廓的类，外轮廓定义为逆时针方向，内轮廓为顺时针方向，左边为x负方向，下为y负方向。</p>
 <h4 id="成员变量-7">成员变量</h4>
-<p>定义了一个指向Path类型的*path指针，path类型定义在ClipperLib文件中，实际上是<code class="highlighter-rouge">std::vector&lt; IntPoint &gt;</code>的别名。</p>
+<p>定义了一个指向Path类型的*path指针，path类型定义在ClipperLib文件中，实际上是<code class="language-plaintext highlighter-rouge">std::vector&lt; IntPoint &gt;</code>的别名。</p>
 <h4 id="成员函数-9">成员函数</h4>
 <ul>
   <li><strong>构造函数</strong>。传递一个const ClipperLib::Path类型的polygon地址；</li>
@@ -290,9 +290,11 @@ gitment.render('container')
           
           <details class="menu" open>
             <summary>
-              <font size="4"><b>MobileGame（3）</b></font>
+              <font size="4"><b>MobileGame（4）</b></font>
             </summary>
             <ul class="arc-list">
+              
+              <li>17/06/2020<a href="/mobilegame/2020/06/17/MobileGame-fgo-py.html">手游fgo网易mumu模拟器自动挂机py脚本</a></li>
               
               <li>18/02/2020<a href="/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a></li>
               
@@ -340,17 +342,6 @@ gitment.render('container')
             <ul class="arc-list">
               
               <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">Windows下jekyll的配置</a></li>
-              
-            </ul>
-          </details>
-          
-          <details class="menu" open>
-            <summary>
-              <font size="4"><b>matrix（1）</b></font>
-            </summary>
-            <ul class="arc-list">
-              
-              <li>18/09/2019<a href="/matrix/2019/09/18/matrix-decomposition.html">矩阵分解</a></li>
               
             </ul>
           </details>

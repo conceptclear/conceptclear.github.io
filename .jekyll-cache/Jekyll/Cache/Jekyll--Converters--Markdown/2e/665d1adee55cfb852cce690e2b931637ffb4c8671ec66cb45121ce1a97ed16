@@ -1,4 +1,4 @@
-I"l3<p>STL模型作为一种存储三角面片的三维模型格式现在广泛运用于3d打印行业中。一般来说用3d打印的商业软件可以直接读取模型并且进行后续的切片等操作，但是由于商业软件的封装特点，往往难以得到所需要的信息。实际上STL模型是一种很简单的模型，他只存储了模型的三角面片的三个顶点坐标和法向量坐标，面与面之间的拓扑关系等是没有存储在内的，这样虽然减少了模型的数据量，但是在后续打印中也遗留下一定的困难。</p>
+I"=4<p>STL模型作为一种存储三角面片的三维模型格式现在广泛运用于3d打印行业中。一般来说用3d打印的商业软件可以直接读取模型并且进行后续的切片等操作，但是由于商业软件的封装特点，往往难以得到所需要的信息。实际上STL模型是一种很简单的模型，他只存储了模型的三角面片的三个顶点坐标和法向量坐标，面与面之间的拓扑关系等是没有存储在内的，这样虽然减少了模型的数据量，但是在后续打印中也遗留下一定的困难。</p>
 
 <h2 id="stl模型简介">STL模型简介</h2>
 <p>STL模型实际上有两种数据存储格式，分别是二进制格式和ASCII格式，其中二进制格式占用空间少，ASCII格式便于阅读，但是不管是哪种格式，存储的内容都是一样的。</p>
@@ -11,7 +11,7 @@
 facet normal 是三角面片指向实体外部的法矢量坐标，
 outer loop 说明随后的3行数据分别是三角面片的3个顶点坐标，3顶点沿指向实体外部的法矢量方向逆时针排列。
 ASCII格式的STL文件可以显示如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>solid filename
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>solid filename
    facet normal 0.000000e+000 1.000000e+000 0.000000e+000
       outer loop
          vertex 8.440000e+001 2.000000e+001 0.000000e+000
@@ -34,7 +34,7 @@ ASCII格式的STL文件可以显示如下：</p>
 一个完整二进制STL文件的大小为三角形面片数乘以50再加上84个字节。
 由于解码的问题，二进制格式的STL文件如果直接用记事本打开则显示出来大多数都是乱码。
 二进制格式的STL文件可显示如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UINT8//Header//文件头
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UINT8//Header//文件头
 UINT32//Numberoftriangles//三角面片数量
 //foreachtriangle（每个三角面片中）
 REAL32[3]//Normalvector//法线矢量
@@ -60,7 +60,7 @@ UINT16//Attribute byte count//文件属性统计
 <h2 id="两种格式区别">两种格式区别</h2>
 <p>读取STL文件首先要对文件进行分类，二进制文件和ASCII格式文件虽然信息量是相等的，但是读取方法不相同，这样判断一个STL文件到底是二进制文件还是ASCII格式文件就非常重要。
 从简单的方法来看，ASCII格式的STL文件，首行读取的前五个字符一定是’solid’,第二行开始的第一个非空格字符一定是’f’（由于生成STL格式的软件众多，一般来说f是第二行的第三个字符，但是由于标准不统一，这里采用非空格字符的方法），这样就可以用简单的方法将两类文件区分开来了，用C++代码实现如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>string headStr;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>string headStr;
 string SecondStr;
 getline(in, headStr);
 getline(in, SecondStr);
@@ -87,11 +87,11 @@ else
 <h2 id="读取ascii格式文件">读取ASCII格式文件</h2>
 <p>读取ASCII格式文件比较简单，由于ASCII格式是按行来储存数据的，利用C++的getline就可以很简单的来读取每一行的数据。
 ASCII文件可以直接用输入的方式打开，代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ifstream in;  
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ifstream in;  
 in.open(cfilename, ios::in);  
 </code></pre></div></div>
 <p>读取文件之后，利用循环读取每一行数据，对其中的字母，符号等数据进行剔除，只留下浮点数的数据。由于数据包含了法向量的数据和3个顶点的坐标，法向量的数据实际上可以由三个顶点坐标求出，所以可以选择舍弃法向量数据也可以单独存储，读取代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int flag=0;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int flag=0;
 do   
 {   
     i=0;   
@@ -131,19 +131,19 @@ do
 </code></pre></div></div>
 <h2 id="读取二进制格式文件">读取二进制格式文件</h2>
 <p>读取二进制格式的文件时，相较于读取ASCII格式文件，在读取函数中需要添加ios::binary，代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ifstream in;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ifstream in;
 in.open(cfilename, ios::in | ios::binary);
 </code></pre></div></div>
 <p>由于前80个字节是文件头，可以直接舍弃</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in.read(str, 80);
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in.read(str, 80);
 </code></pre></div></div>
 <p>紧接着的四个字节整型描述模型的三角面片个数，所以可以事先读取出面片个数：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//number of triangles  
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//number of triangles  
 int unTriangles;
 in.read((char*)&amp;unTriangles, sizeof(int));
 </code></pre></div></div>
 <p>得到所有三角面片数量之后，利用for循环则可以很轻松得存储每个面片的数据信息：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (int i = 0; i &lt; unTriangles; i++)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (int i = 0; i &lt; unTriangles; i++)
 {
     float coorXYZ[12];
     in.read((char*)coorXYZ, 12 * sizeof(float));
@@ -157,7 +157,7 @@ in.read((char*)&amp;unTriangles, sizeof(int));
 
 <h2 id="写ascii格式文件">写ASCII格式文件</h2>
 <p>当具有所有面片的顶点信息时，可以比较容易将面片信息存储为STL文件。ASCII格式在前文已经讨论过，只需要对每个面片进行遍历，并且将面片的顶点数据按照格式写入文件即可，利用glm库来处理向量叉乘，代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>string filename_output = filename + string(".stl");
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>string filename_output = filename + string(".stl");
 ofstream output(filename_output.c_str(), ios_base::out);
 
 output &lt;&lt; "solid " &lt;&lt; filename &lt;&lt; endl;
@@ -192,7 +192,7 @@ output.close();
 
 <h2 id="写二进制格式文件">写二进制格式文件</h2>
 <p>相较于写ASCII格式文件，二进制格式相对麻烦一点，由于二进制格式文件在文件开始处就需要将面片数量写入文件，所以需要在遍历面片之前先读取面片数量的数据，代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>string filename_output = filename + string(".stl");
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>string filename_output = filename + string(".stl");
 ofstream output(filename_output.c_str(), ios_base::out | ios_base::binary);
 
 output.write(filename.c_str(),80);

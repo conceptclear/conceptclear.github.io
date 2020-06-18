@@ -59,13 +59,13 @@
 
 <h2 id="rubygems">RubyGems</h2>
 <p>RubyGems（简称 gems）是一个用于对 Ruby组件进行打包的 Ruby 打包系统，类似于linux系统下的apt-get。由于各种原因，rubygems的<a href="rubygems.org">官网</a>访问非常缓慢，直接从命令行来安装jekyll很困难，国内有一个rubygems的<a href="http://gems.ruby-china.com/">镜像网站</a>，可以改变一下rubygems的源来提高速度。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/
 $ gem sources -l
 https://gems.ruby-china.com
 # 确保只有 gems.ruby-china.com
 </code></pre></div></div>
 <p>更改源之后更新一下rubygems</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gem update --system
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gem update --system
 $ gem -v
 </code></pre></div></div>
 <p>如图所示：</p>
@@ -73,17 +73,17 @@ $ gem -v
 
 <h2 id="jekyll">jekyll</h2>
 <p>安装好ruby和rubygems之后，就可以利用命令行通过rubygems来安装jekyll了。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install jekyll
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install jekyll
 </code></pre></div></div>
 <p>安装完成可以测试一下</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll -v
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll -v
 </code></pre></div></div>
 <p>如图所示：</p>
 <div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/jekyll/jekyll_check.jpg" /></div>
 
 <h2 id="运行">运行</h2>
 <p>都配置好之后，只需要按照jekyll官网上的运行方法，就可以在本地运行jekyll的静态网站进行调试了。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ $ gem install jekyll bundler
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ $ gem install jekyll bundler
 ~ $ jekyll new my-awesome-site
 ~ $ cd my-awesome-site
 ~/my-awesome-site $ bundle install
@@ -164,9 +164,11 @@ gitment.render('container')
           
           <details class="menu" open>
             <summary>
-              <font size="4"><b>MobileGame（3）</b></font>
+              <font size="4"><b>MobileGame（4）</b></font>
             </summary>
             <ul class="arc-list">
+              
+              <li>17/06/2020<a href="/mobilegame/2020/06/17/MobileGame-fgo-py.html">手游fgo网易mumu模拟器自动挂机py脚本</a></li>
               
               <li>18/02/2020<a href="/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a></li>
               
@@ -214,17 +216,6 @@ gitment.render('container')
             <ul class="arc-list">
               
               <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">Windows下jekyll的配置</a></li>
-              
-            </ul>
-          </details>
-          
-          <details class="menu" open>
-            <summary>
-              <font size="4"><b>matrix（1）</b></font>
-            </summary>
-            <ul class="arc-list">
-              
-              <li>18/09/2019<a href="/matrix/2019/09/18/matrix-decomposition.html">矩阵分解</a></li>
               
             </ul>
           </details>

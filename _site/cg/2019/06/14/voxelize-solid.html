@@ -50,7 +50,7 @@
 
 <h2 id="漫水填充法">漫水填充法</h2>
 <p>模型经过表面体素化之后一般可以得到一个水密的表面体素模型，通过漫水填充算法，可以比较轻易地得到所需要的实体体素模型。实现方法主要有基于深度优先搜索的迭代递归的方法和基于广度优先搜索的循环两种，其中最简单直观的漫水填充算法是采用深度优先搜索通过栈的递归方式来实现的，6邻域的实现方法如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void FloodFill(int x, int y, int z)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void FloodFill(int x, int y, int z)
 {
     //判断该位置体素是否在表面体素上或者不在体素空间中，若是则返回，若不是则填充
     if(CheckVoxel(x,y,z))
@@ -69,7 +69,7 @@
 <div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/voxelization/Recursive_Flood_Fill_4.gif" /></div>
 
 <p>这种方法需要逐点进行搜索，效率比较低，而且由于函数递归需要压栈，系统资源是有限的,递归层次一旦多起来就很容易堆栈溢出。为了解决这个问题可以采用广度优先搜索的方法将迭代转换为循环通过队列来实现，6邻域的实现方法如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void FloodFill_bfs(int x, int y, int z)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void FloodFill_bfs(int x, int y, int z)
 {
     unsigned int nummax=1&lt;&lt;(max_height-1);
     nummax--;
@@ -134,7 +134,7 @@
 </ul>
 
 <p>实现方法如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int check_point_triangle(vec2 v0, vec2 v1, vec2 v2, vec2 point)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int check_point_triangle(vec2 v0, vec2 v1, vec2 v2, vec2 point)
 {
 	 vec2 PA = point - v0;
 	 vec2 PB = point - v1;
@@ -162,7 +162,7 @@
 <p>若体素中心点在三角形内部，将该体素中心沿着x轴进行投影到三角面片上，对该投影点在体素空间中的映射体素q到原检测体素之间的所有体素值全部求反。遍历完所有面片之后，则完成了三维模型的实体体素化。                    <br />
 与二维像素空间的填充相似，边界标志算法在边界位置上存在着一定的问题。在二维图形中，若凸多边形的顶点正好位于像素中心上，其所连接的边数必为偶数，这样映射到像素空间中时，顶点像素总会进行两次翻转，这样该顶点最后都会产生填充错误。从二维映射到三维时，若存在体素的中心经过某个面片的边，这样会导致该体素所对应的体素列重复填充，引起整条体素列的填充错误。而且若体素中心在某面片的顶点之上时，由于顶点连接的三角面片数是不确定的，这样会导致顶点所投影的体素列翻转也出现问题。                   <br />
 针对于边重复所对应的体素列重复翻转的问题，可以采用光栅化中的左上填充规则（top-left rule），对于每个三角面片的边，只对其左边和上边对应的体素列进行翻转。左上填充规则实现起来其实比较容易，由于三角形顶点方向是一定的，可以通过对每条边两个顶点的高低来判断是不是左边或上边。对于逆时针排列的三个顶点，左边的边的第一个顶点一定比第二个顶点高，如果是上边的话则第一个顶点和第二个顶点一样高，但是第一个顶点一定在第二个顶点的右边。实现方法如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool TopLeftEdge(vec2 v0, vec2 v1)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool TopLeftEdge(vec2 v0, vec2 v1)
 {
     return ((v1.y&lt;v0.y)||(v1.y==v0.y&amp;&amp;v0.x&gt;v1.x));
 }
@@ -172,7 +172,7 @@
 对于三角形ABC,若AB</em>AC&lt;0，则三角形ABC是顺时针的；                       <br />
 对于三角形ABC,若AB*AC=0，则三点共线。                       <br />
 实现方法如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool checkCCW(vec2 v0, vec2 v1, vec2 v2)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool checkCCW(vec2 v0, vec2 v1, vec2 v2)
 {
 	 vec2 e0 = v1 - v0;
 	 vec2 e1 = v2 - v0;
@@ -252,9 +252,11 @@ gitment.render('container')
           
           <details class="menu" open>
             <summary>
-              <font size="4"><b>MobileGame（3）</b></font>
+              <font size="4"><b>MobileGame（4）</b></font>
             </summary>
             <ul class="arc-list">
+              
+              <li>17/06/2020<a href="/mobilegame/2020/06/17/MobileGame-fgo-py.html">手游fgo网易mumu模拟器自动挂机py脚本</a></li>
               
               <li>18/02/2020<a href="/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a></li>
               
@@ -302,17 +304,6 @@ gitment.render('container')
             <ul class="arc-list">
               
               <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">Windows下jekyll的配置</a></li>
-              
-            </ul>
-          </details>
-          
-          <details class="menu" open>
-            <summary>
-              <font size="4"><b>matrix（1）</b></font>
-            </summary>
-            <ul class="arc-list">
-              
-              <li>18/09/2019<a href="/matrix/2019/09/18/matrix-decomposition.html">矩阵分解</a></li>
               
             </ul>
           </details>

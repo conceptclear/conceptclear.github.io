@@ -81,7 +81,7 @@
 <div align="center"><img src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/MobileGame/mousesimulate.png" /></div>
 <p>其中由于游戏有时候火车来了并没有刷新出货物，可以通过采集一下金币来实现火舞的刷新，所以设置了一个按键1实现金币收集。               <br />
 因为火车有火车之间的时间间隔是不确定的，这里利用颜色识别的方法来判定火车是否到站，具体代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()
 Do
     Call Plugin.Bkgnd.KeyPress(Hwnd, 49)
     Delay 10000
@@ -130,7 +130,7 @@ Loop
 
 <h2 id="自动收集金币升级">自动收集金币升级</h2>
 <p>相对于收货，这个脚本要简单的多，只需要事先录制好几组收集金币的鼠标滑动路径，为了防止检测出利用脚本，这里使用了一个随机函数，每次随机调用一个路径来收集金币，代码如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hwnd = Plugin.Window.MousePoint()
 For 100
 	Call Plugin.Bkgnd.KeyPress(Hwnd,54)
     Delay 1000
@@ -234,9 +234,11 @@ gitment.render('container')
           
           <details class="menu" open>
             <summary>
-              <font size="4"><b>MobileGame（3）</b></font>
+              <font size="4"><b>MobileGame（4）</b></font>
             </summary>
             <ul class="arc-list">
+              
+              <li>17/06/2020<a href="/mobilegame/2020/06/17/MobileGame-fgo-py.html">手游fgo网易mumu模拟器自动挂机py脚本</a></li>
               
               <li>18/02/2020<a href="/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a></li>
               
@@ -284,17 +286,6 @@ gitment.render('container')
             <ul class="arc-list">
               
               <li>07/08/2019<a href="/jekyll/2019/08/07/setupjekyll.html">Windows下jekyll的配置</a></li>
-              
-            </ul>
-          </details>
-          
-          <details class="menu" open>
-            <summary>
-              <font size="4"><b>matrix（1）</b></font>
-            </summary>
-            <ul class="arc-list">
-              
-              <li>18/09/2019<a href="/matrix/2019/09/18/matrix-decomposition.html">矩阵分解</a></li>
               
             </ul>
           </details>
