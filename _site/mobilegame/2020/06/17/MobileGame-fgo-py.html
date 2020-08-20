@@ -43,7 +43,7 @@
 
         <h1>手游fgo网易mumu模拟器自动挂机py脚本</h1>
 <p class="meta"><b>Date:</b>17 June 2020
-  | <b>Number of words:</b>3643
+  | <b>Number of words:</b>3649
   | <b>Approximately reading time:</b>11 minutes</p>
 
 <p>之前曾经写过一篇利用按键精灵来进行fgo挂机的脚本<a href="http://conceptclear.cn/mobilegame/2020/02/18/MobileGame-fgo.html">手游fgo网易mumu模拟器自动挂机刷本脚本</a>，但是按键精灵本身存在很多限制（比如图像识别算法的问题，不能后台识图的问题等）而且运行起来CPU占用率也不低，这里提出一种利用python脚本来实现的方法。</p>
@@ -118,7 +118,7 @@ def get_handle(name):
 <p>fgo助战在很多情况下无法保证第一个角色就是我想要借的角色，利用按键精灵的简单图像识别不仅速度慢，而且操作起来比较麻烦。之前文章中提到的方法是只检测第一个助战位，若不是则刷新，这样大幅度的降低了程序运行的效率，这里利用python实现了识别所需角色位置的方法。在mumu模拟器中，不仅可以用键盘按键模拟鼠标点击的操作，还可以模拟鼠标拖动的操作，这里通过模拟鼠标上拖来实现助战界面的下滑。在每次上拖之后，检测当前窗口下是否存在我需要借用的角色，若不存在则继续下滑。由于助战显示是有限制的，有时候正好所有显示的助战都不是我所需要的角色，这里采用计数的方法，记录操作的次数，若次数到达一定之后还没有找到所需角色，则刷新助战，具体代码如下：</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def check_character(handle, width, height, character):
-    """find CBA in assist"""
+    """find character in assist"""
     basic_function.get_bitmap(handle, width, height)
     print('finding ' + character)
     [min_val, max_val, min_loc, max_loc] = basic_function.template_matching(handle, width, height,
@@ -262,9 +262,11 @@ gitment.render('container')
           
           <details class="menu" open>
             <summary>
-              <font size="4"><b>GPU（1）</b></font>
+              <font size="4"><b>GPU（2）</b></font>
             </summary>
             <ul class="arc-list">
+              
+              <li>20/08/2020<a href="/gpu/2020/08/20/CUDA-install.html">ubuntu裸机安装特定版本cuda</a></li>
               
               <li>14/06/2019<a href="/gpu/2019/06/14/GPU-voxelize.html">GPU加速的体素化</a></li>
               

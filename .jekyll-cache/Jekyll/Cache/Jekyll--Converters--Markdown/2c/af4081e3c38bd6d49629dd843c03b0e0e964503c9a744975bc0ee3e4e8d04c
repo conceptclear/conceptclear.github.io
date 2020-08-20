@@ -1,0 +1,58 @@
+I"t<p>由于linux自己有一个第三方图形驱动nouveau，CUDA安装经常出现问题，这里记录一下裸机如何安装特定版本的CUDA。</p>
+
+<h2 id="安装依赖库">安装依赖库</h2>
+<p><code class="language-plaintext highlighter-rouge">gcc</code>和<code class="language-plaintext highlighter-rouge">make</code>是安装cuda所必需的库，首先安装一下</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install gcc
+sudo apt install make
+</code></pre></div></div>
+
+<h2 id="禁用nouveau">禁用nouveau</h2>
+<p>nouveau是一个旨在为nvidia的GPU建立高质量的，免费自由的开源驱动项目，但是有了这个之后安装显卡驱动和cuda都会出问题，所以要先禁用。      <br />
+打开blacklist</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo gedit /etc/modprobe.d/blacklist.conf
+</code></pre></div></div>
+<p>将nouveau添加进去</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blacklist nouveau
+</code></pre></div></div>
+<p>重新生成 kernel initramfs</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo update-initramfs -u
+</code></pre></div></div>
+<p>然后重启</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>reboot
+</code></pre></div></div>
+
+<h2 id="安装显卡驱动">安装显卡驱动</h2>
+<p>禁用nouveau重启之后，显示会出现一定的问题，分辨率很低，这只要安装完NVIDIA的驱动之后就可以解决。显卡驱动可以和cuda一起由cuda的安装包安装，但是这种方法容易出现问题，这里采用的是单独安装显卡之后再安装cuda的方法。显卡驱动可以从NVIDIA的官网下载，最新的显卡驱动安装的时候似乎不需要关掉图形界面了，比较老的显卡驱动版本还需要关闭图形界面来进行安装。             <br />
+直接下载驱动之后，利用terminal安装</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo sh NVIDIA-Linux-x86_64-x.run
+</code></pre></div></div>
+<p>一路回车就行，安装完驱动之后显示并不会立刻变正常，可以重启使之生效。</p>
+
+<h2 id="安装cuda">安装CUDA</h2>
+<p>安装完成显卡驱动之后，就可以接着安装CUDA了，这里因为安装的是制定版本的CUDA，它安装的时候里面是附带了一个NVIDIA的显卡驱动的，一般来说会比最新的驱动版本要低，因为在之前已经安装完成，在安装的时候直接选择不装驱动而直接装其他模块就行。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo sh cuda_x.run
+</code></pre></div></div>
+<p>安装完成之后，需要将cuda的添加到环境变量中，</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo gedit ~/.bashrc
+</code></pre></div></div>
+<p>添加两句话进文件中</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export PATH=/usr/local/cuda-10.1/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-10.1/lib64$LD_LIBRARY_PATH
+</code></pre></div></div>
+<p>终端运行</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>source ~/.bashrc
+</code></pre></div></div>
+<p>检查一下</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nvcc --version
+</code></pre></div></div>
+<p>显示出CUDA的安装版本就安装成功了。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2019 NVIDIA Corporation
+Built on Fri_Feb__8_19:08:17_PST_2019
+Cuda compilation tools, release 10.1, V10.1.105
+</code></pre></div></div>
+
+<h2 id="reference">Reference</h2>
+<p>[1] https://blog.csdn.net/wanzhen4330/article/details/81699769</p>
+:ET
