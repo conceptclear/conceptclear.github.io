@@ -85,6 +85,7 @@ def check_apple(handle, width, height, resolution, state):
         sys.exit()
 
     return None
+```
 
 ## 自动选取助战
 fgo助战在很多情况下无法保证第一个角色就是我想要借的角色，利用按键精灵的简单图像识别不仅速度慢，而且操作起来比较麻烦。之前文章中提到的方法是只检测第一个助战位，若不是则刷新，这样大幅度的降低了程序运行的效率，这里利用python实现了识别所需角色位置的方法。在mumu模拟器中，不仅可以用键盘按键模拟鼠标点击的操作，还可以模拟鼠标拖动的操作，这里通过模拟鼠标上拖来实现助战界面的下滑。在每次上拖之后，检测当前窗口下是否存在我需要借用的角色，若不存在则继续下滑。由于助战显示是有限制的，有时候正好所有显示的助战都不是我所需要的角色，这里采用计数的方法，记录操作的次数，若次数到达一定之后还没有找到所需角色，则刷新助战，具体代码如下：
@@ -180,7 +181,6 @@ def check_character(handle, width, height, character, equipment, resolution):
     basic_function.press_mouse(handle, point, 3)
     basic_function.press_keyboard(handle, button_dict['4'], 22)
     return None
-
 ```
 
 ## 战斗操作
@@ -249,7 +249,6 @@ def check_character(handle, width, height, character, equipment, resolution):
         basic_function.press_keyboard(handle, button_dict['4'], 1)
     print('battle finish')
     return None
-
 ```
 脚本现在加入了一段测试代码，用于测试每一面释放技能开始之前是否游戏已经运行到了这一界面，以防止出现游戏卡顿导致的时间轴出错或者是宝具回收不够导致上一面没有成功运行脚本的情况，因为每个副本的游戏背景不同，简单地采用模板匹配并不能准确检测当前的战斗面，所以可能出现bug，现在处于测试阶段。
 
