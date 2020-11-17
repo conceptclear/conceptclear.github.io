@@ -8,7 +8,7 @@ category: CG
 体素（voxel）是体积像素（volume pixel）的简称，类似于二维空间中的最小单位————像素，体素是三维空间分割中的最小单位，被广泛应用于三维成像、科学数据与医学影像等领域。三维模型的体素化本质上就是对模型所在的三维空间进行离散化从而分割成正方体或长方体网格，并判断每个网格是否处于模型上（表面体素化）或模型内部（实体体素化）。由于计算机中对于三维图像的处理几乎都是基于三角面片的，三维模型的保存格式也基本都以三角面片为最小单元进行储存，三维模型的表面体素化也就可以转化成为空间中每个三角面片的体素化。                                    
 
 ## 体素空间
-3D离散空间$$Z^3$$可以表示为3D空间中的一组网格点，离散空间中任意点$$P$$都可以用其笛卡尔坐标$$P(x,y,z)$$来表示，体素空间即为其中一种。为了能够完全表示三维模型，通常采用模型的AABB包围盒来构建体素空间$$N^3$$，并根据分辨率N将整个AABB包围盒按照长宽高划分为$$N \times N \times N$$个体素cell，通过设置flag记录每个体素cell与三维模型的关系（在模型内部，在模型外部，在模型上）。对于表面体素空间，每个体素cell的flag则只需分辨与模型是相交还是分离即可，不必再区分在模型内部或是外部，即
+3D离散空间$Z^3$可以表示为3D空间中的一组网格点，离散空间中任意点$P$都可以用其笛卡尔坐标$P(x,y,z)$来表示，体素空间即为其中一种。为了能够完全表示三维模型，通常采用模型的AABB包围盒来构建体素空间$N^3$，并根据分辨率N将整个AABB包围盒按照长宽高划分为$N \times N \times N$个体素cell，通过设置flag记录每个体素cell与三维模型的关系（在模型内部，在模型外部，在模型上）。对于表面体素空间，每个体素cell的flag则只需分辨与模型是相交还是分离即可，不必再区分在模型内部或是外部，即
 
 $$
 flag=\left\{
@@ -26,8 +26,8 @@ cell_y=\frac{L_y}{N}   \qquad
 cell_z=\frac{L_z}{N}    
 $$
 
-其中$$cell_x,cell_y,cell_z$$分别为体素的长度宽度和高度，$$L_x,L_y,L_z$$分别为AABB包围盒的长度宽度和高度。            
-为了加快运算速度并简化算法，体素空间以原点为起点构建在第一象限内，对于原三维模型的的任意点$$P(x_0,y_0,z_0)$$,其对应的体素$$P_v(v_{x_0},v_{y_0},v_{z_0})$$为
+其中$cell_x,cell_y,cell_z$分别为体素的长度宽度和高度，$L_x,L_y,L_z$分别为AABB包围盒的长度宽度和高度。            
+为了加快运算速度并简化算法，体素空间以原点为起点构建在第一象限内，对于原三维模型的的任意点$P(x_0,y_0,z_0)$,其对应的体素$P_v(v_{x_0},v_{y_0},v_{z_0})$为
 
 $$
 v_{x_0}=ceil(\frac{x_0-x_min}{L_x}N)    \\
@@ -69,23 +69,23 @@ $$
 
 ### 分离轴（SAT）算法
 分离轴算法（separating axis theorem，SAT）被广泛运用于多边形相交的检测之中。对于两个凸多面体A,B，若存在任意一条平行于A，B某一面片法向量的轴线或A,B任意两条边的向量叉乘所得到的轴线，使得两个多面体在该轴线上的投影不相交，则这两个多面体不相交。                  
-如下图所示对于三角面片和AABB包围盒划分的体素来说，体素可以通过中心$$\boldsymbol{c}$$和长度一半的向量$$\boldsymbol{h}$$来表示，三角面片则可以通过三个顶点$$\boldsymbol{u_0,u_1,u_2}$$来表示。为了简化测试，将体素中心移动到原点，则三角面片的坐标会变为$$\boldsymbol{v_i}=\boldsymbol{u_i}-\boldsymbol{c},i\in\{0,1,2\}$$。由于体素是通过AABB包围盒划分生成的，所以三个向量的方向与坐标轴一致，若与坐标轴不一致时还需要进行旋转变换。
+如下图所示对于三角面片和AABB包围盒划分的体素来说，体素可以通过中心$\boldsymbol{c}$和长度一半的向量$\boldsymbol{h}$来表示，三角面片则可以通过三个顶点$\boldsymbol{u_0,u_1,u_2}$来表示。为了简化测试，将体素中心移动到原点，则三角面片的坐标会变为$\boldsymbol{v_i}=\boldsymbol{u_i}-\boldsymbol{c},i\in\{0,1,2\}$。由于体素是通过AABB包围盒划分生成的，所以三个向量的方向与坐标轴一致，若与坐标轴不一致时还需要进行旋转变换。
 
 <div align="center"><img  src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/voxelization/SAT_transformation.png"></div>                     
 
 基于SAT算法，检测二者是否相交需要检测以下13个轴：
-- 坐标轴的三个基向量，共3个，$$\boldsymbol{e}_0(1,0,0),\boldsymbol{e}_1(0,1,0),\boldsymbol{e}_2(0,0,1)$$;                       
-- 三角面片的法向量，共1个，$$\boldsymbol{N}=\boldsymbol{v}_0\times \boldsymbol{v}_1$$;                    
-- 三角面片的三个边构成的向量与三个基向量叉乘的向量，共9个，$$\boldsymbol{a_{ij}}=\boldsymbol{e_i}\times \boldsymbol{v_j}$$。                   
+- 坐标轴的三个基向量，共3个，$\boldsymbol{e}_0(1,0,0),\boldsymbol{e}_1(0,1,0),\boldsymbol{e}_2(0,0,1)$;                       
+- 三角面片的法向量，共1个，$\boldsymbol{N}=\boldsymbol{v}_0\times \boldsymbol{v}_1$;                    
+- 三角面片的三个边构成的向量与三个基向量叉乘的向量，共9个，$\boldsymbol{a_{ij}}=\boldsymbol{e_i}\times \boldsymbol{v_j}$。                   
 
 若其中某一个轴投影下二者不相交，则说明二者在三维空间内不相交。
 
 ### Michael Schwarz所提出算法
-给定三角面片$$\Gamma$$，其三个顶点分别为$$\boldsymbol{v_0,v_1,v_2}$$，体素$$B$$最小顶点为$$\boldsymbol{p}$$，最大顶点为$$\boldsymbol{p}+\boldsymbol{\Delta p}$$，若$$B$$与$$\Gamma$$相交，则有：
-- $$\Gamma$$所在平面与$$B$$相交；                
-- $$\Gamma$$与$$B$$在xy，yz，zx三个平面上的投影都相交。                       
+给定三角面片$\Gamma$，其三个顶点分别为$\boldsymbol{v_0,v_1,v_2}$，体素$B$最小顶点为$\boldsymbol{p}$，最大顶点为$\boldsymbol{p}+\boldsymbol{\Delta p}$，若$B$与$\Gamma$相交，则有：
+- $\Gamma$所在平面与$B$相交；                
+- $\Gamma$与$B$在xy，yz，zx三个平面上的投影都相交。                       
 
-判断$$\Gamma$$所在平面是否与$$B$$相交可以利用Haines和Wallace[4]所提出的方法，令$$\Gamma$$所在平面的法向量为$$\boldsymbol{n}$$，设critical point $$\boldsymbol{c}$$
+判断$\Gamma$所在平面是否与$B$相交可以利用Haines和Wallace[4]所提出的方法，令$\Gamma$所在平面的法向量为$\boldsymbol{n}$，设critical point $\boldsymbol{c}$
 
 $$
 \boldsymbol{c}=
@@ -108,7 +108,7 @@ $$
   \right)}^T
 $$
 
-只需要检测点$$\boldsymbol{p}+\boldsymbol{c}$$和其对应点$$\boldsymbol{p}+\boldsymbol{\Delta p} -\boldsymbol{c}$$是否在平面$$\Gamma$$的两侧即可，即判断是否满足：
+只需要检测点$\boldsymbol{p}+\boldsymbol{c}$和其对应点$\boldsymbol{p}+\boldsymbol{\Delta p} -\boldsymbol{c}$是否在平面$\Gamma$的两侧即可，即判断是否满足：
 
 $$
 (\boldsymbol{n}\cdot\boldsymbol{p}+d_1)(\boldsymbol{n}\cdot\boldsymbol{p}+d_2)\leq 0
@@ -121,9 +121,9 @@ d_1=\boldsymbol{n}\cdot(\boldsymbol{c}-\boldsymbol{v}_0)  \\
 d_2=\boldsymbol{n}\cdot(\boldsymbol{\Delta p}-\boldsymbol{c}-\boldsymbol{v}_0)  \\
 $$
 
-若满足条件，则说明$$\Gamma$$所在平面与$$B$$相交。                 
+若满足条件，则说明$\Gamma$所在平面与$B$相交。                 
 
-对于三个平面的二维投影相交的判定，可以通过Pineda[5]的边缘函数来进行。和之前判断点是否在平面一侧类似，这里需要判断体素投影的测试点（conservative和6-separating不同）是否在投影三角形内部，以xy平面的投影为例，需要计算每条边的法向量$$\boldsymbol{n}_{e_i}^{xy}$$以及距离$$d_{e_i}^{xy}$$，其中，对于conservative的方法来说
+对于三个平面的二维投影相交的判定，可以通过Pineda[5]的边缘函数来进行。和之前判断点是否在平面一侧类似，这里需要判断体素投影的测试点（conservative和6-separating不同）是否在投影三角形内部，以xy平面的投影为例，需要计算每条边的法向量$\boldsymbol{n}_{e_i}^{xy}$以及距离$d_{e_i}^{xy}$，其中，对于conservative的方法来说
 
 $$
 \boldsymbol{n}_{e_i}^{xy}=(-e_{i,y},e_{i,x})^{T}\cdot\left\{
@@ -134,13 +134,13 @@ $$
 d_{e_i}^{xy}=-\boldsymbol{n}_{e_i}^{xy}\cdot v_{i,xy}+max\{0,\Delta p_x\boldsymbol{n}_{e_{i,x}}^{xy}\}+max\{0,\Delta p_y\boldsymbol{n}_{e_{i,y}}^{xy}\}
 $$
 
-其中，$$\boldsymbol{e}_i$$表示三角面片上第i个顶点指向第i+1 mod 3个顶点的向量，即
+其中，$\boldsymbol{e}_i$表示三角面片上第i个顶点指向第i+1 mod 3个顶点的向量，即
 
 $$
 \boldsymbol{e}_i=\boldsymbol{v}_{i+1 mod 3}-\boldsymbol{v}_i
 $$
 
-上述公式中，下标的逗号之后的字母表示该向量的x,y或z分量，$$v_{i,xy}$$表示第i个顶点在xy平面的分量。对三角面片在xy平面投影的三条边依次判断
+上述公式中，下标的逗号之后的字母表示该向量的x,y或z分量，$v_{i,xy}$表示第i个顶点在xy平面的分量。对三角面片在xy平面投影的三条边依次判断
 
 $$
 \boldsymbol{n}_{e_i}^{xy}\cdot\boldsymbol{p}_{xy}+d_{e_i}^{xy} \ge 0
@@ -161,7 +161,7 @@ $$
 m= arg max|n_j|   \qquad j={x,y,z}
 $$
 
-同样，投影下的距离$$d_{e_i}^{xy}$$可以表示为
+同样，投影下的距离$d_{e_i}^{xy}$可以表示为
 
 $$
 d_{e_i}^{xy}=\boldsymbol{n}_{e_i}^{xy}\cdot(\frac{1}{2}\boldsymbol{\Delta p}_{xy}-\boldsymbol{v}_{i,xy})+\frac{1}{2}\boldsymbol{\Delta p}_{n}|\boldsymbol{n}_{e_{i,n}^{xy}}|

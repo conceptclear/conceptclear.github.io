@@ -1,4 +1,4 @@
-I"�2<p>CuraEngine作为一个不断在维护的开源软件，在版本更新的过程中代码经常会有一些变化，这里尽力按照类别来对其进行解读，也方便代码更新之后进行修改。
+I"�2<p>CuraEngine作为一个不断在维护的开源软件，在版本更新的过程中代码经常会有一些变化，这里尽力按照类别来对其进行解读，也方便代码更新之后进行修改。
 源码中将一部分文件归类于utils文件夹中，这部分代码主要起到的是基础工具类的作用，这里首先对这部分代码进行分析解读。
 由于CuraEngine主要重用了clipperlib库中提供的IntPoint的定义，所以顶点坐标数据都是以整数点的形式保存在内存之中，单位为um（微米）。</p>
 
@@ -130,7 +130,7 @@
 <p>C++11开始不再对M_PI有宏定义，这里定义M_PI。</p>
 <h3 id="全局函数">全局函数</h3>
 <ul>
-  <li><strong>static const float sqrt2</strong>。全局常量，值为 \(\sqrt{2}\)。</li>
+  <li><strong>static const float sqrt2</strong>。全局常量，值为 $\sqrt{2}$。</li>
   <li><strong>inline T square(const T&amp; a)</strong>。计算模板类型的平方。</li>
   <li><strong>inline unsigned int round_divide(unsigned int dividend, unsigned int divisor)</strong>。计算dividend被divisor平分后最接近的的组数。</li>
   <li><strong>inline unsigned int round_up_divide(unsigned int dividend, unsigned int divisor)</strong>。计算平分后的组数，向上取整。</li>

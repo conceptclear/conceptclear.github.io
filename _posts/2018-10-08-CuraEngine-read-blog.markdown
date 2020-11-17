@@ -117,7 +117,7 @@ math文件主要是对C++的cmath库的拓展。
 ### 宏定义
 C++11开始不再对M_PI有宏定义，这里定义M_PI。                 
 ### 全局函数
-- **static const float sqrt2**。全局常量，值为 $$\sqrt{2}$$。            
+- **static const float sqrt2**。全局常量，值为 $\sqrt{2}$。            
 - **inline T square(const T& a)**。计算模板类型的平方。                    
 - **inline unsigned int round_divide(unsigned int dividend, unsigned int divisor)**。计算dividend被divisor平分后最接近的的组数。                  
 - **inline unsigned int round_up_divide(unsigned int dividend, unsigned int divisor)**。计算平分后的组数，向上取整。                 

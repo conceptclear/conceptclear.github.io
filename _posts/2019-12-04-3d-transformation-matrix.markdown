@@ -5,12 +5,12 @@ date:   2019-12-04 02:35:56
 category: CG
 ---
 
-对于三维空间中的一条线段$$P_1P_2$$如下图所示，若已知变换前后的线段端点坐标$$P_1(x_1,y_1),P_2(x_2,y_2)$$以及$$P_1'(x_1',y_1'),P_2'(x_1',y_1')$$，如何求解该线段的三维变换矩阵？本文针对该问题进行分析。线段的空间三维变换可以主要分解为线段所构成向量的旋转，顶点的平移，以及大小的变换三个变换矩阵，这里分开讨论。
+对于三维空间中的一条线段$P_1P_2$如下图所示，若已知变换前后的线段端点坐标$P_1(x_1,y_1),P_2(x_2,y_2)$以及$P_1'(x_1',y_1'),P_2'(x_1',y_1')$，如何求解该线段的三维变换矩阵？本文针对该问题进行分析。线段的空间三维变换可以主要分解为线段所构成向量的旋转，顶点的平移，以及大小的变换三个变换矩阵，这里分开讨论。
 
 <div align="center"><img  src="https://github.com/conceptclear/conceptclear.github.io/raw/master/images/CG/line_transformation.png"></div>   
 
 ## 旋转矩阵
-不考虑线段的绕着自身的自旋，求解线段的旋转矩阵可以简化为所构成向量的旋转。已知旋转前的向量为$$\boldsymbol {P_1P_2}$$，旋转后的向量为$$\boldsymbol {P_1'P_2'}$$，可以计算出向量之间的夹角为：
+不考虑线段的绕着自身的自旋，求解线段的旋转矩阵可以简化为所构成向量的旋转。已知旋转前的向量为$\boldsymbol {P_1P_2}$，旋转后的向量为$\boldsymbol {P_1'P_2'}$，可以计算出向量之间的夹角为：
 
 $$
 \theta = arccos \left( \frac{\boldsymbol{P_1P_2} \cdot \boldsymbol{P_1'P_2'}}{\|\boldsymbol {P_1P_2}\|\|\boldsymbol {P_1'P_2'}\|} \right)
@@ -39,13 +39,13 @@ $$
         \right]
 $$  
 
-则夹角$$\theta$$可以表示为：
+则夹角$\theta$可以表示为：
 
 $$
 \theta = arccos \left( \frac{a_1b_1+a_2b_2+a_3b_3}{\sqrt{a_1^2+a_2^2+a_3^2}\cdot\sqrt{b_1^2+b_2^2+b_3^2}} \right)
 $$
 
-根据两个向量可以求出向量旋转的旋转轴，旋转轴垂直于两个向量所构成的平面，利用向量的叉乘可以计算出旋转轴$$\boldsymbol{k}$$的向量：
+根据两个向量可以求出向量旋转的旋转轴，旋转轴垂直于两个向量所构成的平面，利用向量的叉乘可以计算出旋转轴$\boldsymbol{k}$的向量：
 
 $$
 \boldsymbol{k}=\boldsymbol{P_1P_2} \times \boldsymbol{P_1'P_2'}=\left[
@@ -55,7 +55,7 @@ $$
   \right]
 $$
 
-得到了向量的旋转角和旋转轴之后，旋转轴$$\boldsymbol{k}$$和原始向量$$\boldsymbol{P_1P_2}$$的外积可以表示成矩阵积的形式：
+得到了向量的旋转角和旋转轴之后，旋转轴$\boldsymbol{k}$和原始向量$\boldsymbol{P_1P_2}$的外积可以表示成矩阵积的形式：
 
 $$
 \boldsymbol{k} \times \boldsymbol{P_1P_2}=\left[
@@ -73,7 +73,7 @@ $$
       \right]
 $$
 
-用矩阵$$\boldsymbol{K}$$来表示向量$$\boldsymbol{k}$$的叉乘矩阵，即
+用矩阵$\boldsymbol{K}$来表示向量$\boldsymbol{k}$的叉乘矩阵，即
 
 $$
 \boldsymbol{K}=\left[
@@ -83,13 +83,13 @@ $$
   \right]
 $$
 
-可以利用罗德里格旋转公式来得到旋转矩阵，旋转矩阵$$\boldsymbol{R}$$表示如下：
+可以利用罗德里格旋转公式来得到旋转矩阵，旋转矩阵$\boldsymbol{R}$表示如下：
 
 $$
 \boldsymbol{R}=\boldsymbol{E}+sin\theta\boldsymbol{K}+(1-cos\theta)\boldsymbol{K^2}
 $$
 
-公式中的$$\boldsymbol{K}$$需要归一化，即
+公式中的$\boldsymbol{K}$需要归一化，即
 
 $$
 {\|\boldsymbol{K}\|}_2=1
@@ -106,7 +106,7 @@ $$
 $$
 
 ## 比例变换矩阵
-经过旋转之后，由于之前做过了归一化处理，这里比例变换因子即为$$\|\boldsymbol {P_1'P_2'}\|$$，直接通过比例变换矩阵$${\boldsymbol{S}}$$进行整体放缩即可：
+经过旋转之后，由于之前做过了归一化处理，这里比例变换因子即为$\|\boldsymbol {P_1'P_2'}\|$，直接通过比例变换矩阵${\boldsymbol{S}}$进行整体放缩即可：
 
 $$
 {\boldsymbol{S}}_{4 \times 4}=\left[
@@ -117,7 +117,7 @@ $$
 $$
 
 ## 平移矩阵
-已知起点$$P_1$$和终点$$P_1'$$，平移矩阵$${\boldsymbol{T}}$$很容易表示：
+已知起点$P_1$和终点$P_1'$，平移矩阵${\boldsymbol{T}}$很容易表示：
 
 $$
 {\boldsymbol{T}}_{4 \times 4}=\left[
